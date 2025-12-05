@@ -13,14 +13,16 @@ export default function Page() {
 
     return (
         <div>
-            <Header></Header>
+            <Header />
             <div className="flex flex-col items-center justify-center my-30 font-[Inter] gap-4 ">
                 <div className="text-5xl font-bold">
                     Find Your Dream Tech Job
                 </div>
+
                 <div className="h-12 w-200 items-center justify-center [font-family:'Inter-Regular',Helvetica] font-normal text-[#65758b] text-2xl text-center leading-7">
                     DEVision connects Computer Science professionals with their ideal career opportunities. Discover roles that match your skills and aspirations.
                 </div>
+
                 <div className="flex mt-7 gap-4 font-[Inter]">
                     <Button text={"Start Your Journey"} onClick={() => router.push("/register")}/>
                     <SecondaryButton text={"Browse Jobs"} onClick={() => console.log("Hello world")}/>
@@ -31,6 +33,7 @@ export default function Page() {
                 <div className="flex items-center justify-center text-4xl font-bold mt-16 mb-10">
                     Why choose DEVision?
                 </div>
+
                 <div className="flex justify-center gap-8 mb-15">
                     <ServiceCard title={"Smart Job Search"}
                                  description={"Advanced search filters to find jobs matching your\n" +
@@ -51,6 +54,7 @@ export default function Page() {
                 <div className="text-[40px] font-bold">
                     Ready to Take the Next Step?
                 </div>
+
                 <div className="h-12 w-200 items-center justify-center [font-family:'Inter-Regular',Helvetica] font-normal text-[#65758b] text-[25px] text-center leading-7">
                     Join thousands of tech professionals who have found their perfect role through
                     DEVision.
@@ -58,7 +62,7 @@ export default function Page() {
 
                 <Button text={"Create Your Account"} onClick={() => router.push("/register")}/>
             </div>
-            <Footer></Footer>
+            <Footer />
         </div>
     );
 }

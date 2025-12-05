@@ -1,0 +1,62 @@
+"use client";
+
+import React from "react";
+import {useRouter} from "next/navigation";
+import {HeadlessForm} from "@/components/form/Form";
+import SecondaryButton from "@/components/secondaryButton";
+import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
+
+export default function Page() {
+    const router = useRouter();
+
+    const formConfig = {
+        className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
+        formTitle: "Login to DEVision",
+        children: [
+            {
+                title: "Email",
+                type: "email",
+                placeholder: "test@gmail.com"
+            },
+            {
+                title: "Password",
+                type: "password",
+                placeholder: "***************"
+            }
+        ],
+        buttonText: "Login  ",
+    };
+
+    return (
+        <div className="flex flex-col min-h-screen items-center bg-[#f1f5f9]/30 p-30 gap-8">
+            <DEVisionLogoButton />
+            <div className="bg-white rounded-lg shadow-md p-7 mx-150 min-w-[700px]">
+                <div className="flex justify-center font-[Inter] text-3xl font-bold mb-4">
+                    {formConfig.formTitle}
+                </div>
+
+                <HeadlessForm config={formConfig} onSubmit={() => console.log("Login submitted")}/>
+
+                <div className="flex items-center my-6">
+                    <div className="flex-grow border-t border-gray-300"></div>
+                    <span className="mx-4 text-gray-500">Or</span>
+                    <div className="flex-grow border-t border-gray-300"></div>
+                </div>
+
+                <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50">
+                    <div className={"flex my-1"}>
+                        <img src="/google_logo.svg" alt="Google logo" className="w-5 h-5 mr-2"/>
+                        Continue with Google
+                    </div>
+                </button>
+
+                <div className="flex flex-col justify-center items-center my-6">
+                    <div className="font-[Inter] text-[#65758B] mb-4">
+                        Do not have an account
+                    </div>
+                    <SecondaryButton text={"Sign in"} onClick={() => router.push("/register")} style={"w-81"}/>
+                </div>
+            </div>
+        </div>
+    );
+}
