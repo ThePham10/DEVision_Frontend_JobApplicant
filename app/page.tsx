@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { motion, useInView } from "motion/react";
 import { useMainPageScroll } from "@/hooks/useMainPageScroll";
 import { FaSearch, FaUsers, FaDollarSign } from "react-icons/fa";
-import { useRef } from "react";
+import React, { useRef } from "react";
 
 type DoodleIconData = {
     position: string;

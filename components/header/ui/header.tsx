@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Button from "@/components/button";
 import SecondaryButton from "@/components/secondaryButton";
 import { useRouter } from "next/navigation";
@@ -16,9 +17,11 @@ export default function Header() {
                     onClick={() => console.log("hello world")}
                 >
                     <div>
-                        <img
+                        <Image
                             src="/DEVision_JA_Logo.svg"
                             alt="DEVision logo"
+                            width={40}
+                            height={40}
                             className="w-8 h-8 sm:w-10 sm:h-10"
                         />
                     </div>
