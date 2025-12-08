@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import Image from "next/image"
 import {useRouter} from "next/navigation";
 import {HeadlessForm} from "@/components/form/Form";
 import SecondaryButton from "@/components/secondaryButton";
@@ -15,11 +15,13 @@ export default function Page() {
         children: [
             {
                 title: "Email",
+                name: "email",
                 type: "email",
                 placeholder: "test@gmail.com"
             },
             {
                 title: "Password",
+                name: "password",
                 type: "password",
                 placeholder: "***************"
             }
@@ -45,7 +47,7 @@ export default function Page() {
 
                 <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50">
                     <div className={"flex my-1"}>
-                        <img src="/google_logo.svg" alt="Google logo" className="w-5 h-5 mr-2"/>
+                        <Image src="/google_logo.svg" alt="Google logo" width={20} height={20} className="w-5 h-5 mr-2"/>
                         Continue with Google
                     </div>
                 </button>
