@@ -10,7 +10,7 @@ import { Country } from "@/components/form/country-drop-down-menu/api/countryDro
 
 type FormChild = {
     title: string;
-    name: string; // Field name for form data
+    name: string; 
     type: string;
     placeholder: string;
     validation?: FieldValidation;
@@ -20,7 +20,7 @@ type FormConfig = {
     className?: string;
     children: FormChild[];
     buttonText: string;
-    phoneFieldName?: string; // Name of the phone field to auto-fill dial code
+    phoneFieldName?: string; 
 }
 
 type HeadlessFormProps = {
@@ -204,10 +204,6 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
     );
 };
 
-// Re-export for convenience
-export { useForm } from "./hook/useForm";
 export type { FormValues } from "./hook/useForm";
 export { commonValidations, loginValidations, patterns } from "./hook/validation";
 export type { FieldValidation, ValidationRule } from "./hook/validation";
-export { getDialCodeFromCache, getCachedCountries } from "@/components/form/country-drop-down-menu/api/countryDropDownMenuService";
-export type { Country } from "@/components/form/country-drop-down-menu/api/countryDropDownMenuService";
