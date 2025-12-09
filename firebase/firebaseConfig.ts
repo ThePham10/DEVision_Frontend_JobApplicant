@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBC5Vs5afWHwqjrA7DrLiC5uALPT0IdTBU",
-    authDomain: "menupilot-94baa.firebaseapp.com",
-    projectId: "menupilot-94baa",
-    storageBucket: "menupilot-94baa.firebasestorage.app",
-    messagingSenderId: "428488521025",
-    appId: "1:428488521025:web:376de8b40bf4561cf39dc0"
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);

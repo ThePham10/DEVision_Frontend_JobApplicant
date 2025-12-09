@@ -3,7 +3,7 @@
 import Image from "next/image"
 import {HeadlessForm, commonValidations, FormValues} from "@/components/form/Form";
 import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
-import { signIn } from "next-auth/react";
+import { googleAuthService } from "@/services/googleAuthService";
 
 export default function Page() {
     const formConfig = {
@@ -74,6 +74,16 @@ export default function Page() {
         console.log("Register successfully with values:", values);
     };
 
+    const handleRegisterWithGoogle = async () => {
+        try {
+            const user = await googleAuthService.signInWithGoogle();
+            console.log("Registered:", user);
+            window.location.href = "/dashboard";
+        } catch (error) {
+            console.error("Google sign-in failed:", error);
+        }
+    };
+
     return (
         <div className="flex flex-col min-h-screen items-center bg-[#f1f5f9]/30 p-10 gap-8">
             <DEVisionLogoButton />
@@ -87,7 +97,7 @@ export default function Page() {
                 </div>
 
                 <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50"
-                        onClick={() => signIn("google", {callbackUrl: "/dashboard"})}>
+                        onClick={handleRegisterWithGoogle}>
                     <div className={"flex my-1"}>
                         <Image src="/google_logo.svg" 
                                 alt="Google logo" 

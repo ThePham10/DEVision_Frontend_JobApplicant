@@ -3,9 +3,9 @@ import { auth } from "@/firebase/firebaseConfig";
 
 export interface AuthUser {
     uid: string;
-    email: string;
-    displayName: string;
-    photoURL: string;
+    email: string | null;
+    displayName: string | null;
+    photoURL: string | null;
     idToken: string;
 }
 
