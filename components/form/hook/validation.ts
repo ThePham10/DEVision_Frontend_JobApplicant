@@ -228,3 +228,4 @@ export const loginValidations = {
         requiredMessage: "Password is required",
     } as FieldValidation,
 };
+

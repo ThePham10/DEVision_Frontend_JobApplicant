@@ -1,14 +1,18 @@
 "use client";
 
-import Image from "next/image"
+import React from "react";
 import {useRouter} from "next/navigation";
-import {HeadlessForm, loginValidations, FormValues} from "@/components/form/Form";
+import {HeadlessForm} from "@/components/form/Form";
 import SecondaryButton from "@/components/secondaryButton";
 import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
-import { signIn } from "next-auth/react";
+import { googleAuthService } from "@/services/googleAuthService";
+import { useState } from "react";
+import Image from "next/image";
 
 export default function Page() {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
@@ -16,25 +20,50 @@ export default function Page() {
         children: [
             {
                 title: "Email",
-                name: "email",
                 type: "email",
-                placeholder: "test@gmail.com",
-                validation: loginValidations.email,
+                placeholder: "test@gmail.com"
             },
             {
                 title: "Password",
-                name: "password",
                 type: "password",
-                placeholder: "***************",
-                validation: loginValidations.password,
+                placeholder: "***************"
             }
         ],
-        buttonText: "Login",
+        buttonText: "Login  ",
     };
 
     const handleSubmit = (values: FormValues) => {
         console.log("Login successfully with values:", values);
     };
+
+    const handleGoogleSignIn = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const user = await googleAuthService.signInWithGoogle();
+            localStorage.setItem("idToken", user.idToken);
+            console.log("Token saved to localStorage");
+            router.push("/dashboard");
+        } catch (err: any) {
+            console.error("Sign-in error:", err);
+            setError(err.message || "Failed to sign in");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSignOut = async () => {
+        try {
+            console.log("Signing out...");
+            await googleAuthService.signOut();
+            localStorage.removeItem("idToken");
+            console.log("Signed out successfully");
+            router.push("/");
+        } catch (error) {
+            console.error("Sign out failed:", error);
+        }
+    };
+
     return (
         <div className="flex flex-col min-h-screen items-center bg-[#f1f5f9]/30 p-30 gap-8">
             <DEVisionLogoButton />
@@ -43,7 +72,7 @@ export default function Page() {
                     {formConfig.formTitle}
                 </div>
 
-                <HeadlessForm config={formConfig} onSubmit={handleSubmit}/>
+                <HeadlessForm config={formConfig} onSubmit={() => console.log("Login submitted")}/>
 
                 <div className="flex items-center my-6">
                     <div className="flex-grow border-t border-gray-300"></div>
@@ -51,11 +80,15 @@ export default function Page() {
                     <div className="flex-grow border-t border-gray-300"></div>
                 </div>
 
-                <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50"
-                        onClick={() => signIn("google", {callbackUrl: "/dashboard"})}>
+                {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+                <button 
+                    className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"
+                    onClick={handleGoogleSignIn}
+                    disabled={isLoading}>
                     <div className={"flex my-1"}>
                         <Image src="/google_logo.svg" alt="Google logo" width={20} height={20} className="w-5 h-5 mr-2"/>
-                        Continue with Google
+                        {isLoading ? "Signing in..." : "Continue with Google"}
                     </div>
                 </button>
 
@@ -63,7 +96,7 @@ export default function Page() {
                     <div className="font-[Inter] text-[#65758B] mb-4">
                         Do not have an account
                     </div>
-                    <SecondaryButton text={"Sign up"} onClick={() => router.push("/register")} style={"w-81"}/>
+                    <SecondaryButton text={"Sign in"} onClick={() => router.push("/register")} style={"w-81"}/>
                 </div>
             </div>
         </div>

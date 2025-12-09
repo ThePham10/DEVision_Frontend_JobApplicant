@@ -1,6 +1,9 @@
 // Custom hook for form state and validation
 
 import { useState, useCallback } from "react";
+import { GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
+import { auth } from "@/firebase/firebaseConfig";
+
 import { 
     validateField, 
     validateForm, 
@@ -38,6 +41,7 @@ type UseFormReturn = {
     };
     getFieldError: (name: string) => string | undefined;
     isFieldTouched: (name: string) => boolean;
+    handleGoogle: (e?: React.FormEvent) => Promise<UserCredential>;
 };
 
 export function useForm({
@@ -180,6 +184,16 @@ export function useForm({
         [touched]
     );
 
+    const handleGoogle = useCallback(
+        async (e?: React.FormEvent) => { 
+            e?.preventDefault();
+            const provider = new GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: "select_account" });
+            return signInWithPopup(auth, provider);
+        },
+        [auth]
+    );
+
     return {
         values,
         errors,
@@ -195,5 +209,7 @@ export function useForm({
         getFieldProps,
         getFieldError,
         isFieldTouched,
+        handleGoogle,
     };
 }
+
