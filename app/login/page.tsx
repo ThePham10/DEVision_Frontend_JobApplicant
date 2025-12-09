@@ -5,6 +5,7 @@ import {useRouter} from "next/navigation";
 import {HeadlessForm, loginValidations, FormValues} from "@/components/form/Form";
 import SecondaryButton from "@/components/secondaryButton";
 import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
+import { signIn } from "next-auth/react";
 
 export default function Page() {
     const router = useRouter();
@@ -50,7 +51,8 @@ export default function Page() {
                     <div className="flex-grow border-t border-gray-300"></div>
                 </div>
 
-                <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50">
+                <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50"
+                        onClick={() => signIn("google", {callbackUrl: "/dashboard"})}>
                     <div className={"flex my-1"}>
                         <Image src="/google_logo.svg" alt="Google logo" width={20} height={20} className="w-5 h-5 mr-2"/>
                         Continue with Google
