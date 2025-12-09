@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import {useRouter} from "next/navigation";
-import {HeadlessForm} from "@/components/form/Form";
+import {HeadlessForm, loginValidations, FormValues} from "@/components/form/Form";
 import SecondaryButton from "@/components/secondaryButton";
 import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
 
@@ -17,18 +17,23 @@ export default function Page() {
                 title: "Email",
                 name: "email",
                 type: "email",
-                placeholder: "test@gmail.com"
+                placeholder: "test@gmail.com",
+                validation: loginValidations.email,
             },
             {
                 title: "Password",
                 name: "password",
                 type: "password",
-                placeholder: "***************"
+                placeholder: "***************",
+                validation: loginValidations.password,
             }
         ],
-        buttonText: "Login  ",
+        buttonText: "Login",
     };
 
+    const handleSubmit = (values: FormValues) => {
+        console.log("Login successfully with values:", values);
+    };
     return (
         <div className="flex flex-col min-h-screen items-center bg-[#f1f5f9]/30 p-30 gap-8">
             <DEVisionLogoButton />
@@ -37,7 +42,7 @@ export default function Page() {
                     {formConfig.formTitle}
                 </div>
 
-                <HeadlessForm config={formConfig} onSubmit={() => console.log("Login submitted")}/>
+                <HeadlessForm config={formConfig} onSubmit={handleSubmit}/>
 
                 <div className="flex items-center my-6">
                     <div className="flex-grow border-t border-gray-300"></div>
@@ -56,7 +61,7 @@ export default function Page() {
                     <div className="font-[Inter] text-[#65758B] mb-4">
                         Do not have an account
                     </div>
-                    <SecondaryButton text={"Sign in"} onClick={() => router.push("/register")} style={"w-81"}/>
+                    <SecondaryButton text={"Sign up"} onClick={() => router.push("/register")} style={"w-81"}/>
                 </div>
             </div>
         </div>

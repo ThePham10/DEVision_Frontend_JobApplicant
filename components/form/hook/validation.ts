@@ -190,7 +190,7 @@ export function hasErrors(errors: ValidationErrors): boolean {
 }
 
 // ============================================================
-// PRE-BUILT VALIDATION CONFIGURATIONS
+// COMMON INPUT VALIDATION CONFIGURATIONS
 // ============================================================
 export const commonValidations = {
     email: {
@@ -217,3 +217,14 @@ export const commonValidations = {
     } as FieldValidation,
 };
 
+export const loginValidations = {
+    email: {
+        required: true,
+        requiredMessage: "Email is required",
+    } as FieldValidation,
+
+    password: {
+        required: true,
+        requiredMessage: "Password is required",
+    } as FieldValidation,
+};

@@ -207,7 +207,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
 // Re-export for convenience
 export { useForm } from "./hook/useForm";
 export type { FormValues } from "./hook/useForm";
-export { commonValidations, patterns } from "./hook/validation";
+export { commonValidations, loginValidations, patterns } from "./hook/validation";
 export type { FieldValidation, ValidationRule } from "./hook/validation";
 export { getDialCodeFromCache, getCachedCountries } from "@/components/country-drop-down-menu/api/countryDropDownMenuService";
 export type { Country } from "@/components/country-drop-down-menu/api/countryDropDownMenuService";
