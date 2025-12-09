@@ -3,6 +3,7 @@
 import Image from "next/image"
 import {HeadlessForm, commonValidations, FormValues} from "@/components/form/Form";
 import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
+import { signIn } from "next-auth/react";
 
 export default function Page() {
     const formConfig = {
@@ -85,7 +86,8 @@ export default function Page() {
                     Join DEVision to start your tech career journey
                 </div>
 
-                <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50">
+                <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50"
+                        onClick={() => signIn("google", {callbackUrl: "/dashboard"})}>
                     <div className={"flex my-1"}>
                         <Image src="/google_logo.svg" 
                                 alt="Google logo" 
