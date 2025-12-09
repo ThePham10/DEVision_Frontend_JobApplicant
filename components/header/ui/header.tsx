@@ -1,12 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import Button from "@/components/button";
 import SecondaryButton from "@/components/secondaryButton";
 import { useRouter } from "next/navigation";
+import { googleAuthService } from "@/services/googleAuthService";
 
 export default function Header() {
     const router = useRouter();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        // Check if user is logged in
+        const token = localStorage.getItem("idToken");
+        setIsLoggedIn(!!token);
+    }, []);
+
+    const handleSignOut = async () => {
+        try {
+            console.log("Signing out...");
+            await googleAuthService.signOut();
+            localStorage.removeItem("idToken");
+            setIsLoggedIn(false);
+            console.log("Signed out successfully");
+            router.push("/");
+        } catch (error) {
+            console.error("Sign out failed:", error);
+        }
+    };
 
     return (
         <header>
@@ -28,8 +50,14 @@ export default function Header() {
                 </button>
 
                 <div className="flex items-center justify-end gap-2 sm:gap-3 lg:flex-auto lg:mr-[162px]">
-                    <SecondaryButton text={"Sign in"} onClick={() => router.push("/login")} />
-                    <Button text={"Get Started"} onClick={() => router.push("/register")} />
+                    {isLoggedIn ? (
+                        <Button text={"Sign Out"} onClick={handleSignOut} />
+                    ) : (
+                        <>
+                            <SecondaryButton text={"Sign in"} onClick={() => router.push("/login")} />
+                            <Button text={"Get Started"} onClick={() => router.push("/register")} />
+                        </>
+                    )}
                 </div>
             </div>
         </header>
