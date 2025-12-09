@@ -1,4 +1,5 @@
 // API layer for fetching countries with dial codes
+import { countriesApi } from "@/utils/httpHelper";
 
 export type Country = {
     value: string;      // Country code (e.g., "VN")
@@ -15,19 +16,12 @@ type RawCountryData = {
     };
 };
 
-const API_URL = "https://restcountries.com/v3.1/all?fields=name,cca2,idd";
-
 // Store countries in memory for dial code lookup
 let countriesCache: Country[] = [];
 
 export async function fetchCountries(): Promise<Country[]> {
-    const response = await fetch(API_URL);
-    
-    if (!response.ok) {
-        throw new Error(`Failed to fetch countries: ${response.statusText}`);
-    }
-    
-    const data: RawCountryData[] = await response.json();
+    // Using httpHelper's countriesApi for centralized API management
+    const data = await countriesApi.get<RawCountryData[]>("/all?fields=name,cca2,idd");
     
     const countries = data
         .map((country) => {

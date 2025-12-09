@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 
-export default function SecondaryButton({ text, onClick, style }: { text: string; onClick: any; style?: string }) {
+export default function SecondaryButton({ text, onClick, style }: { text: string; onClick: React.MouseEventHandler<HTMLButtonElement>; style?: string }) {
     return (
         <motion.button
             className={`bg-white border border-solid border-[#e1e7ef] hover:border-[#2463eb] hover:text-[#2463eb] text-[#0f1729] px-6 py-3 rounded-md ${style}`}
