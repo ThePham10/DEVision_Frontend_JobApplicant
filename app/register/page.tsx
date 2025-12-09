@@ -4,8 +4,11 @@ import Image from "next/image"
 import {HeadlessForm, commonValidations, FormValues} from "@/components/form/Form";
 import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
 import { googleAuthService } from "@/services/googleAuthService";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Page() {
+    const { setUser } = useAuthStore();
+
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
         children: [
@@ -78,6 +81,7 @@ export default function Page() {
         try {
             const user = await googleAuthService.signInWithGoogle();
             console.log("Registered:", user);
+            setUser(user);
             window.location.href = "/dashboard";
         } catch (error) {
             console.error("Google sign-in failed:", error);

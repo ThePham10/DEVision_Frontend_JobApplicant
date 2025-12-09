@@ -2,7 +2,7 @@
 
 import React from "react";
 import {useRouter} from "next/navigation";
-import {HeadlessForm} from "@/components/form/Form";
+import {HeadlessForm, FormValues} from "@/components/form/Form";
 import SecondaryButton from "@/components/secondaryButton";
 import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
 import { googleAuthService } from "@/services/googleAuthService";
@@ -16,15 +16,17 @@ export default function Page() {
 
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
-        formTitle: "Login to DEVision",
+        //formTitle: "Login to DEVision",
         children: [
             {
                 title: "Email",
+                name: "email",
                 type: "email",
                 placeholder: "test@gmail.com"
             },
             {
                 title: "Password",
+                name: "password",
                 type: "password",
                 placeholder: "***************"
             }
@@ -69,7 +71,7 @@ export default function Page() {
             <DEVisionLogoButton />
             <div className="bg-white rounded-lg shadow-md p-7 mx-150 min-w-[700px]">
                 <div className="flex justify-center font-[Inter] text-3xl font-bold mb-4">
-                    {formConfig.formTitle}
+                    Login to DEVision
                 </div>
 
                 <HeadlessForm config={formConfig} onSubmit={() => console.log("Login submitted")}/>
