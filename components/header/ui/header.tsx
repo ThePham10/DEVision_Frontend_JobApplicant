@@ -1,35 +1,22 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Button from "@/components/button";
 import SecondaryButton from "@/components/secondaryButton";
 import { useRouter } from "next/navigation";
 import { googleAuthService } from "@/services/googleAuthService";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Header() {
     const router = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    useEffect(() => {
-        const token = localStorage.getItem("idToken");
-        setIsLoggedIn(!!token);
-
-        const handleStorage = () => {
-            const latestToken = localStorage.getItem("idToken");
-            setIsLoggedIn(!!latestToken);
-        };
-
-        window.addEventListener("storage", handleStorage);
-        return () => window.removeEventListener("storage", handleStorage);
-    }, []);
+    const { isAuthenticated, clearUser } = useAuthStore();
 
     const handleSignOut = async () => {
         try {
             await googleAuthService.signOut();
-            localStorage.removeItem("idToken");
+            clearUser();
             console.log("Signed out successfully");
-            setIsLoggedIn(false);
             router.push("/");
         } catch (error) {
             console.error("Sign out failed:", error);
@@ -58,7 +45,7 @@ export default function Header() {
                 </button>
 
                 <div className="flex items-center justify-end gap-2 sm:gap-3 lg:flex-auto lg:mr-[162px]">
-                    {isLoggedIn ? (
+                    {isAuthenticated ? (
                         <Button text="Sign Out" onClick={handleSignOut} />
                     ) : (
                         <>

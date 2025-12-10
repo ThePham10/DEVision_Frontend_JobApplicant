@@ -2,17 +2,18 @@
 
 import React from "react";
 import {useRouter} from "next/navigation";
-import {HeadlessForm, FormValues} from "@/components/form/Form";
+import {HeadlessForm, loginValidations, FormValues} from "@/components/form/Form";
 import SecondaryButton from "@/components/secondaryButton";
 import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
 import { googleAuthService } from "@/services/googleAuthService";
 import { useState } from "react";
 import Image from "next/image";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Page() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { setUser } = useAuthStore();
+
 
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
@@ -22,13 +23,16 @@ export default function Page() {
                 title: "Email",
                 name: "email",
                 type: "email",
-                placeholder: "test@gmail.com"
+                placeholder: "test@gmail.com",
+                validation: loginValidations.email,
+                
             },
             {
                 title: "Password",
                 name: "password",
                 type: "password",
-                placeholder: "***************"
+                placeholder: "***************",
+                validation: loginValidations.password,
             }
         ],
         buttonText: "Login  ",
@@ -39,31 +43,14 @@ export default function Page() {
     };
 
     const handleGoogleSignIn = async () => {
-        setIsLoading(true);
-        setError(null);
         try {
             const user = await googleAuthService.signInWithGoogle();
-            localStorage.setItem("idToken", user.idToken);
-            console.log("Token saved to localStorage");
+            setUser(user);
+            console.log("Login:", user);
             router.push("/dashboard");
-        } catch (err: any) {
+        } catch (err) {
             console.error("Sign-in error:", err);
-            setError(err.message || "Failed to sign in");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleSignOut = async () => {
-        try {
-            console.log("Signing out...");
-            await googleAuthService.signOut();
-            localStorage.removeItem("idToken");
-            console.log("Signed out successfully");
-            router.push("/");
-        } catch (error) {
-            console.error("Sign out failed:", error);
-        }
+        } 
     };
 
     return (
@@ -74,7 +61,7 @@ export default function Page() {
                     Login to DEVision
                 </div>
 
-                <HeadlessForm config={formConfig} onSubmit={() => console.log("Login submitted")}/>
+                <HeadlessForm config={formConfig} onSubmit={handleSubmit}/>
 
                 <div className="flex items-center my-6">
                     <div className="flex-grow border-t border-gray-300"></div>
@@ -82,15 +69,12 @@ export default function Page() {
                     <div className="flex-grow border-t border-gray-300"></div>
                 </div>
 
-                {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
                 <button 
                     className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"
-                    onClick={handleGoogleSignIn}
-                    disabled={isLoading}>
+                    onClick={handleGoogleSignIn}>
                     <div className={"flex my-1"}>
                         <Image src="/google_logo.svg" alt="Google logo" width={20} height={20} className="w-5 h-5 mr-2"/>
-                        {isLoading ? "Signing in..." : "Continue with Google"}
+                        {"Continue with Google"}
                     </div>
                 </button>
 

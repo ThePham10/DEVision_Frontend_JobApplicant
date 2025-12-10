@@ -28,10 +28,6 @@ export const googleAuthService = {
                 idToken: idToken,
             };
 
-            console.log("User Email:", authUser.email);
-            console.log("Name:", authUser.displayName);
-            console.log("ID Token:", authUser.idToken);
-
             return authUser;
         } catch (error) {
             console.error("Google sign-in error:", error);
