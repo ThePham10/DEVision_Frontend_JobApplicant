@@ -4,25 +4,24 @@ import Image from "next/image";
 import { useAuthStore } from "@/store/authStore";
 import { googleAuthService } from "@/services/googleAuthService";
 import { useRouter } from "next/navigation";
-import registerUserWithGoogleAccount from "./service/RegisterWithGoogleButtonService";
-import { registerUserWithGoogleAccountData } from "@/components/register-form/types/types";
+import authUserWithGoogleAccount from "./service/ContinueWithGoogleButtonService";
+import { authUserWithGoogleAccountData } from "./type/types";
 
-export const RegisterWithGoogleButton = () => {
+export const ContinueWithGoogleButton = () => {
     const {setUser} = useAuthStore();
     const router = useRouter();
 
-    const handleRegisterWithGoogle = async () => {
+    const handleAuthWithGoogle = async () => {
             try {
                 const idToken = await googleAuthService.signInWithGoogle();
                 
-
-                const data: registerUserWithGoogleAccountData = {
+                const data: authUserWithGoogleAccountData = {
                     idToken: idToken
                 }
-                const response = await registerUserWithGoogleAccount(data);
+                const response = await authUserWithGoogleAccount(data);
                 
                 if (response.status === 201) {
-                    console.log("Registration successful!");
+                    console.log("Authentication successful!");
                     setUser(response.data);
                     router.push("/dashboard");
                 }
@@ -35,7 +34,7 @@ export const RegisterWithGoogleButton = () => {
 
     return (
         <button className="w-full bg-white border border-[#2463EB] rounded-md text-[#2463EB] py-2 px-4 mb-6 flex items-center justify-center hover:bg-gray-50"
-                onClick={handleRegisterWithGoogle}>
+                onClick={handleAuthWithGoogle}>
             <div className={"flex my-1"}>
                 <Image src="/google_logo.svg" 
                         alt="Google logo" 

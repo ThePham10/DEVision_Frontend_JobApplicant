@@ -1,11 +1,6 @@
-type RegisterData = {
-  name: string;
+type LoginData = {
   email: string;
   password: string;
-  country: string;
-  phone?: string;
-  street?: string;
-  city?: string;
 }
 
 type UserData = {
@@ -17,4 +12,4 @@ type UserData = {
     emailVerified: boolean;
 }
 
-export type { RegisterData, UserData }
+export type { LoginData, UserData }

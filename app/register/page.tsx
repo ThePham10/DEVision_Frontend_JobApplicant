@@ -1,6 +1,6 @@
 import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
 import { RegisterForm } from "@/components/register-form/RegisterForm";
-import { RegisterWithGoogleButton } from "@/components/register-form/RegisterWithGoogleButton/RegisterWithGoogleButton";
+import { ContinueWithGoogleButton } from "@/components/ContinueWithGoogleButton/ContinueWithGoogleButton";
 import { RegisterRibbon } from "@/components/register-form/RegisterRibbon/RegisterRibbon";
 
 export default function Page() {
@@ -22,7 +22,7 @@ export default function Page() {
                     Join DEVision to start your tech career journey
                 </div>
 
-                <RegisterWithGoogleButton/>
+                <ContinueWithGoogleButton/>
 
                 <div className="flex items-center my-6">
                     <div className="flex-grow border-t border-gray-300"></div>

@@ -18,13 +18,4 @@ export const googleAuthService = {
             throw error;
         }
     },
-
-    async signOut(): Promise<void> {
-        try {
-            await auth.signOut();
-        } catch (error) {
-            console.error("Sign out error:", error);
-            throw error;
-        }
-    },
 };
