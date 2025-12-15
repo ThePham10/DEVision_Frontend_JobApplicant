@@ -21,9 +21,9 @@ let countriesCache: Country[] = [];
 
 export async function fetchCountries(): Promise<Country[]> {
     // Using httpHelper's countriesApi for centralized API management
-    const data = await countriesApi.get<RawCountryData[]>("/all?fields=name,cca2,idd");
+    const response = await countriesApi.get<RawCountryData[]>("/all?fields=name,cca2,idd");
     
-    const countries = data
+    const countries = response.data
         .map((country) => {
             // Build dial code from idd.root + first suffix
             let dialCode = "";

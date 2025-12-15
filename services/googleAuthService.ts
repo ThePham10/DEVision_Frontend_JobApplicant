@@ -1,16 +1,8 @@
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
 
-export interface AuthUser {
-    uid: string;
-    email: string | null;
-    displayName: string | null;
-    photoURL: string | null;
-    idToken: string;
-}
-
 export const googleAuthService = {
-    async signInWithGoogle(): Promise<AuthUser> {
+    async signInWithGoogle(): Promise<string> {
         try {
             const provider = new GoogleAuthProvider();
             provider.setCustomParameters({ prompt: "select_account" });
@@ -20,15 +12,7 @@ export const googleAuthService = {
             // Get the ID token
             const idToken = await user.getIdToken();
 
-            const authUser = {
-                uid: user.uid,
-                email: user.email,
-                displayName: user.displayName,
-                photoURL: user.photoURL,
-                idToken: idToken,
-            };
-
-            return authUser;
+            return idToken;
         } catch (error) {
             console.error("Google sign-in error:", error);
             throw error;

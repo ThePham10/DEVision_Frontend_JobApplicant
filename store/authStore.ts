@@ -1,6 +1,14 @@
-import { AuthUser } from "@/services/googleAuthService";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
+type AuthUser = {
+    id: string,
+    email: string,
+    name: string,
+    role: string,
+    country: string,
+    emailVerified: boolean,
+}
 
 interface AuthStore {
     user: AuthUser | null;

@@ -191,7 +191,7 @@ export function useForm({
             provider.setCustomParameters({ prompt: "select_account" });
             return signInWithPopup(auth, provider);
         },
-        [auth]
+        []
     );
 
     return {

@@ -2,7 +2,7 @@
 
 import Footer from "@/components/footer/ui/footer";
 import Header from "@/components/header/ui/header";
-import ServiceCard from "@/components/serviceCard/ui/serviceCard";
+import ServiceCard from "@/components/serviceCard";
 import Button from "@/components/button";
 import SecondaryButton from "@/components/secondaryButton";
 import { useRouter } from "next/navigation";

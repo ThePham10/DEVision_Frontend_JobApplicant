@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
 
-export default function Button({ text, onClick, style}: { text: string; onClick: React.MouseEventHandler<HTMLButtonElement>; style? : string}) {
+export default function Button({ text, onClick, style, type = "submit" }: { text: string; onClick?: React.MouseEventHandler<HTMLButtonElement>; style?: string; type?: "submit" | "button" | "reset" }) {
     return (
         <motion.button
+            type={type}
             className={`bg-[#2463eb] hover:bg-[#2362ebe6] text-white px-6 py-3 rounded-md ${style}`}
             onClick={onClick}
             whileHover={{ scale: 1.05, boxShadow: "..." }}

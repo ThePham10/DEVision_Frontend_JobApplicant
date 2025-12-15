@@ -145,7 +145,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                             name={child.name}
                             placeholder={selectedDialCode ? "Enter phone number" : child.placeholder}
                             value={selectedDialCode ? extractLocalNumber(values[child.name] || "") : (values[child.name] || "")}
-                            onChange={(e) => handlePhoneChange(selectedDialCode ? `${selectedDialCode} ${e.target.value}` : e.target.value)}
+                            onChange={(e) => handlePhoneChange(e.target.value)}
                             onBlur={() => handleBlur(child.name)}
                             className={`
                                 flex-1 h-[40px] px-3 py-2
@@ -195,8 +195,8 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                     renderField(child, index)
                 )}
                 <Button 
+                    type = "submit"
                     text={isSubmitting ? "Submitting..." : config.buttonText} 
-                    onClick={() => handleSubmit()} 
                     style={"w-full"} 
                 />
             </form>

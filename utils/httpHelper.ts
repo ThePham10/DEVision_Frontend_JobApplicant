@@ -1,9 +1,15 @@
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 interface HttpError extends Error {
   status: number;
   data?: unknown;
+}
+
+// Response type that includes status
+export interface ApiResponse<T> {
+  status: number;
+  data: T;
 }
 
 class HttpHelper {
@@ -16,11 +22,12 @@ class HttpHelper {
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
-  ): Promise<T> {
+  ): Promise<ApiResponse<T>> {
     const url = `${this.baseUrl}${endpoint}`;
 
     const config: RequestInit = {
       ...options,
+      credentials: 'include', // Allow cookies to be sent/received
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
@@ -31,7 +38,7 @@ class HttpHelper {
 
     // Handle empty responses (204 No Content)
     if (response.status === 204) {
-      return {} as T;
+      return { status: response.status, data: {} as T };
     }
 
     const data = await response.json();
@@ -45,15 +52,15 @@ class HttpHelper {
       throw error;
     }
 
-    return data;
+    return { status: response.status, data };
   }
 
   /**
    * GET request
    * @param endpoint - API endpoint (e.g., '/users')
-   * @returns Promise with response data
+   * @returns Promise with status and response data
    */
-  async get<T>(endpoint: string): Promise<T> {
+  async get<T>(endpoint: string): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: "GET" });
   }
 
@@ -61,9 +68,9 @@ class HttpHelper {
    * POST request
    * @param endpoint - API endpoint (e.g., '/auth/login')
    * @param data - Request body
-   * @returns Promise with response data
+   * @returns Promise with status and response data
    */
-  async post<T>(endpoint: string, data: unknown): Promise<T> {
+  async post<T>(endpoint: string, data: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: "POST",
       body: JSON.stringify(data),
@@ -74,9 +81,9 @@ class HttpHelper {
    * PUT request
    * @param endpoint - API endpoint (e.g., '/users/123')
    * @param data - Request body
-   * @returns Promise with response data
+   * @returns Promise with status and response data
    */
-  async put<T>(endpoint: string, data: unknown): Promise<T> {
+  async put<T>(endpoint: string, data: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: "PUT",
       body: JSON.stringify(data),
@@ -87,9 +94,9 @@ class HttpHelper {
    * PATCH request
    * @param endpoint - API endpoint (e.g., '/users/123')
    * @param data - Partial request body
-   * @returns Promise with response data
+   * @returns Promise with status and response data
    */
-  async patch<T>(endpoint: string, data: unknown): Promise<T> {
+  async patch<T>(endpoint: string, data: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: "PATCH",
       body: JSON.stringify(data),
@@ -99,9 +106,9 @@ class HttpHelper {
   /**
    * DELETE request
    * @param endpoint - API endpoint (e.g., '/users/123')
-   * @returns Promise with response data
+   * @returns Promise with status and response data
    */
-  async delete<T>(endpoint: string): Promise<T> {
+  async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: "DELETE" });
   }
 }
