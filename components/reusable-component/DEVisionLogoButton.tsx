@@ -3,13 +3,23 @@
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import { motion } from "motion/react";
+import { useAuthStore } from "@/store/authStore";
 
 export const DEVisionLogoButton = () => {
     const router = useRouter();
+    const { isAuthenticated } = useAuthStore();
+
+    const handleOnClick = () => {
+        if (isAuthenticated) {
+            router.push('/jobs');
+        } else {
+            router.push('/');
+        }
+    }
 
     return (
         <motion.button className="flex items-center"
-                onClick={() => router.push('/')}
+                onClick={handleOnClick}
                 whileHover={{scale: 1.05} }
                 whileTap = {{scale: 0.95}}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}

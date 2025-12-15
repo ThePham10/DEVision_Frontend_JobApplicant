@@ -5,9 +5,10 @@ import { useCountryDropdown, Country } from "./hook/useCountryDropdown";
 type CountryDropdownProps = {
     title: string;
     onChange?: (country: Country) => void;
+    errorMessage?: string;
 };
 
-export default function CountryDropdown({ title, onChange }: CountryDropdownProps) {
+export default function CountryDropdown({ title, onChange, errorMessage }: CountryDropdownProps) {
     const {
         loading,
         isOpen,
@@ -121,6 +122,11 @@ export default function CountryDropdown({ title, onChange }: CountryDropdownProp
                         </ul>
                     </div>
                 )}
+                {errorMessage && (
+                <p className={`mt-1 text-sm border-red-500 focus:border-red-500 focus:ring-red-500/20 text-red-500`}>
+                    {errorMessage}
+                </p>
+            )}
             </div>
         </div>
     );

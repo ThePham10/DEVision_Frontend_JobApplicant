@@ -1,13 +1,13 @@
 import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
 import { RegisterForm } from "@/components/register-form/RegisterForm";
 import { ContinueWithGoogleButton } from "@/components/ContinueWithGoogleButton/ContinueWithGoogleButton";
-import { RegisterRibbon } from "@/components/register-form/RegisterRibbon/RegisterRibbon";
+import { Ribbon } from "@/components/reusable-component/ribbon/Ribbon";
 
 export default function Page() {
     return (
         <div className="relative flex flex-col min-h-screen items-center bg-[#f1f5f9]/30 p-10 gap-8 overflow-hidden">
             {/* Animated ribbon background */}
-            <RegisterRibbon />
+            <Ribbon words={["REGISTER", "*", "SIGN UP", "*", "JOIN US", "*", "CREATE ACCOUNT", "*", "GET STARTED"]} />
             
             {/* Content above ribbon */}
             <div className="z-10">
