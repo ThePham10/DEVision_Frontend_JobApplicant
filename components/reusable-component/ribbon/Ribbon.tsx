@@ -2,15 +2,15 @@
 
 import { motion } from "framer-motion";
 
-type RegisterRibbonProps = {
-    words?: string[];
+type RibbonProps = {
+    words: string[];
     speed?: number; // Duration in seconds for one complete loop
 };
 
-export const RegisterRibbon = ({ 
-    words = ["REGISTER", "*", "SIGN UP", "*", "JOIN US", "*", "CREATE ACCOUNT", "*", "GET STARTED"],
+export const Ribbon = ({ 
+    words,
     speed = 15 
-}: RegisterRibbonProps) => {
+}: RibbonProps) => {
     // Duplicate words to create seamless loop
     const repeatedWords = [...words, ...words, ...words, ...words, ...words, ...words];
 

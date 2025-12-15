@@ -96,27 +96,34 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
     const renderField = (child: FormChild, index: number) => {
         const fieldError = getFieldError(child.name);
 
+        // Get colSpan class for grid layout
+        const colSpanClass = child.colSpan ? `col-span-${child.colSpan}` : "";
+
         if (child.type === "country") {
             return (
-                <CountryDropdown 
-                    key={index} 
-                    title={child.title}
-                    onChange={(country) => handleCountryChange(country)}
-                />
+                <div key={index} className={colSpanClass}>
+                    <CountryDropdown 
+                        title={child.title}
+                        onChange={(country) => handleCountryChange(country)}
+                        errorMessage={fieldError}
+                    />
+                </div>
             );
         }
 
         // Generic select/dropdown field
         if (child.type === "select" && child.options) {
             return (
-                <DropDownMenu title = {child.title}
-                name = {child.name}
-                placeholder = {child.placeholder}
-                value = {values[child.name] || ""}
-                onChange = {(e) => handleChange(child.name, e.target.value)}
-                onBlur = {() => handleBlur(child.name)}
-                options = {child.options}
-                onClear = {() => handleChange(child.name, "")} />
+                <DropDownMenu 
+                    key={index}
+                    title = {child.title}
+                    name = {child.name}
+                    placeholder = {child.placeholder}
+                    value = {values[child.name] || ""}
+                    onChange = {(e) => handleChange(child.name, e.target.value)}
+                    onBlur = {() => handleBlur(child.name)}
+                    options = {child.options}
+                    onClear = {() => handleChange(child.name, "")} />
             );
         }
 
@@ -124,6 +131,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         if (child.type === "range") {
             return (
                 <SalarySlider 
+                    key={index}
                     title = {child.title}
                     name = {child.name}
                     min = {child.min}
@@ -139,6 +147,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         if (child.type === "tel" && child.name === phoneFieldName) {
             return (
                 <PhoneNumberInputField 
+                    key={index}
                     title = {child.title}
                     name = {child.name}
                     selectedDialCode = {selectedDialCode}
@@ -152,18 +161,20 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         }
 
         return (
-            <Input
-                key={index}
-                title={child.title}
-                name={child.name}
-                type={child.type}
-                placeholder={child.placeholder}
-                value={values[child.name] || ""}
-                onChange={(e) => handleChange(child.name, e.target.value)}
-                onBlur={() => handleBlur(child.name)}
-                errorMessage={fieldError}
-                state={fieldError ? "error" : touched[child.name] && !fieldError ? "success" : "default"}
-            />
+            <div key={index} className={colSpanClass}>
+                <Input
+                    key={index}
+                    title={child.title}
+                    name={child.name}
+                    type={child.type}
+                    placeholder={child.placeholder}
+                    value={values[child.name] || ""}
+                    onChange={(e) => handleChange(child.name, e.target.value)}
+                    onBlur={() => handleBlur(child.name)}
+                    errorMessage={fieldError}
+                    state={fieldError ? "error" : touched[child.name] && !fieldError ? "success" : "default"}
+                />
+            </div>
         );
     };
 

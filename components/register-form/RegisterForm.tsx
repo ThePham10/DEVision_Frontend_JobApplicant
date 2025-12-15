@@ -5,12 +5,13 @@ import { FormValues } from "@/components/headless-form/types/types";
 import registerUser from "./service/RegisterFormService";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import type { FormConfig } from "@/components/headless-form/types/types"
 
 export const RegisterForm = () => {
     const { setUser } = useAuthStore();
     const router = useRouter();
 
-    const formConfig = {
+    const formConfig : FormConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
         children: [
             {
@@ -19,6 +20,7 @@ export const RegisterForm = () => {
                 type: "text",
                 placeholder: "John Doe",
                 validation: commonValidations.name,
+                colSpan: 2
             },
             {
                 title: "Email *",
@@ -26,6 +28,7 @@ export const RegisterForm = () => {
                 type: "email",
                 placeholder: "test@gmail.com",
                 validation: commonValidations.email,
+                colSpan: 2
             },
             {
                 title: "Password *",
@@ -33,6 +36,7 @@ export const RegisterForm = () => {
                 type: "password",
                 placeholder: "***************",
                 validation: commonValidations.password,
+                colSpan: 1
             },
             {
                 title: "Confirm Password *",
@@ -45,6 +49,7 @@ export const RegisterForm = () => {
                     match: "password",
                     matchMessage: "Passwords do not match",
                 },
+                colSpan: 1
             },
             {
                 title: "Country *",
@@ -55,6 +60,7 @@ export const RegisterForm = () => {
                     required: true,
                     requiredMessage: "Please select a country",
                 },
+                colSpan: 1
             },
             {
                 title: "Phone Number",
@@ -62,21 +68,30 @@ export const RegisterForm = () => {
                 type: "tel",
                 placeholder: "+84 912345678",
                 validation: commonValidations.phone,
+                colSpan: 1
             },
             {
                 title: "Street name/number",
                 name: "street",
                 type: "text",
                 placeholder: "123 Main St",
+                colSpan: 1
             },
             {
                 title: "City",
                 name: "city",
                 type: "text",
                 placeholder: "Ho Chi Minh City",
+                colSpan: 1
             },
         ],
         buttonText: "Register",
+        layout: {
+            type: "grid",
+            columns: 2,
+            gap: "6",
+        },
+        buttonClassName: "col-span-2"
     };
 
     const handleSubmit = async (values: FormValues) => {
