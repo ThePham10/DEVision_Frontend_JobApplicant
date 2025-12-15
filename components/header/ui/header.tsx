@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import Button from "@/components/button";
 import SecondaryButton from "@/components/secondaryButton";
 import { useRouter } from "next/navigation";
-import { googleAuthService } from "@/services/googleAuthService";
 import { useAuthStore } from "@/store/authStore";
+import logoutUser from "../service/HeaderService";
 
 export default function Header() {
     const router = useRouter();
@@ -14,12 +13,15 @@ export default function Header() {
 
     const handleSignOut = async () => {
         try {
-            await googleAuthService.signOut();
-            clearUser();
-            console.log("Signed out successfully");
-            router.push("/");
+            const response = await logoutUser();
+            if (response.status === 201) {
+                console.log("Logout successful!");
+                clearUser();
+                router.push("/");
+            }
+
         } catch (error) {
-            console.error("Sign out failed:", error);
+            console.error("Logout failed:", error);
         }
     };
     
