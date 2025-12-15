@@ -7,13 +7,6 @@ type CountryDropdownProps = {
     onChange?: (country: Country) => void;
 };
 
-// Helper function to convert country code to flag emoji
-const getCountryFlag = (countryCode: string): string => {
-    return countryCode
-        .toUpperCase()
-        .replace(/./g, char => String.fromCodePoint(127397 + char.charCodeAt(0)));
-};
-
 export default function CountryDropdown({ title, onChange }: CountryDropdownProps) {
     const {
         loading,
@@ -118,16 +111,10 @@ export default function CountryDropdown({ title, onChange }: CountryDropdownProp
                                             ${idx !== filteredCountries.length - 1 ? 'border-b border-[#F1F5F9]' : ''}
                                         `}
                                     >
-                                        {/* Country Flag Emoji */}
-                                        <span className="text-lg">
-                                            {getCountryFlag(country.value)}
+                                        <span className="text-sm">
+                                            {country.value}
                                         </span>
                                         <span className="truncate">{country.label}</span>
-                                        {selectedCountry?.value === country.value && (
-                                            <svg className="w-4 h-4 ml-auto text-[#6366F1]" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                        )}
                                     </li>
                                 ))
                             )}

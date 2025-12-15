@@ -1,48 +1,17 @@
 // Custom hook for form state and validation
 
 import { useState, useCallback } from "react";
-import { GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
+import { ValidationErrors, FormValues, UseFormOptions, UseFormReturn } from "../types/types"
 
 import { 
     validateField, 
     validateForm, 
-    hasErrors,
-    FieldValidation, 
-    ValidationErrors 
+    hasErrors, 
 } from "./validation";
 
-export type FormValues = Record<string, string>;
 
-type UseFormOptions = {
-    initialValues?: FormValues;
-    validations?: Record<string, FieldValidation>;
-    onSubmit?: (values: FormValues) => void | Promise<void>;
-    validateOnChange?: boolean;
-    validateOnBlur?: boolean;
-};
-
-type UseFormReturn = {
-    values: FormValues;
-    errors: ValidationErrors;
-    touched: Record<string, boolean>;
-    isSubmitting: boolean;
-    isValid: boolean;
-    handleChange: (name: string, value: string) => void;
-    handleBlur: (name: string) => void;
-    handleSubmit: (e?: React.FormEvent) => void;
-    setFieldValue: (name: string, value: string) => void;
-    setFieldError: (name: string, error: string) => void;
-    resetForm: () => void;
-    getFieldProps: (name: string) => {
-        value: string;
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-        onBlur: () => void;
-    };
-    getFieldError: (name: string) => string | undefined;
-    isFieldTouched: (name: string) => boolean;
-    handleGoogle: (e?: React.FormEvent) => Promise<UserCredential>;
-};
 
 export function useForm({
     initialValues = {},

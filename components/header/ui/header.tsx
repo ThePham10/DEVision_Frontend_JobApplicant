@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Button from "@/components/button";
-import SecondaryButton from "@/components/secondaryButton";
+import Button from "@/components/reusable-component/button";
+import SecondaryButton from "@/components/reusable-component/secondaryButton";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import logoutUser from "../service/HeaderService";
