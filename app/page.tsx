@@ -2,9 +2,9 @@
 
 import Footer from "@/components/footer/ui/footer";
 import Header from "@/components/header/ui/header";
-import ServiceCard from "@/components/serviceCard";
-import Button from "@/components/button";
-import SecondaryButton from "@/components/secondaryButton";
+import ServiceCard from "@/components/reusable-component/serviceCard";
+import Button from "@/components/reusable-component/button";
+import SecondaryButton from "@/components/reusable-component/secondaryButton";
 import { useRouter } from "next/navigation";
 import { motion, useInView } from "motion/react";
 import { useMainPageScroll } from "@/hooks/useMainPageScroll";
@@ -101,8 +101,8 @@ export default function Page() {
                         DEVision connects Computer Science professionals with their ideal career opportunities.
                     </div>
                     <div className="relative z-10 flex flex-col sm:flex-row mt-4 sm:mt-7 gap-3 sm:gap-4 font-[Inter] w-full sm:w-auto px-4 sm:px-0">
-                        <Button text={"Start Your Journey"} onClick={() => router.push("/register")} />
-                        <SecondaryButton text={"Browse Jobs"} onClick={() => console.log("Hello world")} />
+                        <Button text={"Start Your Journey"} destination="/register" />
+                        <SecondaryButton text={"Browse Jobs"} destination="/jobs" />
                     </div>
                 </div>
             </DoodleIconsSection>

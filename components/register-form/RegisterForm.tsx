@@ -1,6 +1,7 @@
 "use client";
 
-import { HeadlessForm, commonValidations, FormValues } from "@/components/form/Form";
+import { HeadlessForm, commonValidations } from "@/components/headless-form/Form";
+import { FormValues } from "@/components/headless-form/types/types";
 import registerUser from "./service/RegisterFormService";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";

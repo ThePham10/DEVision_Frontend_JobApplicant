@@ -2,9 +2,9 @@
 
 import React from "react";
 import {useRouter} from "next/navigation";
-import {HeadlessForm, loginValidations, FormValues} from "@/components/form/Form";
-import SecondaryButton from "@/components/secondaryButton";
-import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
+import {HeadlessForm, loginValidations, FormValues} from "@/components/headless-form/Form";
+import SecondaryButton from "@/components/reusable-component/secondaryButton";
+import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
 import { googleAuthService } from "@/services/googleAuthService";
 import { useState } from "react";
 import Image from "next/image";

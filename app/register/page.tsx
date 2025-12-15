@@ -1,4 +1,4 @@
-import {DEVisionLogoButton} from "@/components/DEVisionLogoButton";
+import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
 import { RegisterForm } from "@/components/register-form/RegisterForm";
 import { RegisterWithGoogleButton } from "@/components/register-form/RegisterWithGoogleButton/RegisterWithGoogleButton";
 import { RegisterRibbon } from "@/components/register-form/RegisterRibbon/RegisterRibbon";

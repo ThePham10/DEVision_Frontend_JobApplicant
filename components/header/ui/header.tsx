@@ -2,8 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-import Button from "@/components/button";
-import SecondaryButton from "@/components/secondaryButton";
+import Button from "@/components/reusable-component/button";
+import SecondaryButton from "@/components/reusable-component/secondaryButton";
 import { useRouter } from "next/navigation";
 import { googleAuthService } from "@/services/googleAuthService";
 import { useAuthStore } from "@/store/authStore";

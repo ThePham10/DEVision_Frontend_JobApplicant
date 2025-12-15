@@ -1,23 +1,6 @@
 // Validation types and utilities for form fields
 
-export type ValidationRule = {
-    validate: (value: string, allValues?: Record<string, string>) => boolean;
-    message: string;
-};
-
-export type FieldValidation = {
-    required?: boolean;
-    requiredMessage?: string;
-    minLength?: number;
-    maxLength?: number;
-    pattern?: RegExp;
-    patternMessage?: string;
-    match?: string; // Name of field to match (e.g., "password" for confirmPassword)
-    matchMessage?: string;
-    custom?: ValidationRule[];
-};
-
-export type ValidationErrors = Record<string, string>;
+import { ValidationRule, FieldValidation, ValidationErrors } from "../types/types";
 
 // ============================================================
 // PASSWORD VALIDATION
