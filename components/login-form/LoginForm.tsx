@@ -42,7 +42,7 @@ export const LoginForm = () => {
             const response = await loginUser(loginData);
             if (response.status === 201) {
                 console.log("Login successful!");
-                setUser(response.data);
+                setUser(response.data.user);
                 router.push("/dashboard");
             }
         } catch (err) {

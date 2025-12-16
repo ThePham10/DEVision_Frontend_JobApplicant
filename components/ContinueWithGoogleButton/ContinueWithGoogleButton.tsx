@@ -22,7 +22,14 @@ export const ContinueWithGoogleButton = () => {
                 
                 if (response.status === 201) {
                     console.log("Authentication successful!");
-                    setUser(response.data);
+                    setUser({
+                        id: response.data.id,
+                        email: response.data.email,
+                        name: response.data.name,
+                        role: response.data.role,
+                        country: response.data.country,
+                        emailVerified: response.data.emailVerified,
+                    });
                     router.push("/dashboard");
                 }
             } catch (error) {
