@@ -3,8 +3,8 @@
 import Footer from "@/components/footer/ui/footer";
 import Header from "@/components/header/ui/header";
 import ServiceCard from "@/components/reusable-component/serviceCard";
-import Button from "@/components/reusable-component/button";
-import SecondaryButton from "@/components/reusable-component/secondaryButton";
+import Button from "@/components/reusable-component/Button";
+import SecondaryButton from "@/components/reusable-component/SecondaryButton";
 import { useRouter } from "next/navigation";
 import { motion, useInView } from "motion/react";
 import { useMainPageScroll } from "@/hooks/useMainPageScroll";

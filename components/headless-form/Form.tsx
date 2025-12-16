@@ -1,8 +1,8 @@
 "use client";
 
-import Input from "@/components/reusable-component/input";
+import Input from "@/components/reusable-component/Input";
 import React, { useState } from "react";
-import Button from "@/components/reusable-component/button";
+import Button from "@/components/reusable-component/Button";
 import CountryDropdown from "@/components/headless-form/country-drop-down-menu/CountryDropdown";
 import { useForm } from "./hook/useForm";
 import { Country } from "@/components/headless-form/country-drop-down-menu/api/countryDropDownMenuService";
