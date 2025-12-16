@@ -1,6 +1,5 @@
 "use client";
 
-import { div } from "framer-motion/client";
 import useTable, { PaginatedResponse } from "./hook/useTable"
 import Button from "@/components/reusable-component/Button"
 
