@@ -3,7 +3,7 @@ type LoginData = {
   password: string;
 }
 
-type UserData = {
+type User = {
     id: string;
     email: string;
     name: string;
@@ -13,4 +13,8 @@ type UserData = {
     emailVerified: boolean;
 }
 
-export type { LoginData, UserData }
+type UserData = {
+    user: User;
+}
+
+export type { LoginData, UserData, User };

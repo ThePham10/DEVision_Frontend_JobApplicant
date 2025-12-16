@@ -2,17 +2,15 @@ import { HeadlessForm } from "@/components/headless-form/Form";
 import type { FormConfig } from "@/components/headless-form/types/types";
 import { useAuthStore } from "@/store/authStore";
 
-export const PersonalBoxForm = () => {
+export const SummaryForm = () => {
     const { isAuthenticated, user } = useAuthStore();
     if (!isAuthenticated || !user) return null;
 
     const formConfig: FormConfig = {
         children: [
-            { name: "name", title: "Name", type: "text", placeholder: user.name, colSpan: 1 },
-            { name: "email", title: "Email", type: "text", placeholder: user.email, colSpan: 1 },
-            { name: "country", title: "Country", type: "text", placeholder: user.country, colSpan: 1 },
+            { name: "summary", title: "Summary", type: "text", placeholder: "Write a brief summary about your career objectives...", colSpan: 1 },
         ],
-        buttonText: "Save Changes",
+        buttonText: "Save",
         layout: {
             type: "grid",
             columns: 4,
