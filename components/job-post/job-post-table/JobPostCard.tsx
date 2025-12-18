@@ -4,7 +4,7 @@ import { FaLocationDot, FaDollarSign, FaCalendar } from "react-icons/fa6"
 import Button from "@/components/reusable-component/Button"
 import SecondaryButton from "@/components/reusable-component/SecondaryButton"
 
-const JobPostCard = ({ item }: { item: JobPost }) => {
+const JobPostCard = ({ item, onViewDetail }: { item: JobPost, onViewDetail?: (job: JobPost) => void }) => {
     return (
         <div className="relative flex flex-col gap-4 border border-gray-200 bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Header: Title + Employment Type Badge */}
@@ -45,7 +45,7 @@ const JobPostCard = ({ item }: { item: JobPost }) => {
 
             {/* Action buttons */}
             <div className="flex gap-4 mt-2">
-                <Button style="w-full" text="View Details" />
+                <Button style="w-full" text="View Details" onClick={() => onViewDetail?.(item)}/>
                 <SecondaryButton style="w-full" text="Apply Now" />
             </div>
         </div>

@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
-    const { setUser } = useAuthStore();
+    const { setUser, setIsAuthenticated } = useAuthStore();
     const router = useRouter();
 
     const formConfig = {
@@ -43,7 +43,8 @@ export const LoginForm = () => {
             if (response.status === 201) {
                 console.log("Login successful!");
                 setUser(response.data.user);
-                router.push("/dashboard");
+                setIsAuthenticated(true);
+                router.push("/jobs");
             }
         } catch (err) {
             console.error("Login error:", err);

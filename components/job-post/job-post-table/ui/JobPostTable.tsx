@@ -8,6 +8,8 @@ import { JobPostFilters, PaginatedResponse, JobPost } from "../types"
 import { HeadlessForm } from "@/components/headless-form/Form"
 import type { FormConfig } from "@/components/headless-form/types/types"
 import { FaTimes } from "react-icons/fa"
+import Modal from "@/components/reusable-component/Modal"
+import JobPostDetail from "@/components/job-post/job-post-table/ui/JobPostDetail"
 
 // Filter form configuration
 const filterFormConfig: FormConfig = {
@@ -63,6 +65,8 @@ const filterFormConfig: FormConfig = {
 const JobPostTable = () => {
     // State for filters
     const [filters, setFilters] = useState<JobPostFilters>({})
+    const [ isOpen, setIsOpen] = useState(false)
+    const [ selectedJob, setSelectedJob ] = useState<JobPost | null>(null)
     
     // Create a service function that includes current filters
     const loadJobPostWithFilters = useCallback(
@@ -96,6 +100,12 @@ const JobPostTable = () => {
             delete newFilters[key]
             return newFilters
         })
+    }
+
+    const handleViewDetail = (post: JobPost) => {
+        console.log(post)
+        setSelectedJob(post)
+        setIsOpen(true)
     }
 
     return (
@@ -161,11 +171,26 @@ const JobPostTable = () => {
                 className="flex flex-col gap-5"
                 title="Available Positions"
                 CardComponent={JobPostCard}
+                onViewDetail={handleViewDetail}
                 loadItemService={loadJobPostWithFilters}
                 limit={10}
                 showTotal={true}
                 getItemId={(job) => job.id}
             />
+
+
+            {isOpen && (
+                <Modal
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    title={selectedJob?.title}
+                    size="large"
+                >
+                    {selectedJob && (
+                        <JobPostDetail job={selectedJob} />
+                    )}
+                </Modal>
+            )}
         </div>
     )
 }
