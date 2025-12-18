@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Activity, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -8,6 +8,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  isDisplayedReturnLink?: boolean;
   children: React.ReactNode;
   size?: "small" | "medium" | "large";
 }
@@ -22,6 +23,7 @@ export default function Modal({
   isOpen,
   onClose,
   title,
+  isDisplayedReturnLink,
   children,
   size = "medium",
 }: ModalProps) {
@@ -61,10 +63,12 @@ export default function Modal({
             transition={{ duration: 0.25, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
           >
-            <button className="w-fit flex items-center font-[Inter] text-[#65758B] gap-2 hover:underline underline-offset-4 rounded-full p-2 mt-5 mx-5" onClick={onClose}>
+            <Activity mode={isDisplayedReturnLink ? "visible" : "hidden"}>
+              <button className="w-fit flex items-center font-[Inter] text-[#65758B] gap-2 hover:underline underline-offset-4 rounded-full p-2 mt-5 mx-5" onClick={onClose}>
                 <FaArrowLeft /> 
                 {title}
             </button>
+            </Activity>
             <div className="p-6">{children}</div>
           </motion.div>
         </motion.div>
