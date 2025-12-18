@@ -7,13 +7,14 @@ type AuthUser = {
     name: string,
     avatarUrl?: string,
     role: string,
-    country: string,
+    country?: string,
     emailVerified: boolean,
 }
 
 interface AuthStore {
     user: AuthUser | null;
     isAuthenticated: boolean;
+    isAdmin: boolean;
 
     setUser: (user : AuthUser) => void;
     clearUser: () => void;
@@ -24,17 +25,20 @@ export const useAuthStore = create<AuthStore>()(
         (set) => ({
             user: null,
             isAuthenticated: false,
+            isAdmin: false,
 
             setUser: (user : AuthUser) => 
                 set({
                     user,
-                    isAuthenticated: true
+                    isAuthenticated: true,
+                    isAdmin: user.role === "admin"
                 }),
             
             clearUser: () => 
                 set({
                     user: null,
-                    isAuthenticated: false
+                    isAuthenticated: false,
+                    isAdmin: false
                 })
         }),
         {

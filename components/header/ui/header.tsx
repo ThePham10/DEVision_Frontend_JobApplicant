@@ -13,7 +13,7 @@ import { NotificationButton } from "@/components/reusable-component/notification
 
 export default function Header() {
     const router = useRouter();
-    const { isAuthenticated, clearUser } = useAuthStore();
+    const { isAuthenticated, isAdmin, clearUser } = useAuthStore();
 
     const handleSignOut = async () => {
         try {
@@ -38,7 +38,14 @@ export default function Header() {
 
 
                 <div className="flex items-center justify-end gap-2 sm:gap-3 lg:flex-auto lg:mr-[162px]">
-                    {isAuthenticated ? (
+                    {!isAuthenticated && (
+                        <>
+                            <SecondaryButton text="Sign in" onClick={() => router.push("/login")} />
+                            <Button text="Get Started" onClick={() => router.push("/register")} />
+                        </>
+                    )}
+
+                    {isAuthenticated && !isAdmin && (
                         <>
                             <NotificationButton />
                             <PopUpBox
@@ -70,11 +77,34 @@ export default function Header() {
                                 }
                             />
                         </>
+                    )}
 
-                    ) : (
+                    {isAuthenticated && isAdmin && (
                         <>
-                            <SecondaryButton text="Sign in" onClick={() => router.push("/login")} />
-                            <Button text="Get Started" onClick={() => router.push("/register")} />
+                            <PopUpBox
+                                trigger={<AvatarFrame size={50} className="mr-2 cursor-pointer" />}
+                                content={
+                                    <div className="space-y-3">
+                                        <InfoCard
+                                            title="Job Applicant Accounts"
+                                            //onClick={() => router.push("/")}
+                                        />
+                                        <InfoCard
+                                            title="Company Accounts"
+                                            //onClick={() => router.push("/")}
+                                        />
+                                        <InfoCard
+                                            title="Job Posts"
+                                            //onClick={() => router.push("/")}
+                                        />
+                                        <InfoCard
+                                            title="Log out"
+                                            backgroundColor="bg-red-400"
+                                            onClick={handleSignOut}
+                                        />
+                                    </div>
+                                }
+                            />
                         </>
                     )}
                 </div>

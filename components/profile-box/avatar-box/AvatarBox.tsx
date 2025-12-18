@@ -3,7 +3,6 @@
 import { AvatarFrame } from "@/components/reusable-component/avatarFrame"
 import { EditButton } from "@/components/reusable-component/EditButton"
 import { useAuthStore } from "@/store/authStore";
-import { motion } from "motion/react";
 
 const AvatarBox = () => {
     const { user, isAuthenticated } = useAuthStore();
