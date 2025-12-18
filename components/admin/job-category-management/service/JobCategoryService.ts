@@ -1,6 +1,6 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { JobCategory, JobCategoryFilters, PaginatedResponse } from "../types";
-import { JOB_CATEGORY_URL, SKILL_URL } from "@/Config/URLConfig";
+import { JOB_CATEGORY_URL } from "@/Config/URLConfig";
 
 /**
  * Load job categories with pagination and filtering
@@ -32,7 +32,7 @@ async function loadJobCategories(
         }
         
         // Sort by createdAt descending (newest first)
-        filteredItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        filteredItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         
         const startIndex = (page - 1) * limit;
         const paginatedItems = filteredItems.slice(startIndex, startIndex + limit);
@@ -58,7 +58,7 @@ async function loadJobCategories(
 /**
  * Create a new job category
  */
-async function createJobCategory(category: JobCategory): Promise<JobCategory> {
+async function createJobCategory(category: Omit<JobCategory, "id" | "createdAt" | "updatedAt" | "isActive">): Promise<JobCategory> {
     const response = await httpHelper.post<JobCategory>(JOB_CATEGORY_URL, category);
 
     if (response.status === 201) {
@@ -79,25 +79,32 @@ async function createJobCategory(category: JobCategory): Promise<JobCategory> {
  * Update an existing job category
  */
 async function updateJobCategory(id: string, updates: Partial<Omit<JobCategory, "id" | "createdAt">>): Promise<JobCategory | null> {
-    // await new Promise(resolve => setTimeout(resolve, 200));
+    const response = await httpHelper.patch<JobCategory>(JOB_CATEGORY_URL + "/" + `${id}`, updates);
     
-    // const index = mockJobCategories.findIndex(c => c.id === id);
-    // if (index === -1) return null;
-    
-    // mockJobCategories[index] = { 
-    //     ...mockJobCategories[index], 
-    //     ...updates,
-    //     updatedAt: new Date()
-    // };
-    // return mockJobCategories[index];
-    return null;
+    console.log(response.status)
+
+    if (response.status === 200) {
+        return response.data;
+    } else {
+        return null;
+    }
 }
 
 /**
  * Delete a job category
  */
-async function deleteJobCategory(id: string): Promise<boolean> {
+async function deActiveJobCategory(id: string): Promise<boolean> {
     const response = await httpHelper.delete(JOB_CATEGORY_URL + "/" + `${id}`);
+    
+    if (response.status === 200) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+async function deleteJobCategory(id: string): Promise<boolean> {
+    const response = await httpHelper.delete(JOB_CATEGORY_URL + "/" + `${id}` + "/hard");
     
     if (response.status === 200) {
         return true;
@@ -110,5 +117,6 @@ export {
     loadJobCategories, 
     createJobCategory, 
     updateJobCategory, 
+    deActiveJobCategory,
     deleteJobCategory 
 };
