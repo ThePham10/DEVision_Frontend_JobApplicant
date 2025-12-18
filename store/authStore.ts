@@ -18,6 +18,7 @@ interface AuthStore {
 
     setUser: (user : AuthUser) => void;
     clearUser: () => void;
+    setIsAuthenticated: (state: boolean) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
