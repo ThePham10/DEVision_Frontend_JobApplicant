@@ -6,23 +6,27 @@ import { useEffect } from "react"
 
 interface AuthGuardProps {
     children: React.ReactNode;
-    role: string;
+    role?: string;
 }
 
-export const AuthGuard = ({children, role}: AuthGuardProps) => {
-    const { user, isAuthenticated } = useAuthStore();
+export const AuthGuard = ({children}: AuthGuardProps) => {
+    const { isAuthenticated, isAdmin, _hasHydrated } = useAuthStore();
     const router = useRouter();
 
     useEffect(() => {
-        if (!isAuthenticated || user?.role !== role) {
+        // Wait for hydration before checking auth
+        if (!_hasHydrated) return;
+        
+        if (!isAuthenticated || !isAdmin) {
+            console.log("Not authenticated or not authorized: isAuthenticated=" + isAuthenticated + ", isAdmin=" + isAdmin);
             router.push("/login");
         }
-    }, [isAuthenticated, router, role, user])
+    }, [_hasHydrated, isAuthenticated, isAdmin, router])
 
-    if (!isAuthenticated) {
+    // Show nothing while hydrating or if not authenticated
+    if (!_hasHydrated || !isAuthenticated) {
         return null;
     }
 
-    
     return (<>{children}</>)
 }

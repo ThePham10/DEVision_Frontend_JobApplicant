@@ -10,7 +10,7 @@ export const PersonalBoxForm = () => {
         children: [
             { name: "name", title: "Name", type: "text", placeholder: user.name, colSpan: 1 },
             { name: "email", title: "Email", type: "text", placeholder: user.email, colSpan: 1 },
-            { name: "country", title: "Country", type: "text", placeholder: user.country, colSpan: 1 },
+            { name: "country", title: "Country", type: "text", placeholder: user.country ?? "", colSpan: 1 },
         ],
         buttonText: "Save Changes",
         layout: {

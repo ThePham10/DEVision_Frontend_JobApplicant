@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { JobCategory, JobCategoryFilters, PaginatedResponse } from "../types";
-import { loadJobCategories, createJobCategory, updateJobCategory, deleteJobCategory } from "../service/JobCategoryService";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { JobCategory, JobCategoryFilters } from "../types";
+import { loadJobCategories, createJobCategory, updateJobCategory, deleteJobCategory, deActiveJobCategory } from "../service/JobCategoryService";
 import JobCategoryCard from "./JobCategoryCard";
 import JobCategoryForm from "./JobCategoryForm";
 import Modal from "@/components/reusable-component/Modal";
@@ -11,54 +12,74 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import { AnimatePresence } from "framer-motion";
 
 export default function JobCategoryManagement() {
-    // State
-    const [categories, setCategories] = useState<JobCategory[]>([]);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
+    
+    // Pagination and filter state
     const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(false);
-    const [total, setTotal] = useState(0);
-    
-    // Modal state
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingCategory, setEditingCategory] = useState<JobCategory | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    
-    // Delete confirmation
-    const [deleteConfirm, setDeleteConfirm] = useState<JobCategory | null>(null);
-    
-    // Filter state
     const [searchTerm, setSearchTerm] = useState("");
     const [activeFilter, setActiveFilter] = useState("");
     const [filters, setFilters] = useState<JobCategoryFilters>({});
     
-    // Load categories
-    const fetchCategories = useCallback(async (pageNum: number, currentFilters: JobCategoryFilters, append = false) => {
-        setLoading(true);
-        try {
-            const response: PaginatedResponse<JobCategory> = await loadJobCategories(pageNum, 10, currentFilters);
-            setCategories(prev => append ? [...prev, ...response.data] : response.data);
-            setHasMore(response.hasMore);
-            setTotal(response.total);
-            setPage(pageNum);
-        } catch (error) {
-            console.error("Failed to load categories:", error);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+    // Modal state
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingCategory, setEditingCategory] = useState<JobCategory | null>(null);
+    const [deleteConfirm, setDeleteConfirm] = useState<JobCategory | null>(null);
     
-    // Initial load and when filters change
-    useEffect(() => {
-        fetchCategories(1, filters);
-    }, [filters, fetchCategories]);
+    // Query for fetching categories - data is cached and automatically managed
+    const { data, isLoading, isFetching } = useQuery({
+        queryKey: ["jobCategories", page, filters],
+        queryFn: () => loadJobCategories(page, 10, filters),
+    });
+    
+    const categories = data?.data ?? [];
+    const total = data?.total ?? 0;
+    const hasMore = data?.hasMore ?? false;
+    
+    // Mutation for creating category
+    const createMutation = useMutation({
+        mutationFn: createJobCategory,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
+            setIsModalOpen(false);
+            setEditingCategory(null);
+        },
+    });
+    
+    // Mutation for updating category
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }: { id: string; data: Partial<JobCategory> }) => 
+            updateJobCategory(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
+            setIsModalOpen(false);
+            setEditingCategory(null);
+        },
+    });
+    
+    // Mutation for deleting category
+    const deleteMutation = useMutation({
+        mutationFn: deleteJobCategory,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
+            setDeleteConfirm(null);
+        },
+    });
+    
+    // Mutation for deactivating category
+    const deactivateMutation = useMutation({
+        mutationFn: deActiveJobCategory,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
+        },
+    });
     
     // Handle search
     const handleSearch = () => {
-        const newFilters: JobCategoryFilters = {
+        setPage(1); // Reset to first page when searching
+        setFilters({
             name: searchTerm || undefined,
             isActive: activeFilter === "" ? undefined : activeFilter === "active",
-        };
-        setFilters(newFilters);
+        });
     };
     
     // Clear filters
@@ -66,56 +87,43 @@ export default function JobCategoryManagement() {
         setSearchTerm("");
         setActiveFilter("");
         setFilters({});
+        setPage(1);
     };
     
-    // Load more
-    const handleLoadMore = () => {
-        fetchCategories(page + 1, filters, true);
-    };
-    
-    // Open add modal
+    // Open modals
     const openAddModal = () => {
         setEditingCategory(null);
         setIsModalOpen(true);
     };
     
-    // Open edit modal
     const openEditModal = (category: JobCategory) => {
         setEditingCategory(category);
         setIsModalOpen(true);
     };
     
     // Handle form submit
-    const handleFormSubmit = async (data: { name: string; description?: string; isActive: boolean }) => {
-        setIsSubmitting(true);
-        try {
-            if (editingCategory) {
-                await updateJobCategory(editingCategory.id, data);
-            } else {
-                await createJobCategory(data);
-            }
-            setIsModalOpen(false);
-            setEditingCategory(null);
-            fetchCategories(1, filters);
-        } catch (error) {
-            console.error("Failed to save category:", error);
-        } finally {
-            setIsSubmitting(false);
+    const handleFormSubmit = (data: { name: string; description?: string }) => {
+        if (editingCategory) {
+            updateMutation.mutate({ id: editingCategory.id, data });
+        } else {
+            createMutation.mutate(data);
         }
     };
     
     // Handle delete
-    const handleDelete = async () => {
-        if (!deleteConfirm) return;
-        
-        try {
-            await deleteJobCategory(deleteConfirm.id);
-            setDeleteConfirm(null);
-            fetchCategories(1, filters);
-        } catch (error) {
-            console.error("Failed to delete category:", error);
+    const handleDelete = () => {
+        if (deleteConfirm) {
+            deleteMutation.mutate(deleteConfirm.id);
         }
     };
+    
+    // Handle status change
+    const handleDeActiveJobCategory = (category: JobCategory) => {
+        deactivateMutation.mutate(category.id);
+    };
+    
+    const isSubmitting = createMutation.isPending || updateMutation.isPending;
+    const loading = isLoading || isFetching;
     
     return (
         <div className="flex flex-col gap-6">
@@ -205,12 +213,13 @@ export default function JobCategoryManagement() {
             <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-500 font-[Inter]">
                     Showing {categories.length} of {total} categories
+                    {isFetching && !isLoading && <span className="ml-2 text-blue-500">(Updating...)</span>}
                 </div>
             </div>
             
             {/* Categories List */}
             <div className="flex flex-col gap-3">
-                {loading && categories.length === 0 ? (
+                {isLoading && categories.length === 0 ? (
                     <div className="text-center py-10 text-gray-500 font-[Inter]">
                         Loading categories...
                     </div>
@@ -224,6 +233,7 @@ export default function JobCategoryManagement() {
                             <JobCategoryCard
                                 key={category.id}
                                 category={category}
+                                onChangeStatus={handleDeActiveJobCategory}
                                 onEdit={openEditModal}
                                 onDelete={setDeleteConfirm}
                             />
@@ -237,7 +247,7 @@ export default function JobCategoryManagement() {
                 <div className="flex justify-center">
                     <Button 
                         text={loading ? "Loading..." : "Load More"} 
-                        onClick={handleLoadMore}
+                        onClick={() => setPage(prev => prev + 1)}
                     />
                 </div>
             )}
@@ -250,7 +260,7 @@ export default function JobCategoryManagement() {
                     setEditingCategory(null);
                 }}
                 title={editingCategory ? "Edit Category" : "Add New Category"}
-                isDisplayedReturnLink = {false}
+                isDisplayedReturnLink={false}
                 size="medium"
             >
                 <JobCategoryForm
@@ -286,9 +296,10 @@ export default function JobCategoryManagement() {
                         </button>
                         <button
                             onClick={handleDelete}
-                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-[Inter]"
+                            disabled={deleteMutation.isPending}
+                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-[Inter] disabled:opacity-50"
                         >
-                            Delete
+                            {deleteMutation.isPending ? "Deleting..." : "Delete"}
                         </button>
                     </div>
                 </div>

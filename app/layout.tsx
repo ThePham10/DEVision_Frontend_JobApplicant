@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
+import QueryProvider from "@/providers/QueryProvider";
 
 // Load Inter font with all weights you need
 const inter = Inter({ 
@@ -24,7 +25,9 @@ export default function RootLayout({children,}: Readonly<{
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={`${inter.className} antialiased`}>
-                {children}
+                <QueryProvider>
+                    {children}
+                </QueryProvider>
             </body>
         </html>
     );

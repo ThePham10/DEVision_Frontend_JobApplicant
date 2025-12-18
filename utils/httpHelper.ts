@@ -1,3 +1,5 @@
+import { useAuthStore } from "@/store/authStore";
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -34,7 +36,15 @@ class HttpHelper {
       },
     };
 
-    const response = await fetch(url, config);
+    let response = await fetch(url, config);
+
+    if (response.status === 401) {
+      const refreshed = await this.refreshToken();
+
+      if (refreshed) {
+        response = await fetch(url, config);
+      }
+    }
 
     // Handle empty responses (204 No Content)
     if (response.status === 204) {
@@ -53,6 +63,21 @@ class HttpHelper {
     }
 
     return { status: response.status, data };
+  }
+
+  
+  private async refreshToken(): Promise<boolean> {
+      try {
+          const isAdmin = useAuthStore.getState().isAdmin;
+          const endpoint = isAdmin ? '/auth/admin/refresh' : '/auth/applicant/refresh';
+          const response = await fetch(`${this.baseUrl}${endpoint}`, {
+              method: 'POST',
+              credentials: 'include', // Send refresh token cookie
+          });
+          return response.ok;
+      } catch {
+          return false;
+      }
   }
 
   /**

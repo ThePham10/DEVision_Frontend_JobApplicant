@@ -7,7 +7,7 @@ import SecondaryButton from "@/components/reusable-component/SecondaryButton";
 
 interface JobCategoryFormProps {
     category?: JobCategory | null;
-    onSubmit: (data: { name: string; description?: string; isActive: boolean }) => void;
+    onSubmit: (data: { name: string; description?: string; }) => void;
     onCancel: () => void;
     isLoading?: boolean;
 }
@@ -38,17 +38,6 @@ export default function JobCategoryForm({ category, onSubmit, onCancel, isLoadin
                 placeholder: "Brief description of this category...",
                 colSpan: 1,
             },
-            {
-                title: "Status",
-                name: "isActive",
-                type: "select",
-                placeholder: "Select status",
-                options: [
-                    { label: "Active", value: "true" },
-                    { label: "Inactive", value: "false" },
-                ],
-                colSpan: 1,
-            },
         ],
         buttonText: isLoading ? "Saving..." : isEditing ? "Update Category" : "Add Category",
         layout: {
@@ -64,7 +53,6 @@ export default function JobCategoryForm({ category, onSubmit, onCancel, isLoadin
         onSubmit({
             name: formData.name,
             description: formData.description || undefined,
-            isActive: formData.isActive === "true",
         });
     };
     
@@ -72,7 +60,6 @@ export default function JobCategoryForm({ category, onSubmit, onCancel, isLoadin
     const initialValues: FormValues = {
         name: category?.name || "",
         description: category?.description || "",
-        isActive: category?.isActive !== false ? "true" : "false",
     };
     
     return (
