@@ -1,4 +1,4 @@
-import SecondaryButton from "@/components/reusable-component/secondaryButton";
+import SecondaryButton from "@/components/reusable-component/SecondaryButton";
 import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
 import { LoginForm } from "@/components/login-form/LoginForm";
 import { ContinueWithGoogleButton } from "@/components/ContinueWithGoogleButton/ContinueWithGoogleButton";
