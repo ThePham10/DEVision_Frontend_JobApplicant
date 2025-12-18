@@ -7,8 +7,9 @@ type User = {
     id: string;
     email: string;
     name: string;
+    avatarUrl?: string;
     role: string;
-    country: string;
+    country?: string;
     emailVerified: boolean;
 }
 
@@ -16,4 +17,4 @@ type UserData = {
     user: User;
 }
 
-export type { LoginData, UserData, User }
+export type { LoginData, UserData, User };
