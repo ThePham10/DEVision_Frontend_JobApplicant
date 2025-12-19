@@ -13,6 +13,7 @@ type Skill = {
 type Education = {
     id: string;
     degree: string;
+    school: string;
     fieldOfStudy: string;
     startYear: string;
     endYear: string;

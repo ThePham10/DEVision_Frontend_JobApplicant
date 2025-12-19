@@ -17,6 +17,7 @@ export const mockProfile: Profile[] = [
             {
                 id: "e1",
                 degree: "Bachelor (Honours)",
+                school: "RMIT University",
                 fieldOfStudy: "Software Engineering",
                 startYear: "2022",
                 endYear: "2025",
@@ -24,8 +25,9 @@ export const mockProfile: Profile[] = [
             },
             {
                 id: "e2",
-                degree: "Bachelor",
-                fieldOfStudy: "Human Resource Management",
+                degree: "Master",
+                school: " University of Science Ho Chi Minh City",
+                fieldOfStudy: "Computer Science",
                 startYear: "2018",
                 endYear: "2022",
                 gpa: "3.2",
@@ -40,10 +42,10 @@ export const mockProfile: Profile[] = [
                 jobDescription: "Assisted in the development of web applications using React",
             }, {
                 id: "w2",
-                jobTitle: "Lead HR Coordinator",
-                startDate: "Jun 2020",
-                endDate: "December 2022",
-                jobDescription: "Managed recruitment and onboarding processes for new employees.",
+                jobTitle: "Frontend Test Engineer",
+                startDate: "2020",
+                endDate: "2022",
+                jobDescription: "Conducted testing and quality assurance for frontend applications",
             }
         ],
     }
