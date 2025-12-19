@@ -10,9 +10,9 @@ interface TableProps<T, F> {
     /** Header title */
     title?: string
     /** Component to render each item */
-    CardComponent: React.FC<{item: T, onViewDetail?: (job : JobPost) => void}>
+    CardComponent: React.FC<{item: T, onViewDetail?: (item : T) => void}>
     /** Callback when viewing item details */
-    onViewDetail?: (job: JobPost) => void
+    onViewDetail?: (item: T) => void
     /** Service function to fetch items (receives page, limit, filters) */
     loadItemService: (page: number, limit: number, filters?: F) => Promise<PaginatedResponse<T>>
     /** Items per page (default: 10) */

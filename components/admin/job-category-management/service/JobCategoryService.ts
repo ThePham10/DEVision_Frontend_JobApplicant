@@ -1,6 +1,6 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { JobCategory, JobCategoryFilters, PaginatedResponse } from "../types";
-import { JOB_CATEGORY_URL } from "@/Config/URLConfig";
+import { JOB_CATEGORY_URL } from "@/config/URLConfig";
 
 /**
  * Load job categories with pagination and filtering

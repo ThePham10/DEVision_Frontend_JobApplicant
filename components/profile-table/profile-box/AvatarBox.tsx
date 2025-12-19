@@ -13,7 +13,7 @@ const AvatarBox = () => {
     const userLocation = user.country;
     
     return (
-        <div className="w-full bg-white rounded-xl border border-slate-200 p-8 shadow-sm max-w-8/10 ">
+        <div className="flex flex-col gap-4 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
             <div className="flex items-center gap-6 ml-10">
                 <div className="relative">
                     <AvatarFrame size={130} className="rounded-full" />

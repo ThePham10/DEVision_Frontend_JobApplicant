@@ -10,17 +10,17 @@ interface AuthGuardProps {
 }
 
 export const AuthGuard = ({children}: AuthGuardProps) => {
-    const { isAuthenticated, isAdmin, _hasHydrated } = useAuthStore();
+    const { isAuthenticated, _hasHydrated } = useAuthStore();
     const router = useRouter();
 
     useEffect(() => {
         // Wait for hydration before checking auth
         if (!_hasHydrated) return;
         
-        if (!isAuthenticated || !isAdmin) {
+        if (!isAuthenticated) {
             router.push("/login");
         }
-    }, [_hasHydrated, isAuthenticated, isAdmin, router])
+    }, [_hasHydrated, isAuthenticated, router])
 
     // Show nothing while hydrating or if not authenticated
     if (!_hasHydrated || !isAuthenticated) {

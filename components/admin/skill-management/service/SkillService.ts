@@ -1,6 +1,6 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { Skill, SkillFilters, PaginatedResponse, JobCategory } from "../types";
-import { SKILL_URL } from "@/Config/URLConfig";
+import { SKILL_URL } from "@/config/URLConfig";
 
 // Mock job categories data
 const mockJobCategories: JobCategory[] = [
