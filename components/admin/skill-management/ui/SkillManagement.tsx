@@ -7,25 +7,26 @@ import Button from "@/components/reusable-component/Button";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { AnimatePresence } from "framer-motion";
 import useSkillManagement from "../hook/SkillManagementHook";
+import JobCategoryDropDownMenu from "../job-category-drop-down-menu/ui/JobCategoryDropDownMenu";
 
 export default function SkillManagement() {
     const {
         skills,
         jobCategories,
-        loading,
-        hasMore,
-        total,
+        isLoading,
+        handleLoadMore,
+        handleDeActivate,
+        hasNextPage,
+        totalSkills,
         isModalOpen, setIsModalOpen,
         editingSkill, setEditingSkill,
         isSubmitting,
         deleteConfirm, setDeleteConfirm,
         searchTerm, setSearchTerm,
-        categoryFilter, setCategoryFilter,
+        setCategoryFilter,
         filters, setFilters,
-        fetchSkills,
         handleSearch,
         clearFilters,
-        handleLoadMore,
         openAddModal,
         openEditModal,
         handleFormSubmit,
@@ -67,16 +68,10 @@ export default function SkillManagement() {
                             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
                         />
                     </div>
-                    <select
-                        value={categoryFilter}
-                        onChange={(e) => setCategoryFilter(e.target.value)}
-                        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter] bg-white"
-                    >
-                        <option value="">All Categories</option>
-                        {jobCategories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                        ))}
-                    </select>
+                    <JobCategoryDropDownMenu
+                        onChange={(value) => setCategoryFilter(value.id)}
+                        jobCategories={jobCategories}
+                    />
                     <Button text="Search" onClick={handleSearch} />
                 </div>
                 
@@ -121,13 +116,13 @@ export default function SkillManagement() {
             {/* Results count */}
             <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-500 font-[Inter]">
-                    Showing {skills.length} of {total} skills
+                    Showing {skills.length} of {totalSkills} skills
                 </div>
             </div>
             
             {/* Skills List */}
             <div className="flex flex-col gap-3">
-                {loading && skills.length === 0 ? (
+                {isLoading && skills.length === 0 ? (
                     <div className="text-center py-10 text-gray-500 font-[Inter]">
                         Loading skills...
                     </div>
@@ -144,6 +139,7 @@ export default function SkillManagement() {
                                 jobCategories={jobCategories}
                                 onEdit={openEditModal}
                                 onDelete={setDeleteConfirm}
+                                onChangeStatus={handleDeActivate}
                             />
                         ))}
                     </AnimatePresence>
@@ -151,10 +147,10 @@ export default function SkillManagement() {
             </div>
             
             {/* Load More */}
-            {hasMore && (
+            {hasNextPage && (
                 <div className="flex justify-center">
                     <Button 
-                        text={loading ? "Loading..." : "Load More"} 
+                        text={isLoading ? "Loading..." : "Load More"} 
                         onClick={handleLoadMore}
                     />
                 </div>
