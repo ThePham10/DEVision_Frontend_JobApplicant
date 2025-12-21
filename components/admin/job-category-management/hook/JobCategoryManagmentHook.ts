@@ -25,7 +25,7 @@ export default function useJobCategoryManagment() {
     
     const categories = data?.data ?? [];
     const total = data?.total ?? 0;
-    const hasMore = data?.hasMore ?? false;
+    const hasMore = page * 10 < total;
     
     // Mutation for creating category
     const createMutation = useMutation({

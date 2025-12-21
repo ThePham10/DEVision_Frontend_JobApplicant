@@ -1,15 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
-import { Skill, SkillFilters, PaginatedResponse, JobCategory } from "../types";
-import { loadSkills, createSkill, updateSkill, deleteSkill, loadJobCategories } from "../service/SkillService";
+import { useState, useMemo } from "react";
+import { Skill, SkillFilters} from "../types";
+import { loadSkills, loadSkillsByCategory, createSkill, updateSkill, deleteSkill, loadJobCategories, deActiveSkill } from "../service/SkillService";
+import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function useSkillManagement() {
-        // State
-    const [skills, setSkills] = useState<Skill[]>([]);
-    const [jobCategories, setJobCategories] = useState<JobCategory[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(false);
-    const [total, setTotal] = useState(0);
+    const queryClient = useQueryClient();
     
     // Modal state
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,32 +18,91 @@ export default function useSkillManagement() {
     const [searchTerm, setSearchTerm] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("");
     const [filters, setFilters] = useState<SkillFilters>({});
+
+    const { data: categoriesData} = useQuery ({
+        queryKey: ["jobCategories"],
+        queryFn: () => loadJobCategories(1000),
+    })
+
+    const jobCategories = categoriesData ?? [];
+
+    const {
+        data: skillData,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+    } = useInfiniteQuery({
+        queryKey: ["skills", filters],
+        queryFn: ({pageParam}) => {
+            // Use different API based on whether category filter is active
+            if (filters.jobCategoryId) {
+                return loadSkillsByCategory(filters.jobCategoryId);
+            }
+            return loadSkills(pageParam, 10);
+        },
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
+    })
     
-    // Load job categories on mount
-    useEffect(() => {
-        loadJobCategories().then(setJobCategories);
-    }, []);
-    
-    // Load skills
-    const fetchSkills = useCallback(async (pageNum: number, currentFilters: SkillFilters, append = false) => {
-        setLoading(true);
-        try {
-            const response: PaginatedResponse<Skill> = await loadSkills(pageNum, 10, currentFilters);
-            setSkills(prev => append ? [...prev, ...response.data] : response.data);
-            setHasMore(response.hasMore);
-            setTotal(response.total);
-            setPage(pageNum);
-        } catch (error) {
-            console.error("Failed to load skills:", error);
-        } finally {
-            setLoading(false);
+    const allSkills = useMemo(() => 
+        skillData?.pages.flatMap(page => page.data) ?? [], 
+        [skillData]
+    );
+    const totalSkills = useMemo(() => 
+        skillData?.pages[0]?.total ?? 0, 
+        [skillData]
+    );
+
+    const skills = useMemo(() => {
+        let result = allSkills;
+        if (filters.name) {
+            const nameFilter = filters.name.toLowerCase();
+            result = result.filter(s => s.name.toLowerCase().includes(nameFilter));
         }
-    }, []);
-    
-    // Initial load and when filters change
-    useEffect(() => {
-        fetchSkills(1, filters);
-    }, [filters, fetchSkills]);
+        return result;
+    }, [allSkills, filters]);
+
+    const createMutation = useMutation({
+        mutationFn: createSkill,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["skills"] });
+            setIsModalOpen(false);
+            setEditingSkill(null);
+        }
+    })
+
+    const updateMutation = useMutation({
+        mutationFn: ({id, data}: {id: string, data: Partial<Omit<Skill, "id" | "createdAt">>}) => 
+            updateSkill(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["skills"] });
+            setIsModalOpen(false);
+            setEditingSkill(null);
+        }
+    })
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteSkill,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["skills"] });
+            setIsModalOpen(false);
+            setDeleteConfirm(null);
+        }
+    })
+
+    const deActiveMutation = useMutation({
+        mutationFn: deActiveSkill,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["skills"] });
+            setIsModalOpen(false);
+            setDeleteConfirm(null);
+        }
+    })
+
+    const handleLoadMore = () => {
+        fetchNextPage();
+    }
     
     // Handle search
     const handleSearch = () => {
@@ -64,12 +118,7 @@ export default function useSkillManagement() {
         setSearchTerm("");
         setCategoryFilter("");
         setFilters({});
-    };
-    
-    // Load more
-    const handleLoadMore = () => {
-        fetchSkills(page + 1, filters, true);
-    };
+    };  
     
     // Open add modal
     const openAddModal = () => {
@@ -84,34 +133,32 @@ export default function useSkillManagement() {
     };
     
     // Handle form submit
-    const handleFormSubmit = async (data: { name: string; jobCategoryId: string; description?: string; isActive: boolean }) => {
+    const handleFormSubmit = async (data: { name: string; jobCategoryId?: string; description?: string }) => {
         setIsSubmitting(true);
-        try {
-            if (editingSkill) {
-                await updateSkill(editingSkill.id, data);
-            } else {
-                await createSkill(data);
+        if (editingSkill) {
+            updateMutation.mutate({ id: editingSkill.id, data });
+        } else {
+            if (!data.jobCategoryId) {
+                throw new Error("Job category is required when creating a skill");
             }
-            setIsModalOpen(false);
-            setEditingSkill(null);
-            fetchSkills(1, filters); // Refresh list
-        } catch (error) {
-            console.error("Failed to save skill:", error);
-        } finally {
-            setIsSubmitting(false);
+            createMutation.mutate({
+                name: data.name,
+                jobCategoryId: data.jobCategoryId,
+                description: data.description,
+            }); 
         }
+        setIsSubmitting(false);
     };
+
+    //Handle deactivate skill
+    const handleDeActivate = async (skill: Skill) => {
+        deActiveMutation.mutate(skill.id);
+    }
     
     // Handle delete
     const handleDelete = async () => {
-        if (!deleteConfirm) return;
-        
-        try {
-            await deleteSkill(deleteConfirm.id);
-            setDeleteConfirm(null);
-            fetchSkills(1, filters); // Refresh list
-        } catch (error) {
-            console.error("Failed to delete skill:", error);
+        if (deleteConfirm) {
+            deleteMutation.mutate(deleteConfirm.id);
         }
     };
     
@@ -123,9 +170,12 @@ export default function useSkillManagement() {
     return {
         skills,
         jobCategories,
-        loading,
-        hasMore,
-        total,
+        isLoading,
+        handleLoadMore,
+        handleDeActivate,
+        hasNextPage,
+        isFetchingNextPage,
+        totalSkills,
         isModalOpen, setIsModalOpen,
         editingSkill, setEditingSkill,
         isSubmitting,
@@ -133,10 +183,8 @@ export default function useSkillManagement() {
         searchTerm, setSearchTerm,
         categoryFilter, setCategoryFilter,
         filters, setFilters,
-        fetchSkills,
         handleSearch,
         clearFilters,
-        handleLoadMore,
         openAddModal,
         openEditModal,
         handleFormSubmit,

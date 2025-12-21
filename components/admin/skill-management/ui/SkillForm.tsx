@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 interface SkillFormProps {
     skill?: Skill | null;
     jobCategories: JobCategory[];
-    onSubmit: (data: { name: string; jobCategoryId: string; description?: string; isActive: boolean }) => void;
+    onSubmit: (data: { name: string; jobCategoryId?: string; description?: string; isActive?: boolean }) => void;
     onCancel: () => void;
     isLoading?: boolean;
 }
@@ -37,12 +37,12 @@ export default function SkillForm({ skill, jobCategories, onSubmit, onCancel, is
             return;
         }
         
-        onSubmit({
-            name: name.trim(),
-            jobCategoryId,
-            description: description.trim() || undefined,
-            isActive
-        });
+        // Only include isActive when editing (server sets default for new skills)
+        const submitData = isEditing
+            ? { name: name.trim(), description: description.trim() || undefined, isActive }
+            : { name: name.trim(), jobCategoryId, description: description.trim() || undefined };
+        
+        onSubmit(submitData);
     };
     
     return (

@@ -9,6 +9,7 @@ interface SkillCardProps {
     jobCategories: JobCategory[];
     onEdit: (skill: Skill) => void;
     onDelete: (skill: Skill) => void;
+    onChangeStatus: (skill: Skill) => void;
 }
 
 // Category color mapping by category name
@@ -25,7 +26,7 @@ const categoryColors: Record<string, string> = {
     "Other": "bg-gray-100 text-gray-700",
 };
 
-export default function SkillCard({ skill, jobCategories, onEdit, onDelete }: SkillCardProps) {
+export default function SkillCard({ skill, jobCategories, onEdit, onDelete, onChangeStatus }: SkillCardProps) {
     // Look up category name from ID
     const category = jobCategories.find(cat => cat.id === skill.jobCategoryId);
     const categoryName = category?.name || "Unknown";
@@ -51,11 +52,13 @@ export default function SkillCard({ skill, jobCategories, onEdit, onDelete }: Sk
                 </span>
                 
                 {/* Active/Inactive Badge */}
-                {!skill.isActive && (
-                    <span className="px-2 py-1 rounded text-xs font-medium bg-gray-200 text-gray-600">
-                        Inactive
-                    </span>
-                )}
+                <button onClick={() => onChangeStatus(skill)} className={`px-2 py-1 rounded text-xs font-medium ${
+                    skill.isActive 
+                        ? "bg-green-100 text-green-700" 
+                        : "bg-gray-200 text-gray-600"
+                }`}>
+                    {skill.isActive ? "Active" : "Inactive"}
+                </button>
             </div>
             
             {/* Action Buttons */}
