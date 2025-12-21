@@ -14,7 +14,7 @@ const mockApplicants: ApplicantAccount[] = [
     {
         id: "a2",
         name: "thetest2",
-        email: "thetest2@gmail.com",
+        email: "thealo@gmail.com",
         phone: "0987654321",
         emailVerified: false,
         subscription: false,
@@ -32,7 +32,7 @@ const mockApplicants: ApplicantAccount[] = [
     {
         id: "a4",
         name: "Dang Thai Hoang",
-        email: "dangthaihoang1@gmail.com",
+        email: "hoangdang@gmail.com",
         phone: "0129873645",
         emailVerified: false,
         subscription: true,
@@ -41,7 +41,7 @@ const mockApplicants: ApplicantAccount[] = [
     {
         id: "a5",
         name: "Nguyen Van A",
-        email: "nguyenvana@gmail.com",
+        email: "johnhenry@gmail.com",
         phone: "0112233445",
         emailVerified: true,
         subscription: false,
@@ -50,7 +50,7 @@ const mockApplicants: ApplicantAccount[] = [
     {
         id: "a6",
         name: "Le Thi B",
-        email: "letheb@gmail.com",
+        email: "mariamisa@gmail.com",
         phone: "0223344556",
         emailVerified: false,
         subscription: true,

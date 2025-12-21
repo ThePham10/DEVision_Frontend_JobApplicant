@@ -11,7 +11,8 @@ import Modal from "@/components/reusable-component/Modal";
 
 const ApplicantManagement = () => {
     const [page, setPage] = useState(1);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchName, setSearchName] = useState("");
+    const [searchEmail, setSearchEmail] = useState("");
     const [emailFilter, setEmailFilter] = useState("");
     const [subscriptionFilter, setSubscriptionFilter] = useState("");
     const [filters, setFilters] = useState<ApplicantFilters>({});
@@ -72,7 +73,8 @@ const ApplicantManagement = () => {
     const handleSearch = () => {
         setPage(1); // Reset to first page when searching
         setFilters({
-            name: searchTerm || undefined,
+            name: searchName || undefined,
+            email: searchEmail || undefined,
             emailVerified: emailFilter === "" ? undefined : emailFilter === "active",
             subscription: subscriptionFilter === "" ? undefined : subscriptionFilter === "active",
         });
@@ -80,7 +82,8 @@ const ApplicantManagement = () => {
     
     const clearFilters = () => {
         setFilters({});
-        setSearchTerm("");
+        setSearchName("");
+        setSearchEmail("");
         setEmailFilter("");
         setSubscriptionFilter("");
         setPage(1);
@@ -108,8 +111,8 @@ const ApplicantManagement = () => {
                         <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            value={searchName}
+                            onChange={(e) => setSearchName(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                             placeholder="Search by name"
                             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
@@ -119,8 +122,8 @@ const ApplicantManagement = () => {
                         <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            value={searchEmail}
+                            onChange={(e) => setSearchEmail(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                             placeholder="Search by email"
                             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
@@ -150,7 +153,7 @@ const ApplicantManagement = () => {
                     <Button text="Search" onClick={handleSearch} />
                 </div>
                 
-                {(filters.name || filters.emailVerified !== undefined || filters.subscription !== undefined) && (
+                {(filters.name || filters.email !== undefined || filters.emailVerified !== undefined || filters.subscription !== undefined) && (
                     <div className="flex flex-wrap gap-2 mt-4 items-center">
                         <span className="text-sm text-gray-500">Active filters:</span>
                         {filters.name && (
@@ -158,8 +161,20 @@ const ApplicantManagement = () => {
                                 Name: {filters.name}
                                 <FaTimes 
                                     onClick={() => {
-                                        setSearchTerm("");
+                                        setSearchName("");
                                         setFilters(prev => ({ ...prev, name: undefined }));
+                                    }}
+                                    className="cursor-pointer ml-1 hover:bg-blue-200 rounded-full p-0.5"
+                                />
+                            </span>
+                        )}
+                        {filters.email && (
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                Email: {filters.email}
+                                <FaTimes 
+                                    onClick={() => {
+                                        setSearchEmail("");
+                                        setFilters(prev => ({ ...prev, email: undefined }));
                                     }}
                                     className="cursor-pointer ml-1 hover:bg-blue-200 rounded-full p-0.5"
                                 />
