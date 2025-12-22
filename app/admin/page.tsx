@@ -1,5 +1,5 @@
 import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
-import { Ribbon } from "@/components/reusable-component/ribbon/Ribbon";
+import { Ribbon } from "@/components/reusable-component/Ribbon";
 import { LoginFormAdmin } from "@/components/login-form/LoginFormAdmin";
 
 export default function Page() {

@@ -8,97 +8,64 @@ import AddEducationForm from "../profile-forms/AddEducationForm";
 
 const ProfileEducationBox = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
 
     const openAddModal = () => {
+        setEditingId(null);
         setIsModalOpen(true);
     };
 
-    const openDeleteModal = () => {
-        setIsDeleteModalOpen(true);
+    const handleEdit = (id: string) => {
+        console.log("Editing education:", id);
+        setEditingId(id);
+        setIsModalOpen(true);
     };
 
     const handleDelete = (id: string) => {
+        // TODO: Add confirmation dialog and actual delete logic
         console.log("Deleting education:", id);
-        setIsDeleteModalOpen(false);
     };
     
     return (
-        <div className="flex flex-col gap-4 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
             <div>
-                <div className="flex items-center justify-between mb-4">
-                    <div className="font-[Inter] text-3xl font-bold">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                         Education
-                    </div>
+                    </h2>
 
-                    <div className="flex items-center gap-4">
-                        <Button 
-                            text="Add Education Degree" 
-                            onClick={openAddModal}
-                            style="flex items-center gap-2"
-                        />
-    
-                        <Button 
-                            text="Delete Education Degree" 
-                            onClick={openDeleteModal}
-                            style="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
-                        />
-                    </div>
+                    <Button 
+                        text="Add Education" 
+                        onClick={openAddModal}
+                        style="flex items-center gap-2"
+                    />
                 </div>
                 
-                <ProfileEducationCard item={mockProfile[0]} />
+                <ProfileEducationCard 
+                    item={mockProfile[0]} 
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                />
             </div>
 
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => {
                     setIsModalOpen(false);
+                    setEditingId(null);
                 }}
-                title="Add New Education"
+                title={editingId ? "Edit Education" : "Add New Education"}
                 isDisplayedReturnLink={false}
                 size="medium"
             >
+                <h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6">New Education Form</h2>
                 <AddEducationForm
-                    //onSubmit={handleFormSubmit}
                     onCancel={() => {
                         setIsModalOpen(false);
+                        setEditingId(null);
                     }}
-                    //isLoading={isSubmitting}
                 />
             </Modal>
-
-            <Modal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                title="Delete Education"
-                isDisplayedReturnLink={false}
-                size="medium"
-            >
-                <div className="space-y-4">
-                    <p className="text-gray-600 font-[Inter]">Select an education entry to delete:</p>
-                    <div className="flex flex-col gap-3">
-                        {mockProfile[0].education.map((edu) => (
-                            <div
-                                key={edu.id}
-                                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
-                            >
-                                <div>
-                                    <div className="font-semibold text-gray-900">{edu.degree} of {edu.fieldOfStudy}</div>
-                                    <div className="text-sm text-gray-600">{edu.school}</div>
-                                    <div className="text-xs text-gray-500">{edu.startYear} - {edu.endYear}</div>
-                                </div>
-                                <button
-                                    onClick={() => handleDelete(edu.id)}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-[Inter]"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </Modal>
-                
         </div>
     )
 }
