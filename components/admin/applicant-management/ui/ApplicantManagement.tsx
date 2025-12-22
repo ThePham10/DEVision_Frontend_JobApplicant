@@ -17,7 +17,10 @@ const ApplicantManagement = () => {
         handleLoadMore,
         deactivateConfirm,
         setDeactivateConfirm,
-        handleDeActivate
+        activateConfirm,
+        setActivateConfirm,
+        handleDeActivate,
+        handleActivate
     } = useApplicantManagement();
 
     return (
@@ -98,7 +101,9 @@ const ApplicantManagement = () => {
                                 key={applicant.id}
                                 applicant={applicant}
                                 onDeactivate={setDeactivateConfirm}
+                                onActivate={setActivateConfirm}
                             />
+                            
                         ))}
                     </AnimatePresence>
                 )}
@@ -112,6 +117,34 @@ const ApplicantManagement = () => {
                     />
                 </div>
             )}
+
+            <Modal
+                isOpen={!!activateConfirm}
+                onClose={() => setActivateConfirm(null)}
+                title="Confirm Activation"
+                size="small"
+            >
+                <div className="space-y-4">
+                    <p className="font-[Inter] text-gray-700">
+                        Are you sure you want to activate <strong>&quot;{activateConfirm?.name}&quot;</strong> account?
+                    </p>
+                    <div className="flex justify-end gap-3">
+                        <button
+                            onClick={() => setActivateConfirm(null)}
+                            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-[Inter]"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={() => activateConfirm && handleActivate(activateConfirm)}
+                            disabled={!activateConfirm}
+                            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 font-[Inter] disabled:opacity-50"
+                        >
+                            {isLoading ? "Activating..." : "Activate"}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
             
             <Modal
                 isOpen={!!deactivateConfirm}
@@ -122,7 +155,6 @@ const ApplicantManagement = () => {
                 <div className="space-y-4">
                     <p className="font-[Inter] text-gray-700">
                         Are you sure you want to deactivate <strong>&quot;{deactivateConfirm?.name}&quot;</strong> account?
-                        This action cannot be undone.
                     </p>
                     <div className="flex justify-end gap-3">
                         <button

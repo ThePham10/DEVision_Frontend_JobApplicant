@@ -45,7 +45,20 @@ async function deactivateApplicant(
     }
 }
 
+async function activateApplicant(
+    applicantId: string,
+): Promise<boolean> {
+    const response = await httpHelper.put<ApplicantAccount>(APPLICANT_URL + "/" + `${applicantId}`, { isActive: true });
+    
+    if (response.status === 200) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 export { 
     loadApplicants,
-    deactivateApplicant
+    deactivateApplicant,
+    activateApplicant
 };

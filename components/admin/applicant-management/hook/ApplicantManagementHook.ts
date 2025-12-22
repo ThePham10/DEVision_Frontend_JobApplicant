@@ -1,12 +1,13 @@
 import { useState, useMemo } from "react";
 import { ApplicantFilters, ApplicantAccount } from "../types";
-import { loadApplicants, deactivateApplicant } from "../service/ApplicantManagementService";
+import { loadApplicants, deactivateApplicant, activateApplicant } from "../service/ApplicantManagementService";
 import { useInfiniteQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
 export default function useApplicantManagement() { 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [deactivateConfirm, setDeactivateConfirm] = useState<ApplicantAccount | null>(null);
+    const [activateConfirm, setActivateConfirm] = useState<ApplicantAccount | null>(null);
 
     const queryClient = useQueryClient();
 
@@ -57,9 +58,21 @@ export default function useApplicantManagement() {
         }
     });
 
-    const handleDeActivate = (applicant?: ApplicantAccount | null) => {
-        if (!applicant) return;
+    const activateMutation = useMutation({
+        mutationFn: activateApplicant,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["applicants"] });
+            setIsModalOpen(false);
+            setActivateConfirm(null);
+        }
+    });
+
+    const handleDeActivate = (applicant: ApplicantAccount) => {
         deactivateMutation.mutate(applicant.id);
+    }
+
+    const handleActivate = (applicant: ApplicantAccount) => {
+        activateMutation.mutate(applicant.id);
     }
 
     const handleLoadMore = () => {
@@ -78,6 +91,9 @@ export default function useApplicantManagement() {
         setIsModalOpen,
         deactivateConfirm,
         setDeactivateConfirm,
-        handleDeActivate
+        handleDeActivate,
+        handleActivate,
+        activateConfirm,
+        setActivateConfirm
     }
 }

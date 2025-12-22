@@ -2,13 +2,15 @@
 
 import { ApplicantAccount } from "../types";
 import { motion } from "framer-motion";
+import { Check, X } from "lucide-react";
 
 interface ApplicantManagementCardProps {
     applicant: ApplicantAccount;
     onDeactivate: (applicant: ApplicantAccount) => void;
+    onActivate: (applicant: ApplicantAccount) => void;
 }
 
-export default function ApplicantManagementCard({ applicant, onDeactivate }: ApplicantManagementCardProps) {
+export default function ApplicantManagementCard({ applicant, onDeactivate, onActivate }: ApplicantManagementCardProps) {
     return (
         <motion.div
             className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
@@ -54,17 +56,27 @@ export default function ApplicantManagementCard({ applicant, onDeactivate }: App
                 </div>
                 
             </div>
-            
+
             <div className="flex items-center gap-2">
-                <motion.button
+                {!applicant.isActive && <motion.button
+                    onClick={() => onActivate(applicant)}
+                    className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors font-[Inter]"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    aria-label="Activate"
+                >
+                    <Check />
+                </motion.button>}
+
+                {applicant.isActive && <motion.button
                     onClick={() => onDeactivate(applicant)}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-[Inter]"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    aria-label="Deactivate applicant"
+                    aria-label="Deactivate"
                 >
-                    Deactivate
-                </motion.button>
+                    <X />
+                </motion.button>}
             </div>
         </motion.div>
     );

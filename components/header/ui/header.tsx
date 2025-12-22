@@ -7,12 +7,13 @@ import { useAuthStore } from "@/store/authStore";
 import logoutUser from "../service/HeaderService";
 import { DEVisionLogoButton } from "@/components/reusable-component/DEVisionLogoButton";
 import { AvatarFrame } from "@/components/reusable-component/AvatarFrame";
-import { PopUpBox } from "@/components/popUpBox/popUpBox";
+import { PopUpBox } from "@/components/popUpBox/PopUpBox";
 import InfoCard from "@/components/reusable-component/InfoCard";
 import { NotificationButton } from "@/components/reusable-component/NotificationButton";
 import { Activity } from "react";
 import { usePathname } from "next/navigation";
 import { NavBar } from "@/components/reusable-component/NavBar";
+import { motion } from "motion/react";
 
 export default function Header() {
     const router = useRouter();
@@ -32,8 +33,6 @@ export default function Header() {
             router.push("/");
         }
     };
-
-    
 
     return (
         <header>
@@ -59,11 +58,18 @@ export default function Header() {
                         <>
                             <NotificationButton />
                             <PopUpBox
-                                trigger={
-                                    <AvatarFrame 
-                                        size={50} 
-                                        className="mr-2 cursor-pointer" 
-                                    />
+                                trigger={ 
+                                    <motion.button
+                                        className="flex items-center gap-2"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                                    >
+                                        <AvatarFrame 
+                                            size={50} 
+                                            className="mr-2 cursor-pointer" 
+                                        />
+                                    </motion.button>
                                 }
                                 content={
                                     <div className="space-y-3">
