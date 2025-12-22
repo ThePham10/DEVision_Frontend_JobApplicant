@@ -14,7 +14,7 @@ export default function AddSkillForm({ onCancel, isLoading = false }: AddEducati
     const formConfig: FormConfig = {
         children: [
             {
-                title: "name",
+                title: "Name",
                 name: "name",
                 type: "text",
                 placeholder: "e.g., JavaScript, Python, React, Node.js",

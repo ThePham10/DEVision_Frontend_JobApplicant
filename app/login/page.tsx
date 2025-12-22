@@ -2,7 +2,7 @@ import SecondaryButton from "@/components/reusable-component/SecondaryButton";
 import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
 import { LoginForm } from "@/components/login-form/LoginForm";
 import { ContinueWithGoogleButton } from "@/components/ContinueWithGoogleButton/ContinueWithGoogleButton";
-import { Ribbon } from "@/components/reusable-component/ribbon/Ribbon";
+import { Ribbon } from "@/components/reusable-component/Ribbon";
 
 export default function Page() {
     return (
