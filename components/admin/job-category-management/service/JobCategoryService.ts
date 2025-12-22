@@ -113,10 +113,21 @@ async function deleteJobCategory(id: string): Promise<boolean> {
     }
 }
 
+async function activateJobCategory(id: string): Promise<boolean> {
+    const response = await httpHelper.patch(JOB_CATEGORY_URL + "/" + `${id}`, { isActive: true });
+    
+    if (response.status === 200) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 export { 
     loadJobCategories, 
     createJobCategory, 
     updateJobCategory, 
     deActiveJobCategory,
+    activateJobCategory,
     deleteJobCategory 
 };

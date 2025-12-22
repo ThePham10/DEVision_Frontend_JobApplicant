@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { JobCategory, JobCategoryFilters } from "@/components/admin/job-category-management/types";
-import { loadJobCategories, createJobCategory, updateJobCategory, deleteJobCategory, deActiveJobCategory } from "@/components/admin/job-category-management/service/JobCategoryService"
+import { loadJobCategories, createJobCategory, updateJobCategory, deleteJobCategory, deActiveJobCategory, activateJobCategory } from "@/components/admin/job-category-management/service/JobCategoryService"
 
 export default function useJobCategoryManagment() {
     const queryClient = useQueryClient();
@@ -64,6 +64,14 @@ export default function useJobCategoryManagment() {
             queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
         },
     });
+
+    // Mutation for activate category
+    const activateMutation = useMutation({
+        mutationFn: activateJobCategory,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
+        },
+    });
     
     // Handle search
     const handleSearch = () => {
@@ -109,10 +117,15 @@ export default function useJobCategoryManagment() {
         }
     };
     
-    // Handle status change
+    // Handle deactivate category action
     const handleDeActiveJobCategory = (category: JobCategory) => {
         deactivateMutation.mutate(category.id);
     };
+
+    // Handle activate category action
+    const handleActivateJobCategory = (category: JobCategory) => {
+        activateMutation.mutate(category.id);
+    }
     
     const isSubmitting = createMutation.isPending || updateMutation.isPending;
     const loading = isLoading || isFetching;
@@ -140,5 +153,6 @@ export default function useJobCategoryManagment() {
         handleFormSubmit,
         handleDelete,
         handleDeActiveJobCategory,
+        handleActivateJobCategory,
     }
 }

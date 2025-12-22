@@ -32,6 +32,7 @@ export default function JobCategoryManagement() {
         handleFormSubmit,
         handleDelete,
         handleDeActiveJobCategory,
+        handleActivateJobCategory,
     } = useJobCategoryManagment();
     
     return (
@@ -142,7 +143,8 @@ export default function JobCategoryManagement() {
                             <JobCategoryCard
                                 key={category.id}
                                 category={category}
-                                onChangeStatus={handleDeActiveJobCategory}
+                                onDeactivate={handleDeActiveJobCategory}
+                                onActivate={handleActivateJobCategory}
                                 onEdit={openEditModal}
                                 onDelete={setDeleteConfirm}
                             />

@@ -6,12 +6,13 @@ import { motion } from "framer-motion";
 
 interface JobCategoryCardProps {
     category: JobCategory;
-    onChangeStatus: (category: JobCategory) => void;
+    onDeactivate: (category: JobCategory) => void;
+    onActivate: (category: JobCategory) => void;
     onEdit: (category: JobCategory) => void;
     onDelete: (category: JobCategory) => void;
 }
 
-export default function JobCategoryCard({ category, onChangeStatus, onEdit, onDelete }: JobCategoryCardProps) {
+export default function JobCategoryCard({ category, onDeactivate, onActivate, onEdit, onDelete }: JobCategoryCardProps) {
     return (
         <motion.div
             className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
@@ -34,7 +35,7 @@ export default function JobCategoryCard({ category, onChangeStatus, onEdit, onDe
                 </div>
                 
                 {/* Active/Inactive Badge */}
-                <button onClick={() => onChangeStatus(category)} className={`px-2 py-1 rounded text-xs font-medium ${
+                <button onClick={() => category.isActive ? onDeactivate(category) : onActivate(category)} className={`px-2 py-1 rounded text-xs font-medium ${
                     category.isActive 
                         ? "bg-green-100 text-green-700" 
                         : "bg-gray-200 text-gray-600"
