@@ -2,18 +2,17 @@ type ApplicantAccount = {
     id: string;
     name: string;
     email: string;
-    phone: string;
-    emailVerified: boolean;
-    subscription: boolean;
+    phone?: string;
+    address?: string;
+    isActive: boolean;
     createdAt: Date;
+    updatedAt: Date;
 }
 
 type ApplicantFilters = {
     name?: string;
     email?: string;
     phone?: string;
-    emailVerified?: boolean;
-    subscription?: boolean;
 }
 
 type PaginatedResponse<T> = {
