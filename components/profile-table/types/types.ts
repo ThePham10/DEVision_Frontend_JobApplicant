@@ -8,6 +8,7 @@ type Profile = {
 type Skill = {
     id: string;
     name: string;
+    icon?: string; // Lucide icon name
 }
 
 type Education = {

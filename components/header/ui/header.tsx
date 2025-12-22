@@ -6,14 +6,19 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import logoutUser from "../service/HeaderService";
 import { DEVisionLogoButton } from "@/components/reusable-component/DEVisionLogoButton";
-import { AvatarFrame } from "@/components/reusable-component/avatarFrame";
-import { PopUpBox } from "@/components/popUpBox/popUpBox";
-import InfoCard from "@/components/reusable-component/infoCard";
-import { NotificationButton } from "@/components/reusable-component/notificationButton";
+import { AvatarFrame } from "@/components/reusable-component/AvatarFrame";
+import { PopUpBox } from "@/components/popUpBox/PopUpBox";
+import InfoCard from "@/components/reusable-component/InfoCard";
+import { NotificationButton } from "@/components/reusable-component/NotificationButton";
+import { Activity } from "react";
+import { usePathname } from "next/navigation";
+import { NavBar } from "@/components/reusable-component/NavBar";
+import { motion } from "motion/react";
 
 export default function Header() {
     const router = useRouter();
     const { isAuthenticated, isAdmin, clearUser } = useAuthStore();
+    const pathname = usePathname();
 
     const handleSignOut = async () => {
         try {
@@ -36,6 +41,10 @@ export default function Header() {
                     <DEVisionLogoButton />
                 </div>
 
+                <Activity mode={(isAuthenticated) ? "visible" : "hidden"}>
+                    <NavBar isAdmin={isAdmin} pathname={pathname} />
+                </Activity>
+
 
                 <div className="flex items-center justify-end gap-2 sm:gap-3 lg:flex-auto lg:mr-[162px]">
                     {!isAuthenticated && (
@@ -49,7 +58,19 @@ export default function Header() {
                         <>
                             <NotificationButton />
                             <PopUpBox
-                                trigger={<AvatarFrame size={50} className="mr-2 cursor-pointer" />}
+                                trigger={ 
+                                    <motion.button
+                                        className="flex items-center gap-2"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                                    >
+                                        <AvatarFrame 
+                                            size={50} 
+                                            className="mr-2 cursor-pointer" 
+                                        />
+                                    </motion.button>
+                                }
                                 content={
                                     <div className="space-y-3">
                                         <InfoCard
@@ -70,7 +91,7 @@ export default function Header() {
                                         />
                                         <InfoCard
                                             title="Log out"
-                                            backgroundColor="bg-red-400"
+                                            variant="danger"
                                             onClick={handleSignOut}
                                         />
                                     </div>
@@ -86,28 +107,8 @@ export default function Header() {
                                 content={
                                     <div className="space-y-3">
                                         <InfoCard
-                                            title="Job Categories"
-                                            onClick={() => router.push("/admin/job-category")}
-                                        />
-                                        <InfoCard
-                                            title="Skills"
-                                            onClick={() => router.push("/admin/skill")}
-                                        />
-                                        <InfoCard
-                                            title="Job Applicant Accounts"
-                                            onClick={() => router.push("/admin/applicant")}
-                                        />
-                                        <InfoCard
-                                            title="Company Accounts"
-                                            //onClick={() => router.push("/admin/company")}
-                                        />
-                                        <InfoCard
-                                            title="Job Posts"
-                                            //onClick={() => router.push("/admin/jobs")}
-                                        />
-                                        <InfoCard
                                             title="Log out"
-                                            backgroundColor="bg-red-400"
+                                            variant="danger"
                                             onClick={handleSignOut}
                                         />
                                     </div>

@@ -4,14 +4,14 @@ export const mockProfile: Profile[] = [
     {
         summary: "Aspiring software engineer with a passion for developing innovative programs that expedite the efficiency and effectiveness of organizational success.",
         skills: [
-            { id: "s1", name: "SpringBoot" },
-            { id: "s2", name: "React" },
-            { id: "s3", name: "Next.js" },
-            { id: "s4", name: "JavaScript" },
-            { id: "s5", name: "Presentation" },
-            { id: "s6", name: "Networking" },
-            { id: "s7", name: "Negotiation" },
-            { id: "s8", name: "Communication" },
+            { id: "s1", name: "SpringBoot", icon: "Leaf" },
+            { id: "s2", name: "React", icon: "Atom" },
+            { id: "s3", name: "Next.js", icon: "Triangle" },
+            { id: "s4", name: "JavaScript", icon: "FileCode" },
+            { id: "s5", name: "Presentation", icon: "Presentation" },
+            { id: "s6", name: "Networking", icon: "Network" },
+            { id: "s7", name: "Negotiation", icon: "Handshake" },
+            { id: "s8", name: "Communication", icon: "MessageCircle" },
         ],
         education: [
             {

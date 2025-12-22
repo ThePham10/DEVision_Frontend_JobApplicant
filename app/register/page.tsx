@@ -1,7 +1,7 @@
 import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
 import { RegisterForm } from "@/components/register-form/RegisterForm";
 import { ContinueWithGoogleButton } from "@/components/ContinueWithGoogleButton/ContinueWithGoogleButton";
-import { Ribbon } from "@/components/reusable-component/ribbon/Ribbon";
+import { Ribbon } from "@/components/reusable-component/Ribbon";
 
 export default function Page() {
     return (

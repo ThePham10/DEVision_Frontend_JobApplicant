@@ -4,49 +4,42 @@ import ProfileSkillCard from "../profile-cards/ProfileSkillCard";
 import { useState } from "react";
 import Modal from "@/components/reusable-component/Modal";
 import AddSkillForm from "../profile-forms/AddSkillForm";
-import Badge from "@/components/reusable-component/Badge";
 
 const ProfileSkillBox = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const openAddModal = () => {
         setIsModalOpen(true);
     };
 
-    const openDeleteModal = () => {
-        setIsDeleteModalOpen(true);
-    };
-
     const handleDelete = (id: string) => {
-        console.log("Deleting work experience:", id);
-        setIsDeleteModalOpen(false);
+        // TODO: Add confirmation and actual delete logic
+        console.log("Deleting skill:", id);
     };
 
     return (
-        <div className="flex flex-col gap-4 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
             <div>
-                <div className="flex items-center justify-between mb-4">
-                    <div className="font-[Inter] text-3xl font-bold">
-                        Technical Skill
-                    </div>
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                        Technical Skills
+                    </h2>
     
-                    <div className="flex items-center gap-4">
-                        <Button 
-                            text="Add Technical Skill" 
-                            onClick={openAddModal}
-                            style="flex items-center gap-2"
-                        />
-    
-                        <Button 
-                            text="Delete Technical Skill" 
-                            onClick={openDeleteModal}
-                            style="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
-                        />
-                    </div>
+                    <Button 
+                        text="Add Skill" 
+                        onClick={openAddModal}
+                        style="flex items-center gap-2"
+                    />
                 </div>
+                
+                <p className="text-gray-500 text-sm mb-6">
+                    Hover over a skill and click the × to remove it
+                </p>
             
-                <ProfileSkillCard item={mockProfile[0]} />
+                <ProfileSkillCard 
+                    item={mockProfile[0]} 
+                    onDelete={handleDelete}
+                />
             </div>
 
             <Modal
@@ -54,49 +47,18 @@ const ProfileSkillBox = () => {
                 onClose={() => {
                     setIsModalOpen(false);
                 }}
-                title="Add New Education"
+                title="Add New Skill"
                 isDisplayedReturnLink={false}
                 size="medium"
             >
+                <h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6">New Skill Form</h2>
                 <AddSkillForm
-                    //onSubmit={handleFormSubmit}
                     onCancel={() => {
                         setIsModalOpen(false);
                     }}
-                    //isLoading={isSubmitting}
                 />
             </Modal>
-
-            <Modal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                title="Delete Education"
-                isDisplayedReturnLink={false}
-                size="medium"
-            >
-                <div className="space-y-4">
-                    <p className="text-gray-600 font-[Inter]">Select a technical skill to delete:</p>
-                    <div className="flex flex-col gap-3">
-                        {mockProfile[0].skills.map((skill, index) => (
-                            <div
-                                key={skill.id}
-                                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
-                            >
-                                <Badge key={index} text={skill.name} />
-
-                                <button
-                                    onClick={() => handleDelete(skill.id)}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-[Inter]"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </Modal>
         </div>
-        
     )
 }
 
