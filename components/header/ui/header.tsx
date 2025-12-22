@@ -86,16 +86,24 @@ export default function Header() {
                                 content={
                                     <div className="space-y-3">
                                         <InfoCard
+                                            title="Job Categories"
+                                            onClick={() => router.push("/admin/job-category")}
+                                        />
+                                        <InfoCard
+                                            title="Skills"
+                                            onClick={() => router.push("/admin/skill")}
+                                        />
+                                        <InfoCard
                                             title="Job Applicant Accounts"
-                                            //onClick={() => router.push("/")}
+                                            onClick={() => router.push("/admin/applicant")}
                                         />
                                         <InfoCard
                                             title="Company Accounts"
-                                            //onClick={() => router.push("/")}
+                                            //onClick={() => router.push("/admin/company")}
                                         />
                                         <InfoCard
                                             title="Job Posts"
-                                            //onClick={() => router.push("/")}
+                                            //onClick={() => router.push("/admin/jobs")}
                                         />
                                         <InfoCard
                                             title="Log out"
