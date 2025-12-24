@@ -1,6 +1,5 @@
 "use client";
 
-import { JobPost } from "../job-post/job-post-table/types";
 import useTable, { PaginatedResponse } from "./hook/useTable"
 import Button from "@/components/reusable-component/Button"
 
@@ -10,9 +9,11 @@ interface TableProps<T, F> {
     /** Header title */
     title?: string
     /** Component to render each item */
-    CardComponent: React.FC<{item: T, onViewDetail?: (item : T) => void}>
+    CardComponent: React.FC<{item: T, onViewDetail?: (item : T) => void, onApply?: (item : T) => void}>
     /** Callback when viewing item details */
     onViewDetail?: (item: T) => void
+    /** Callback when applying for a job */
+    onApply?: (item: T) => void
     /** Service function to fetch items (receives page, limit, filters) */
     loadItemService: (page: number, limit: number, filters?: F) => Promise<PaginatedResponse<T>>
     /** Items per page (default: 10) */
@@ -49,6 +50,7 @@ const Table = <T extends object, F extends object = Record<string, unknown>>({
     title,
     CardComponent,
     onViewDetail,
+    onApply,
     loadItemService,
     limit = 10,
     filters: externalFilters,
@@ -109,6 +111,7 @@ const Table = <T extends object, F extends object = Record<string, unknown>>({
                 <CardComponent 
                     key={getItemId ? getItemId(item) : index} 
                     onViewDetail={onViewDetail}
+                    onApply={onApply}
                     item={item} 
                 />
             ))}

@@ -91,14 +91,58 @@ class HttpHelper {
     /**
      * POST request
      * @param endpoint - API endpoint (e.g., '/auth/login')
-     * @param data - Request body
+     * @param data - Request body (supports JSON objects or FormData for file uploads)
      * @returns Promise with status and response data
      */
     async post<T>(endpoint: string, data: unknown): Promise<ApiResponse<T>> {
+        // If data is FormData, use multipart upload (no Content-Type header needed)
+        if (data instanceof FormData) {
+            return this.requestFormData<T>(endpoint, data);
+        }
+        
+        // Otherwise, use standard JSON request
         return this.request<T>(endpoint, {
-        method: "POST",
-        body: JSON.stringify(data),
+            method: "POST",
+            body: JSON.stringify(data),
         });
+    }
+
+    /**
+     * Internal method for FormData requests (file uploads)
+     */
+    private async requestFormData<T>(endpoint: string, formData: FormData): Promise<ApiResponse<T>> {
+        const url = `${this.baseUrl}${endpoint}`;
+
+        const config: RequestInit = {
+            method: "POST",
+            credentials: 'include',
+            body: formData,
+            // Note: Don't set Content-Type header - browser will set it with boundary
+        };
+
+        let response = await fetch(url, config);
+
+        if (response.status === 401) {
+            const refreshed = await this.refreshToken();
+            if (refreshed) {
+                response = await fetch(url, config);
+            }
+        }
+
+        if (response.status === 204) {
+            return { status: response.status, data: {} as T };
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            const error = new Error(data.message || "Request failed") as HttpError;
+            error.status = response.status;
+            error.data = data;
+            throw error;
+        }
+
+        return { status: response.status, data };
     }
 
     /**

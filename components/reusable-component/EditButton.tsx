@@ -1,21 +1,16 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useRouter } from "next/navigation";
 import { Camera } from "lucide-react";
 import { useState } from "react";
 
 type EditButtonProps = {
     className?: string;
+    onClick: () => void;
 };
 
-export const EditButton = ({ className = "" }: EditButtonProps) => {
-    const router = useRouter();
+export const EditButton = ({ className = "", onClick}: EditButtonProps) => {
     const [isHovered, setIsHovered] = useState(false);
-
-    const handleClick = () => {
-        router.push("/dashboard");
-    }
 
     return (
         <div className="absolute bottom-1 right-1">
@@ -44,7 +39,7 @@ export const EditButton = ({ className = "" }: EditButtonProps) => {
             {/* Main button */}
             <motion.button
                 className={`relative z-10 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 rounded-full p-2.5 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 border-2 border-white/80 ${className}`}
-                onClick={handleClick}
+                onClick={onClick}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 whileHover={{ scale: 1.1, rotate: 15 }}
