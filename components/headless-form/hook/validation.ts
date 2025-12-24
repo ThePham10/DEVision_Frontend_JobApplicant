@@ -1,6 +1,6 @@
 // Validation types and utilities for form fields
 
-import { ValidationRule, FieldValidation, ValidationErrors } from "../types/types";
+import { ValidationRule, FieldValidation, ValidationErrors, FormFieldValue, FormValues } from "../types/types";
 
 // ============================================================
 // PASSWORD VALIDATION
@@ -12,19 +12,19 @@ import { ValidationRule, FieldValidation, ValidationErrors } from "../types/type
 // ============================================================
 export const passwordValidationRules: ValidationRule[] = [
     {
-        validate: (value) => value.length >= 8,
+        validate: (value) => typeof value === 'string' && value.length >= 8,
         message: "Password must be at least 8 characters",
     },
     {
-        validate: (value) => /[0-9]/.test(value),
+        validate: (value) => typeof value === 'string' && /[0-9]/.test(value),
         message: "Password must contain at least 1 number",
     },
     {
-        validate: (value) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(value),
+        validate: (value) => typeof value === 'string' && /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(value),
         message: "Password must contain at least 1 special character (e.g., $#@!)",
     },
     {
-        validate: (value) => /[A-Z]/.test(value),
+        validate: (value) => typeof value === 'string' && /[A-Z]/.test(value),
         message: "Password must contain at least 1 uppercase letter",
     },
 ];
@@ -39,15 +39,16 @@ export const passwordValidationRules: ValidationRule[] = [
 // ============================================================
 export const emailValidationRules: ValidationRule[] = [
     {
-        validate: (value) => value.length < 255,
+        validate: (value) => typeof value === 'string' && value.length < 255,
         message: "Email must be less than 255 characters",
     },
     {
-        validate: (value) => (value.match(/@/g) || []).length === 1,
+        validate: (value) => typeof value === 'string' && (value.match(/@/g) || []).length === 1,
         message: "Email must contain exactly one '@' symbol",
     },
     {
         validate: (value) => {
+            if (typeof value !== 'string') return false;
             const atIndex = value.indexOf('@');
             if (atIndex === -1) return false;
             const afterAt = value.substring(atIndex + 1);
@@ -56,7 +57,7 @@ export const emailValidationRules: ValidationRule[] = [
         message: "Email must contain at least one '.' after the '@' symbol",
     },
     {
-        validate: (value) => !/[\s()[\];:]/.test(value),
+        validate: (value) => typeof value === 'string' && !/[\s()\[\];:]/.test(value),
         message: "Email cannot contain spaces or prohibited characters ( ) [ ] ; :",
     },
 ];
@@ -69,11 +70,12 @@ export const emailValidationRules: ValidationRule[] = [
 // ============================================================
 export const phoneValidationRules: ValidationRule[] = [
     {
-        validate: (value) => /^\+\d+(\s\d+)?$/.test(value.replace(/\s+/g, ' ').trim()),
+        validate: (value) => typeof value === 'string' && /^\+\d+(\s\d+)?$/.test(value.replace(/\s+/g, ' ').trim()),
         message: "Phone must start with '+' followed by country code and contain only digits",
     },
     {
         validate: (value) => {
+            if (typeof value !== 'string') return false;
             // Extract local number (after the dial code and space)
             const parts = value.trim().split(/\s+/);
             // If there's no space, check total digits after +
@@ -100,10 +102,36 @@ export const patterns = {
 
 // Validate a single field (with optional access to all values for cross-field validation)
 export function validateField(
-    value: string,
+    value: FormFieldValue,
     validation: FieldValidation,
-    allValues?: Record<string, string>
+    allValues?: FormValues
 ): string | null {
+    // Handle File validation
+    if (value instanceof File) {
+        // For file inputs, only check if required
+        if (validation.required && !value) {
+            return validation.requiredMessage || "This field is required";
+        }
+        // Run custom validations for files
+        if (validation.custom) {
+            for (const rule of validation.custom) {
+                if (!rule.validate(value, allValues)) {
+                    return rule.message;
+                }
+            }
+        }
+        return null;
+    }
+
+    // Handle null/undefined
+    if (value === null || value === undefined) {
+        if (validation.required) {
+            return validation.requiredMessage || "This field is required";
+        }
+        return null;
+    }
+
+    // Handle string validation (existing logic)
     const trimmedValue = value.trim();
 
     // Required check
@@ -151,13 +179,13 @@ export function validateField(
 
 // Validate all fields
 export function validateForm(
-    values: Record<string, string>,
+    values: FormValues,
     validations: Record<string, FieldValidation>
 ): ValidationErrors {
     const errors: ValidationErrors = {};
 
     for (const [fieldName, validation] of Object.entries(validations)) {
-        const value = values[fieldName] || "";
+        const value = values[fieldName] ?? "";
         const error = validateField(value, validation, values);
         if (error) {
             errors[fieldName] = error;

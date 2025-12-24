@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, Activity } from "react"
 import Table from "@/components/headless-table/Table"
 import JobPostCard from "../JobPostCard"
 import { loadJobPost } from "../service/JobPostTableService"
@@ -10,6 +10,7 @@ import type { FormConfig } from "@/components/headless-form/types/types"
 import { FaTimes } from "react-icons/fa"
 import Modal from "@/components/reusable-component/Modal"
 import JobPostDetail from "@/components/job-post/job-post-table/ui/JobPostDetail"
+import { useAuthStore } from "@/store/authStore";
 
 // Filter form configuration
 const filterFormConfig: FormConfig = {
@@ -62,11 +63,53 @@ const filterFormConfig: FormConfig = {
     buttonClassName: "col-span-4",
 }
 
+const jobApplicationFormConfig : FormConfig = {
+    children: [
+        {
+            title: "Full Name",
+            name: "fullName",
+            type: "text",
+            placeholder: "Enter your full name",
+            colSpan: 2
+        },
+        {
+            title: "Email",
+            name: "email",
+            type: "email",
+            placeholder: "Enter your email",
+            colSpan: 2
+        },
+        {
+            title: "Phone Number",
+            name: "phoneNumber",
+            type: "text",
+            placeholder: "Enter your phone number",
+            colSpan: 2
+        },
+        {
+            title: "Cover Letter",
+            name: "coverLetter",
+            type: "file",
+            placeholder: "Upload your cover letter",
+            colSpan: 2
+        },
+    ],
+    buttonText: "Submit Application",
+    layout: {
+        type: "grid",
+        columns: 2,
+        gap: "6",
+    },
+    buttonClassName: "col-span-2",
+}
+
 const JobPostTable = () => {
     // State for filters
     const [filters, setFilters] = useState<JobPostFilters>({})
     const [ isOpen, setIsOpen] = useState(false)
+    const [ isJobApplicationOpen, setIsJobApplicationOpen] = useState(false)
     const [ selectedJob, setSelectedJob ] = useState<JobPost | null>(null)
+    const { user } = useAuthStore();
     
     // Create a service function that includes current filters
     const loadJobPostWithFilters = useCallback(
@@ -106,6 +149,12 @@ const JobPostTable = () => {
         console.log(post)
         setSelectedJob(post)
         setIsOpen(true)
+    }
+
+    const handleApply = (post: JobPost) => {
+        console.log(post)
+        setSelectedJob(post)
+        setIsJobApplicationOpen(true)
     }
 
     return (
@@ -172,6 +221,7 @@ const JobPostTable = () => {
                 title="Available Positions"
                 CardComponent={JobPostCard}
                 onViewDetail={handleViewDetail}
+                onApply={handleApply}
                 loadItemService={loadJobPostWithFilters}
                 limit={10}
                 showTotal={true}
@@ -179,18 +229,35 @@ const JobPostTable = () => {
             />
 
 
-            {isOpen && (
-                <Modal
+            <Modal
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     title={selectedJob?.title}
                     size="large"
                 >
-                    {selectedJob && (
-                        <JobPostDetail job={selectedJob} />
-                    )}
-                </Modal>
-            )}
+                    <Activity mode={selectedJob ? "visible" : "hidden"}>
+                        {selectedJob && (
+                            <JobPostDetail job={selectedJob} />
+                        )}
+                    </Activity>
+            </Modal>
+
+            <Modal
+                isOpen={isJobApplicationOpen}
+                onClose={() => setIsJobApplicationOpen(false)}
+                title="Job Application"
+                size="large">
+                <HeadlessForm
+                    config={jobApplicationFormConfig}
+                    onSubmit={() => console.log("Submmited")}
+                    initialValues={
+                        {
+                            fullName: user?.name || "",
+                            email: user?.email || "",
+                        }
+                    }
+                />
+            </Modal>
         </div>
     )
 }

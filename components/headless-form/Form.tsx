@@ -38,6 +38,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         touched,
         isSubmitting,
         handleChange,
+        handleFileChange,
         handleBlur,
         handleSubmit,
         getFieldError,
@@ -60,7 +61,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         
         if (dialCode) {
             // Get current phone value and extract just the local number
-            const currentPhone = values[phoneFieldName] || "";
+            const currentPhone = String(values[phoneFieldName] || "");
             const localNumber = extractLocalNumber(currentPhone);
             
             // Set new phone value with dial code
@@ -119,11 +120,49 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                     title = {child.title}
                     name = {child.name}
                     placeholder = {child.placeholder}
-                    value = {values[child.name] || ""}
+                    value = {String(values[child.name] || "")}
                     onChange = {(e) => handleChange(child.name, e.target.value)}
                     onBlur = {() => handleBlur(child.name)}
                     options = {child.options}
                     onClear = {() => handleChange(child.name, "")} />
+            );
+        }
+
+        // File input field
+        if (child.type === "file") {
+            const fileValue = values[child.name];
+            const fileName = fileValue instanceof File ? fileValue.name : "";
+            return (
+                <div key={index} className={colSpanClass}>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {child.title}
+                    </label>
+                    <div className="relative">
+                        <input
+                            type="file"
+                            name={child.name}
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0] || null;
+                                handleFileChange(child.name, file);
+                            }}
+                            onBlur={() => handleBlur(child.name)}
+                            className="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100
+                                cursor-pointer"
+                        />
+                        {fileName && (
+                            <p className="mt-1 text-sm text-gray-500">Selected: {fileName}</p>
+                        )}
+                    </div>
+                    {fieldError && (
+                        <p className="mt-1 text-sm text-red-500">{fieldError}</p>
+                    )}
+                </div>
             );
         }
 
@@ -145,6 +184,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
 
         // Special handling for phone/tel field
         if (child.type === "tel" && child.name === phoneFieldName) {
+            const phoneValue = String(values[child.name] || "");
             return (
                 <PhoneNumberInputField 
                     key={index}
@@ -153,7 +193,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                     selectedDialCode = {selectedDialCode}
                     fieldError = {fieldError} 
                     placeholder = {child.placeholder}
-                    value = {selectedDialCode ? extractLocalNumber(values[child.name] || "") : (values[child.name] || "")}
+                    value = {selectedDialCode ? extractLocalNumber(phoneValue) : phoneValue}
                     onChange = {(e) => handlePhoneChange(e.target.value)}
                     onBlur = {() => handleBlur(child.name)}
                 />
@@ -168,7 +208,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                     name={child.name}
                     type={child.type}
                     placeholder={child.placeholder}
-                    value={values[child.name] || ""}
+                    value={String(values[child.name] || "")}
                     onChange={(e) => handleChange(child.name, e.target.value)}
                     onBlur={() => handleBlur(child.name)}
                     errorMessage={fieldError}

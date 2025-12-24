@@ -63,6 +63,7 @@ type UseFormReturn = {
     isSubmitting: boolean;
     isValid: boolean;
     handleChange: (name: string, value: string) => void;
+    handleFileChange: (name: string, file: File | null) => void;
     handleBlur: (name: string) => void;
     handleSubmit: (e?: React.FormEvent) => void;
     setFieldValue: (name: string, value: string) => void;
@@ -79,7 +80,7 @@ type UseFormReturn = {
 };
 
 type ValidationRule = {
-    validate: (value: string, allValues?: Record<string, string>) => boolean;
+    validate: (value: FormFieldValue, allValues?: FormValues) => boolean;
     message: string;
 };
 
@@ -97,6 +98,9 @@ type FieldValidation = {
 
 export type ValidationErrors = Record<string, string>;
 
-export type FormValues = Record<string, string>;
+// FormFieldValue can be a string (text inputs) or File (file inputs)
+export type FormFieldValue = string | File | null;
+
+export type FormValues = Record<string, FormFieldValue>;
 
 export type { FormChild, FormConfig, HeadlessFormProps, UseFormOptions, UseFormReturn, ValidationRule, FieldValidation, SelectOption };

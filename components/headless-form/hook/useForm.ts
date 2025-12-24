@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
-import { ValidationErrors, FormValues, UseFormOptions, UseFormReturn } from "../types/types"
+import { ValidationErrors, FormValues, FormFieldValue, UseFormOptions, UseFormReturn } from "../types/types"
 
 import { 
     validateField, 
@@ -27,7 +27,7 @@ export function useForm({
 
     // Validate a single field
     const validateSingleField = useCallback(
-        (name: string, value: string, currentValues: FormValues) => {
+        (name: string, value: FormFieldValue, currentValues: FormValues) => {
             const validation = validations[name];
             if (!validation) return null;
             return validateField(value, validation, currentValues);
@@ -60,13 +60,23 @@ export function useForm({
         [validateOnChange, validateSingleField]
     );
 
+    // Handle file change
+    const handleFileChange = useCallback(
+        (name: string, file: File | null) => {
+            setValues(prev => ({ ...prev, [name]: file }));
+            // Mark as touched when file is selected
+            setTouched(prev => ({ ...prev, [name]: true }));
+        },
+        []
+    );
+
     // Handle blur
     const handleBlur = useCallback(
         (name: string) => {
             setTouched(prev => ({ ...prev, [name]: true }));
 
             if (validateOnBlur) {
-                const value = values[name] || "";
+                const value = values[name] ?? "";
                 const error = validateSingleField(name, value, values);
                 setErrors(prev => {
                     const newErrors = { ...prev };
@@ -130,10 +140,10 @@ export function useForm({
         setIsSubmitting(false);
     }, [initialValues]);
 
-    // Get field props (for easier binding)
+    // Get field props (for easier binding - for string fields only)
     const getFieldProps = useCallback(
         (name: string) => ({
-            value: values[name] || "",
+            value: String(values[name] || ""),
             onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(name, e.target.value),
             onBlur: () => handleBlur(name),
@@ -170,6 +180,7 @@ export function useForm({
         isSubmitting,
         isValid: !hasErrors(errors),
         handleChange,
+        handleFileChange,
         handleBlur,
         handleSubmit,
         setFieldValue,
