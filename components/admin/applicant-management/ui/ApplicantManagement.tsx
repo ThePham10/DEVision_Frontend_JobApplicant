@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { ApplicantFilters, ApplicantAccount } from "../types";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { Search, X } from "lucide-react";
 import Button from "@/components/reusable-component/Button";
 import { loadApplicants } from "../service/ApplicantManagementService";
 import { AnimatePresence } from "framer-motion";
 import ApplicantManagementCard from "./ApplicantManagementCard";
 import Modal from "@/components/reusable-component/Modal";
+import Dropdown from "@/components/reusable-component/headless-dropdown/ui/Dropdown";
 
 const ApplicantManagement = () => {
     const [page, setPage] = useState(1);
@@ -108,7 +109,7 @@ const ApplicantManagement = () => {
                 <h2 className="font-[Inter] text-lg font-semibold mb-4">Search Applicant Account</h2>
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1 relative">
-                        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
                             value={searchName}
@@ -119,7 +120,7 @@ const ApplicantManagement = () => {
                         />
                     </div>
                     <div className="flex-1 relative">
-                        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
                             value={searchEmail}
@@ -130,25 +131,43 @@ const ApplicantManagement = () => {
                         />
                     </div>
                     
-                    <select
-                        value={emailFilter}
-                        onChange={(e) => setEmailFilter(e.target.value)}
-                        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter] bg-white"
-                    >   
-                        <option value="">Email Status</option>
-                        <option value="active">Verified</option>
-                        <option value="inactive">Not Verified</option>
-                    </select>
+                    <Dropdown 
+                        items={[
+                            {
+                                id: "1",
+                                name: "Verified",
+                                value: "active",
+                                icon: "badge-check"
+                            },
+                            {
+                                id: "2",
+                                name: "Not Verified",
+                                value: "inactive",
+                                icon: "badge-alert"
+                            }
+                        ]}
+                        onChange={(e) => setEmailFilter(e.value)}
+                        showSearch={false}
+                    />
 
-                    <select
-                        value={subscriptionFilter}
-                        onChange={(e) => setSubscriptionFilter(e.target.value)}
-                        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter] bg-white"
-                    >   
-                        <option value="">Subscription Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Expired</option>
-                    </select>
+                    <Dropdown 
+                        items={[
+                            {
+                                id: "1",
+                                name: "Active",
+                                value: "active",
+                                icon: "eye"
+                            },
+                            {
+                                id: "2",
+                                name: "Inactive",
+                                value: "inactive",
+                                icon: "eye-closed"
+                            }
+                        ]}
+                        onChange={(e) => setSubscriptionFilter(e.value)}
+                        showSearch={false}
+                    />
 
                     <Button text="Search" onClick={handleSearch} />
                 </div>
@@ -159,7 +178,7 @@ const ApplicantManagement = () => {
                         {filters.name && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Name: {filters.name}
-                                <FaTimes 
+                                <X
                                     onClick={() => {
                                         setSearchName("");
                                         setFilters(prev => ({ ...prev, name: undefined }));
@@ -171,7 +190,7 @@ const ApplicantManagement = () => {
                         {filters.email && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Email: {filters.email}
-                                <FaTimes 
+                                <X 
                                     onClick={() => {
                                         setSearchEmail("");
                                         setFilters(prev => ({ ...prev, email: undefined }));
@@ -183,7 +202,7 @@ const ApplicantManagement = () => {
                         {filters.emailVerified !== undefined && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Email Verified: {filters.emailVerified ? "Verified" : "Not Verified"}
-                                <FaTimes 
+                                <X 
                                     onClick={() => {
                                         setEmailFilter("");
                                         setFilters(prev => ({ ...prev, emailVerified: undefined }));
@@ -195,7 +214,7 @@ const ApplicantManagement = () => {
                         {filters.subscription !== undefined && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Subscription: {filters.subscription ? "Active" : "Expired"}
-                                <FaTimes 
+                                <X 
                                     onClick={() => {
                                         setSubscriptionFilter("");
                                         setFilters(prev => ({ ...prev, subscription: undefined }));

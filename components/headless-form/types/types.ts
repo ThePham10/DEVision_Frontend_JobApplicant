@@ -1,8 +1,10 @@
 import { UserCredential } from "firebase/auth";
 
 type SelectOption = {
-    label: string;
-    value: string;
+    id: string;
+    name: string;
+    value?: string;
+    icon?: string;
 };
 
 type FormChild = {

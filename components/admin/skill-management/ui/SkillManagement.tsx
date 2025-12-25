@@ -4,10 +4,10 @@ import SkillCard from "./SkillCard";
 import SkillForm from "./SkillForm";
 import Modal from "@/components/reusable-component/Modal";
 import Button from "@/components/reusable-component/Button";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { Search, X } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import useSkillManagement from "../hook/SkillManagementHook";
-import JobCategoryDropDownMenu from "../job-category-drop-down-menu/ui/JobCategoryDropDownMenu";
+import Dropdown from "@/components/reusable-component/headless-dropdown/ui/Dropdown";
 
 export default function SkillManagement() {
     const {
@@ -35,44 +35,45 @@ export default function SkillManagement() {
     } = useSkillManagement();
     
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold font-[Inter] text-gray-900">
+                    <h1 className="text-xl sm:text-2xl font-bold font-[Inter] text-gray-900">
                         Skill Management
                     </h1>
-                    <p className="text-gray-500 font-[Inter]">
+                    <p className="text-sm sm:text-base text-gray-500 font-[Inter]">
                         Manage skills that applicants can use on their profiles
                     </p>
                 </div>
                 <Button 
                     text="Add Skill" 
                     onClick={openAddModal}
-                    style="flex items-center gap-2"
+                    style="flex items-center gap-2 w-full sm:w-auto justify-center"
                 />
             </div>
             
             {/* Filters */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h2 className="font-[Inter] text-lg font-semibold mb-4">Search Skills</h2>
-                <div className="flex flex-col sm:flex-row gap-4">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h2 className="font-[Inter] text-base sm:text-lg font-semibold mb-3 sm:mb-4">Search Skills</h2>
+                <div className="flex flex-row gap-3 sm:gap-4">
                     <div className="flex-1 relative">
-                        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                             placeholder="Search by skill name..."
-                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
+                            className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
                         />
                     </div>
-                    <JobCategoryDropDownMenu
-                        onChange={(value) => setCategoryFilter(value.id)}
-                        jobCategories={jobCategories}
+
+                    <Dropdown 
+                        items={jobCategories}
+                        onChange={((value) => setCategoryFilter(value.id))}
                     />
-                    <Button text="Search" onClick={handleSearch} />
+                    <Button text="Search" onClick={handleSearch} style="w-full sm:w-auto" />
                 </div>
                 
                 {/* Active Filters */}
@@ -82,7 +83,7 @@ export default function SkillManagement() {
                         {filters.name && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Name: {filters.name}
-                                <FaTimes 
+                                <X 
                                     onClick={() => {
                                         setSearchTerm("");
                                         setFilters(prev => ({ ...prev, name: undefined }));
@@ -94,7 +95,7 @@ export default function SkillManagement() {
                         {filters.jobCategoryId && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Category: {getCategoryName(filters.jobCategoryId)}
-                                <FaTimes 
+                                <X 
                                     onClick={() => {
                                         setCategoryFilter("");
                                         setFilters(prev => ({ ...prev, jobCategoryId: undefined }));
@@ -171,10 +172,6 @@ export default function SkillManagement() {
                     skill={editingSkill}
                     jobCategories={jobCategories}
                     onSubmit={handleFormSubmit}
-                    onCancel={() => {
-                        setIsModalOpen(false);
-                        setEditingSkill(null);
-                    }}
                     isLoading={isSubmitting}
                 />
             </Modal>

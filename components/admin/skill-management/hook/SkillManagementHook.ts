@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Skill, SkillFilters} from "../types";
 import { loadSkills, loadSkillsByCategory, createSkill, updateSkill, deleteSkill, loadJobCategories, deActiveSkill } from "../service/SkillService";
 import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
@@ -45,23 +45,14 @@ export default function useSkillManagement() {
         getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
     })
     
-    const allSkills = useMemo(() => 
-        skillData?.pages.flatMap(page => page.data) ?? [], 
-        [skillData]
-    );
-    const totalSkills = useMemo(() => 
-        skillData?.pages[0]?.total ?? 0, 
-        [skillData]
-    );
+    // Derived state - React 19 Compiler handles memoization automatically
+    const allSkills = skillData?.pages.flatMap(page => page.data) ?? [];
+    const totalSkills = skillData?.pages[0]?.total ?? 0;
 
-    const skills = useMemo(() => {
-        let result = allSkills;
-        if (filters.name) {
-            const nameFilter = filters.name.toLowerCase();
-            result = result.filter(s => s.name.toLowerCase().includes(nameFilter));
-        }
-        return result;
-    }, [allSkills, filters]);
+    // Filter skills by name if filter is active
+    const skills = filters.name
+        ? allSkills.filter(s => s.name.toLowerCase().includes(filters.name!.toLowerCase()))
+        : allSkills;
 
     const createMutation = useMutation({
         mutationFn: createSkill,
@@ -133,7 +124,7 @@ export default function useSkillManagement() {
     };
     
     // Handle form submit
-    const handleFormSubmit = async (data: { name: string; jobCategoryId?: string; description?: string }) => {
+    const handleFormSubmit = async (data: { name: string; jobCategoryId?: string; description?: string; icon?: string }) => {
         setIsSubmitting(true);
         if (editingSkill) {
             updateMutation.mutate({ id: editingSkill.id, data });
@@ -145,6 +136,7 @@ export default function useSkillManagement() {
                 name: data.name,
                 jobCategoryId: data.jobCategoryId,
                 description: data.description,
+                icon: data.icon,
             }); 
         }
         setIsSubmitting(false);

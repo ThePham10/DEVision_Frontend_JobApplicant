@@ -1,31 +1,83 @@
 "use client";
 
-import { useJobCategoryDropdown } from "../hook/JobCategoryDropDownMenuHook";
-import { JobCategory } from "../../types";
+import { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Search, Check, Folder } from "lucide-react";
+import { useDropdown, DropdownItem } from "../hook/useDropdown";
 import { icons } from "@/components/reusable-component/Icon";
-import { ChevronDown, Search, Check } from "lucide-react";
 
-type JobCategoryDropdownProps = {
-    onChange?: (jobCategory: JobCategory) => void;
-    jobCategories: JobCategory[];
+export interface DropdownProps<T extends DropdownItem> {
+    items: T[];
+    onChange?: (item: T) => void;
     title?: string;
-};
+    placeholder?: string;
+    searchPlaceholder?: string;
+    searchableFields?: (keyof T)[];
+    width?: string;
+    showSearch?: boolean;
+    showCount?: boolean;
+    showIcons?: boolean;
+    renderItem?: (item: T, isSelected: boolean) => ReactNode;
+    renderSelectedItem?: (item: T) => ReactNode;
+    countLabel?: { singular: string; plural: string };
+}
 
-export default function JobCategoryDropDownMenu({ onChange, jobCategories, title }: JobCategoryDropdownProps) {
+export default function Dropdown<T extends DropdownItem>({
+    items,
+    onChange,
+    title,
+    placeholder = "Select an option",
+    searchPlaceholder = "Search...",
+    searchableFields = ["name"],
+    width = "w-full sm:w-[300px]",
+    showSearch = true,
+    showCount = true,
+    showIcons = true,
+    renderItem,
+    renderSelectedItem,
+    countLabel = { singular: "item", plural: "items" },
+}: DropdownProps<T>) {
     const {
         isOpen,
-        selectedJobCategory,
+        selectedItem,
         searchTerm,
-        filteredJobCategories,
+        filteredItems,
         dropdownRef,
         setSearchTerm,
         handleSelect,
         toggleDropdown,
-    } = useJobCategoryDropdown(jobCategories, onChange);
+    } = useDropdown(items, onChange, searchableFields as (keyof T)[]);
+
+    // Default icon renderer
+    const getIcon = (iconName?: string) => {
+        const Icon = icons[iconName || "Other"] || Folder;
+        return <Icon className="w-4 h-4 text-gray-500" />;
+    };
+
+    // Default item renderer
+    const defaultRenderItem = (item: T, isSelected: boolean) => (
+        <div className="flex items-center gap-3 min-w-0">
+            {showIcons && <span>{getIcon(item.icon)}</span>}
+            <span className={`truncate text-sm ${
+                isSelected ? 'text-indigo-700 font-semibold' : 'text-gray-700'
+            }`}>
+                {item.name}
+            </span>
+        </div>
+    );
+
+    // Default selected item renderer
+    const defaultRenderSelectedItem = (item: T) => (
+        <div className="flex items-center gap-2.5 min-w-0">
+            {showIcons && <span>{getIcon(item.icon)}</span>}
+            <span className="truncate text-gray-800 font-medium">
+                {item.name}
+            </span>
+        </div>
+    );
 
     return (
-        <div className="w-full sm:w-[300px]" ref={dropdownRef}>
+        <div className={width} ref={dropdownRef}>
             {title && (
                 <label className="block text-sm font-medium text-gray-700 mb-1.5 font-[Inter]">
                     {title}
@@ -51,17 +103,11 @@ export default function JobCategoryDropDownMenu({ onChange, jobCategories, title
                         }
                     `}
                 >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                        <span>
-                            {(() => {
-                                const Icon = selectedJobCategory ? icons[selectedJobCategory.icon || "Other"] : icons["Other"];
-                                return <Icon className="w-4 h-4 text-gray-500" />;
-                            })()}
-                        </span>
-                        <span className={`truncate ${!selectedJobCategory ? 'text-gray-400' : 'text-gray-800 font-medium'}`}>
-                            {selectedJobCategory ? selectedJobCategory.name : "Select a category"}
-                        </span>
-                    </div>
+                    {selectedItem ? (
+                        renderSelectedItem ? renderSelectedItem(selectedItem) : defaultRenderSelectedItem(selectedItem)
+                    ) : (
+                        <span className="text-gray-400 truncate">{placeholder}</span>
+                    )}
                     <motion.span
                         animate={{ rotate: isOpen ? 180 : 0 }}
                         transition={{ duration: 0.2 }}
@@ -82,62 +128,53 @@ export default function JobCategoryDropDownMenu({ onChange, jobCategories, title
                             className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden"
                         >
                             {/* Search Input */}
-                            <div className="p-3 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-gray-50">
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search categories..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg 
-                                            focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 
-                                            transition-all duration-200 placeholder:text-gray-400"
-                                        autoFocus
-                                    />
+                            {showSearch && (
+                                <div className="p-3 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-gray-50">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            placeholder={searchPlaceholder}
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg 
+                                                focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 
+                                                transition-all duration-200 placeholder:text-gray-400"
+                                            autoFocus
+                                        />
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Options List */}
                             <ul className="max-h-[240px] overflow-y-auto py-1">
-                                {filteredJobCategories.length === 0 ? (
+                                {filteredItems.length === 0 ? (
                                     <li className="px-4 py-6 text-sm text-gray-400 text-center flex flex-col items-center gap-2">
-                                        <span>No categories found</span>
+                                        <span>No {countLabel.plural} found</span>
                                     </li>
                                 ) : (
-                                    filteredJobCategories.map((jobCategory, idx) => {
-                                        const IconComponent = icons[jobCategory.icon || "Other"];
+                                    filteredItems.map((item, idx) => {
+                                        const isSelected = selectedItem?.id === item.id;
 
                                         return (
                                             <motion.li
-                                                key={jobCategory.id}
+                                                key={item.id}
                                                 initial={{ opacity: 0, x: -10 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: idx * 0.03 }}
-                                                onClick={() => handleSelect(jobCategory)}
+                                                onClick={() => handleSelect(item)}
                                                 className={`
                                                     px-4 py-3 cursor-pointer
                                                     flex items-center justify-between gap-3
                                                     transition-all duration-150
-                                                    ${selectedJobCategory?.id === jobCategory.id
+                                                    ${isSelected
                                                         ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-indigo-500'
                                                         : 'hover:bg-gradient-to-r hover:from-gray-50 hover:to-slate-50 border-l-4 border-transparent'
                                                     }
                                                 `}
                                             >
-                                                <div className="flex items-center gap-3 min-w-0">
-                                                    <span>
-                                                        <IconComponent />
-                                                    </span>
-                                                    <span className={`truncate text-sm ${
-                                                        selectedJobCategory?.id === jobCategory.id 
-                                                            ? 'text-indigo-700 font-semibold' 
-                                                            : 'text-gray-700'
-                                                    }`}>
-                                                        {jobCategory.name}
-                                                    </span>
-                                                </div>
-                                                {selectedJobCategory?.id === jobCategory.id && (
+                                                {renderItem ? renderItem(item, isSelected) : defaultRenderItem(item, isSelected)}
+                                                {isSelected && (
                                                     <motion.span
                                                         initial={{ scale: 0 }}
                                                         animate={{ scale: 1 }}
@@ -147,16 +184,16 @@ export default function JobCategoryDropDownMenu({ onChange, jobCategories, title
                                                     </motion.span>
                                                 )}
                                             </motion.li>
-                                        )
+                                        );
                                     })
                                 )}
                             </ul>
 
                             {/* Footer with count */}
-                            {filteredJobCategories.length > 0 && (
+                            {showCount && filteredItems.length > 0 && (
                                 <div className="px-4 py-2 bg-gradient-to-r from-slate-50 to-gray-50 border-t border-gray-100">
                                     <span className="text-xs text-gray-400 font-[Inter]">
-                                        {filteredJobCategories.length} categor{filteredJobCategories.length === 1 ? 'y' : 'ies'} available
+                                        {filteredItems.length} {filteredItems.length === 1 ? countLabel.singular : countLabel.plural} available
                                     </span>
                                 </div>
                             )}
@@ -167,4 +204,3 @@ export default function JobCategoryDropDownMenu({ onChange, jobCategories, title
         </div>
     );
 }
-
