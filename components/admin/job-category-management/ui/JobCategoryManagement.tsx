@@ -4,14 +4,15 @@ import JobCategoryCard from "./JobCategoryCard";
 import JobCategoryForm from "./JobCategoryForm";
 import Modal from "@/components/reusable-component/Modal";
 import Button from "@/components/reusable-component/Button";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { Search, X } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import useJobCategoryManagment from "../hook/JobCategoryManagmentHook";
+import Dropdown from "@/components/headless-dropdown/ui/Dropdown";
 
 export default function JobCategoryManagement() {
     const {
         searchTerm, setSearchTerm,
-        activeFilter, setActiveFilter,
+        setActiveFilter,
         filters, setFilters,
         setPage,
         isFetching,
@@ -36,49 +37,52 @@ export default function JobCategoryManagement() {
     } = useJobCategoryManagment();
     
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold font-[Inter] text-gray-900">
+                    <h1 className="text-xl sm:text-2xl font-bold font-[Inter] text-gray-900">
                         Job Category Management
                     </h1>
-                    <p className="text-gray-500 font-[Inter]">
+                    <p className="text-sm sm:text-base text-gray-500 font-[Inter]">
                         Manage job categories for organizing skills
                     </p>
                 </div>
                 <Button 
                     text="Add Category" 
                     onClick={openAddModal}
-                    style="flex items-center gap-2"
+                    style="flex items-center gap-2 w-full sm:w-auto justify-center"
                 />
             </div>
             
             {/* Filters */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h2 className="font-[Inter] text-lg font-semibold mb-4">Search Categories</h2>
-                <div className="flex flex-col sm:flex-row gap-4">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
+                <h2 className="font-[Inter] text-base sm:text-lg font-semibold mb-3 sm:mb-4">Search Categories</h2>
+                <div className="flex flex-row gap-3 sm:gap-4">
                     <div className="flex-1 relative">
-                        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                             placeholder="Search by name or description..."
-                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
+                            className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
                         />
                     </div>
-                    <select
-                        value={activeFilter}
-                        onChange={(e) => setActiveFilter(e.target.value)}
-                        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter] bg-white"
-                    >
-                        <option value="">All Status</option>
-                        <option value="active">Active Only</option>
-                        <option value="inactive">Inactive Only</option>
-                    </select>
-                    <Button text="Search" onClick={handleSearch} />
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <Dropdown 
+                            items={[
+                                {id: "1", value: "", name: "All Status", icon: "globe" },
+                                {id: "2", value: "active", name: "Active Only", icon: "eye" },
+                                {id: "3", value: "inactive", name: "Inactive Only", icon: "eye-closed" },
+                            ]}
+                            placeholder="Select Status"
+                            onChange={(e) => setActiveFilter(e.value)}
+                            showSearch={false}
+                        />
+                        <Button text="Search" onClick={handleSearch} style="w-full sm:w-auto" />
+                    </div>
                 </div>
                 
                 {/* Active Filters */}
@@ -88,7 +92,7 @@ export default function JobCategoryManagement() {
                         {filters.name && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Name: {filters.name}
-                                <FaTimes 
+                                <X 
                                     onClick={() => {
                                         setSearchTerm("");
                                         setFilters(prev => ({ ...prev, name: undefined }));
@@ -100,7 +104,7 @@ export default function JobCategoryManagement() {
                         {filters.isActive !== undefined && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Status: {filters.isActive ? "Active" : "Inactive"}
-                                <FaTimes 
+                                <X 
                                     onClick={() => {
                                         setActiveFilter("");
                                         setFilters(prev => ({ ...prev, isActive: undefined }));

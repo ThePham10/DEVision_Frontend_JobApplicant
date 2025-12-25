@@ -8,8 +8,8 @@ import { useForm } from "./hook/useForm";
 import { Country } from "@/components/headless-form/country-drop-down-menu/api/countryDropDownMenuService";
 import { HeadlessFormProps, FormChild, FieldValidation } from "./types/types";
 import PhoneNumberInputField from "./PhoneNumberInputField";
-import DropDownMenu from "../reusable-component/DropDownMenu";
 import SalarySlider from "./SalarySlider"
+import Dropdown from "../headless-dropdown/ui/Dropdown";
 
 
 export const HeadlessForm: React.FC<HeadlessFormProps> = ({ 
@@ -115,16 +115,16 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         // Generic select/dropdown field
         if (child.type === "select" && child.options) {
             return (
-                <DropDownMenu 
-                    key={index}
-                    title = {child.title}
-                    name = {child.name}
-                    placeholder = {child.placeholder}
-                    value = {String(values[child.name] || "")}
-                    onChange = {(e) => handleChange(child.name, e.target.value)}
-                    onBlur = {() => handleBlur(child.name)}
-                    options = {child.options}
-                    onClear = {() => handleChange(child.name, "")} />
+                <div key={index}>
+                    <label>
+                        {child.title}
+                    </label>
+                    <Dropdown
+                        items = {child.options}
+                        onChange={(value) => handleChange(child.name, value.id)}
+                        width="w-full"
+                    />
+                </div>
             );
         }
 
@@ -134,11 +134,12 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
             const fileName = fileValue instanceof File ? fileValue.name : "";
             return (
                 <div key={index} className={colSpanClass}>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label>
                         {child.title}
                     </label>
                     <div className="relative">
                         <input
+                            key={index}
                             type="file"
                             name={child.name}
                             accept="image/*"

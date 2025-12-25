@@ -65,7 +65,7 @@ export default function InfoCard({
                     </div>
                 )}
                 
-                <div className="flex-1 text-left">
+                <div className={`flex-1 ${Icon ? "text-left" : "text-center"}`}>
                     <h3 className={`
                         text-sm font-semibold mb-0.5
                         ${isDanger 

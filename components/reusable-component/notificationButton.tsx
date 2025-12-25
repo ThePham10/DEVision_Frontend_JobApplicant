@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-import { PopUpBox } from "@/components/popUpBox/PopUpBox";
+import { PopUpBox } from "@/components/reusable-component/PopUpBox";
 
 type NotificationProps = {
     id: string;

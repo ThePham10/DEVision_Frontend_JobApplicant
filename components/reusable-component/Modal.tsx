@@ -69,7 +69,7 @@ export default function Modal({
                     onClick={onClose}
                 >
                     <motion.div
-                        className={`bg-white rounded-xl shadow-2xl w-[90%] ${sizeClasses[size]} max-h-[85vh] overflow-y-auto`}
+                        className={`bg-white rounded-xl shadow-2xl w-[90%] ${sizeClasses[size]} max-h-[85vh] flex flex-col overflow-visible`}
                         initial={{ opacity: 0, scale: 0.95, y: -20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -20 }}
@@ -85,7 +85,7 @@ export default function Modal({
                                 {title}
                             </button>
                         )}
-                        <div className="p-6">{children}</div>
+                        <div className="p-6 overflow-visible flex-1">{children}</div>
                     </motion.div>
                 </motion.div>
             )}

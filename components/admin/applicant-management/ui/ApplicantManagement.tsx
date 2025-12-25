@@ -1,9 +1,9 @@
 "use client";
 
-import { FaSearch } from "react-icons/fa";
+import { Search, X } from "lucide-react";
 import Button from "@/components/reusable-component/Button";
 import { AnimatePresence } from "framer-motion";
-import ApplicantManagementCard from "./ApplicantManagementCard";
+import ApplicantManagementCard from "../applicant-management-card/ui/ApplicantManagementCard";
 import Modal from "@/components/reusable-component/Modal";
 import useApplicantManagement from "../hook/ApplicantManagementHook";
 
@@ -40,7 +40,7 @@ const ApplicantManagement = () => {
                 <h2 className="font-[Inter] text-lg font-semibold mb-4">Search Applicant Account</h2>
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1 relative">
-                        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
                             //value={searchName}
@@ -59,7 +59,7 @@ const ApplicantManagement = () => {
                         {filters.name && (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                                 Name: {filters.name}
-                                <FaTimes 
+                                <X
                                     onClick={() => {
                                         setSearchName("");
                                         setFilters(prev => ({ ...prev, name: undefined }));
