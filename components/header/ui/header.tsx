@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 import logoutUser from "../service/HeaderService";
 import { DEVisionLogoButton } from "@/components/reusable-component/DEVisionLogoButton";
 import { AvatarFrame } from "@/components/reusable-component/AvatarFrame";
-import { PopUpBox } from "@/components/popUpBox/popUpBox";
+import { PopUpBox } from "@/components/reusable-component/PopUpBox";
 import InfoCard from "@/components/reusable-component/InfoCard";
 import { NotificationButton } from "@/components/reusable-component/NotificationButton";
 

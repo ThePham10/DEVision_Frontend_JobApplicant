@@ -9,7 +9,7 @@ import { Country } from "@/components/headless-form/country-drop-down-menu/api/c
 import { HeadlessFormProps, FormChild, FieldValidation } from "./types/types";
 import PhoneNumberInputField from "./PhoneNumberInputField";
 import SalarySlider from "./SalarySlider"
-import Dropdown from "../reusable-component/headless-dropdown/ui/Dropdown";
+import Dropdown from "../headless-dropdown/ui/Dropdown";
 
 
 export const HeadlessForm: React.FC<HeadlessFormProps> = ({ 

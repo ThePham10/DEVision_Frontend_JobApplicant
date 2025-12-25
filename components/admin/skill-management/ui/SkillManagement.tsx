@@ -7,7 +7,7 @@ import Button from "@/components/reusable-component/Button";
 import { Search, X } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import useSkillManagement from "../hook/SkillManagementHook";
-import Dropdown from "@/components/reusable-component/headless-dropdown/ui/Dropdown";
+import Dropdown from "@/components/headless-dropdown/ui/Dropdown";
 
 export default function SkillManagement() {
     const {

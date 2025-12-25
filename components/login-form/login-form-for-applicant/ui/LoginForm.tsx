@@ -1,13 +1,14 @@
-"use client";
+"use client"
 
 import { HeadlessForm } from "@/components/headless-form/Form";
-import { useRegisterForm } from "./hook/RegisterFormHook";
+import { useLoginForm } from "../hook/LoginFormHook";
 
-export const RegisterForm = () => {
+
+export const LoginForm = () => {
     const {
         formConfig,
-        handleSubmit
-    } = useRegisterForm();
+        handleSubmit,
+    } = useLoginForm();
 
     return (
         <HeadlessForm config={formConfig} onSubmit={handleSubmit}/>
