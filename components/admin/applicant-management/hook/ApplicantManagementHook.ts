@@ -1,112 +1,99 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 import { ApplicantFilters, ApplicantAccount } from "../types";
-import { loadApplicants } from "../service/ApplicantManagementService";
+import { loadApplicants, deactivateApplicant, activateApplicant } from "../service/ApplicantManagementService";
+import { useInfiniteQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
-const useApplicantManagement = () => {
-    const [page, setPage] = useState(1);
-    const [searchName, setSearchName] = useState("");
-    const [searchEmail, setSearchEmail] = useState("");
-    const [emailFilter, setEmailFilter] = useState("");
-    const [subscriptionFilter, setSubscriptionFilter] = useState("");
-    const [filters, setFilters] = useState<ApplicantFilters>({});
+export default function useApplicantManagement() { 
 
-    const [applicants, setApplicants] = useState<ApplicantAccount[]>([]);
-    const [total, setTotal] = useState(0);
-    const [hasMore, setHasMore] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [deactivateConfirm, setDeactivateConfirm] = useState<ApplicantAccount | null>(null);
+    const [activateConfirm, setActivateConfirm] = useState<ApplicantAccount | null>(null);
 
-    const [deleteConfirm, setDeleteConfirm] = useState<ApplicantAccount | null>(null);
-    const [isFetching, setIsFetching] = useState(false);
+    const queryClient = useQueryClient();
 
-    const loading = isLoading || isFetching;
+    // Filter state
+    // const [searchName, setSearchName] = useState("");
+    // const [statusFilter, setStatusFilter] = useState("");
+    // const [filters, setFilters] = useState<ApplicantFilters>({});
 
-    const handleDelete = async () => {
-        if (deleteConfirm) {
-            setIsLoading(true);
-            
-            try {
-                setApplicants(
-                    prev => prev.filter(
-                        applicant => applicant.id !== deleteConfirm.id
-                    )
-                );
-                setTotal(prev => prev - 1);
-                setDeleteConfirm(null);
-            } catch (err) {
-                console.error("Failed to delete applicant:", err);
-            } finally {
-                setIsLoading(false);
-            }
+    // use to refetch data when page or filters change
+    // cache the data based on page and filters
+    const {
+        data: applicantsData,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+    } = useInfiniteQuery({
+        // applicants: indicates the data being queried
+        queryKey: ["applicants"],
+        // first fetch uses page 1
+        queryFn: ({ pageParam = 1 }) => {
+            return loadApplicants(pageParam, 10);
+        },
+
+        // set the starting page for the first query to 1
+        initialPageParam: 1,
+
+        // determines the next page to fetch based on the data received from the last fetched page
+        getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
+    });
+
+    const allApplicants = useMemo(() => 
+        applicantsData?.pages.flatMap(page => page.data) ?? [], 
+        [applicantsData]
+    );
+
+    const totalApplicantsCount = useMemo(() => 
+        applicantsData?.pages[0]?.total ?? 0, 
+        [applicantsData]
+    );
+
+    const deactivateMutation = useMutation({
+        mutationFn: deactivateApplicant,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["applicants"] });
+            setIsModalOpen(false);
+            setDeactivateConfirm(null);
         }
+    });
+
+    const activateMutation = useMutation({
+        mutationFn: activateApplicant,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["applicants"] });
+            setIsModalOpen(false);
+            setActivateConfirm(null);
+        }
+    });
+
+    const handleDeActivate = (applicant: ApplicantAccount) => {
+        deactivateMutation.mutate(applicant.id);
     }
 
-    const fetchApplicants = async () => {
-        setIsLoading(true);
-        setIsFetching(true);
-        
-        try {
-            const response = await loadApplicants(page, 10, filters);
-            setApplicants(response.data);
-            setTotal(response.total);
-            setHasMore(response.hasMore);
-        } catch (err) {
-            console.error("Failed to load applicants:", err);
-        } finally {
-            setIsFetching(false);
-            setIsLoading(false);
-        }
-    };
+    const handleActivate = (applicant: ApplicantAccount) => {
+        activateMutation.mutate(applicant.id);
+    }
 
-    // Fetch data whenever page or filters change
-    useEffect(() => {
-        fetchApplicants();
-
-    }, [page, filters]);
-
-    const handleSearch = () => {
-        setPage(1); // Reset to first page when searching
-        setFilters({
-            name: searchName || undefined,
-            email: searchEmail || undefined,
-            emailVerified: emailFilter === "" ? undefined : emailFilter === "active",
-            subscription: subscriptionFilter === "" ? undefined : subscriptionFilter === "active",
-        });
-    };
-    
-    const clearFilters = () => {
-        setFilters({});
-        setSearchName("");
-        setSearchEmail("");
-        setEmailFilter("");
-        setSubscriptionFilter("");
-        setPage(1);
-    };
+    const handleLoadMore = () => {
+        fetchNextPage();
+    }
 
     return {
-        applicants,
-        total,
-        hasMore,
-        loading,
-        filters, setFilters,
+        allApplicants,
+        totalApplicantsCount,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
         isLoading,
-        isFetching,
-        deleteConfirm, setDeleteConfirm,
-        handleDelete,
-        handleSearch,
-        clearFilters,
-        page,
-        setPage,
-        searchName,
-        setSearchName,
-        searchEmail,
-        setSearchEmail,
-        emailFilter,
-        setEmailFilter,
-        subscriptionFilter,
-        setSubscriptionFilter,
-    };
+        handleLoadMore,
+        isModalOpen,
+        setIsModalOpen,
+        deactivateConfirm,
+        setDeactivateConfirm,
+        handleDeActivate,
+        handleActivate,
+        activateConfirm,
+        setActivateConfirm
+    }
 }
-
-export default useApplicantManagement;
