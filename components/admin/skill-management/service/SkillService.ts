@@ -1,7 +1,7 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { Skill, PaginatedResponse} from "../types";
 import { JobCategory } from "../../job-category-management/types";
-import { SKILL_URL, JOB_CATEGORY_URL } from "@/Config/URLConfig";
+import { SKILL_URL, JOB_CATEGORY_URL } from "@/config/URLConfig";
 
 /**
  * Load job categories
