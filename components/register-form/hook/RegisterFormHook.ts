@@ -1,13 +1,11 @@
 import { commonValidations } from "@/components/headless-form/Form";
 import { FormValues } from "@/components/headless-form/types/types";
 import registerUser from "../service/RegisterFormService";
-import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import type { FormConfig } from "@/components/headless-form/types/types"
 
 
 export const useRegisterForm = () => {
-    const { setUser } = useAuthStore();
     const router = useRouter();
 
     const formConfig : FormConfig = {
