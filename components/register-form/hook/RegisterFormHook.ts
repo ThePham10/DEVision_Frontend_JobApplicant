@@ -107,10 +107,8 @@ export const useRegisterForm = () => {
             };
 
             const response = await registerUser(registerData);
-            if (response.status === 201) {
-                console.log("Registration successful!");
-                setUser(response.data);
-                router.push("/login");
+            if (response.success && response.emailSent) {
+                router.push("/verify-email");
             }
 
         } catch (err) {

@@ -9,7 +9,11 @@ type RegisterData = {
 }
 
 type UserData = {
-    id: string;
+    user: User;
+}
+
+type User = {
+  id: string;
     email: string;
     name: string;
     role: string;
