@@ -4,7 +4,7 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "motion/react"
 import { useRouter } from "next/navigation"
 import { useState, useEffect, Activity } from "react"
-import { FaBars, FaTimes } from "react-icons/fa"
+import { Menu, X } from "lucide-react"
 
 type Tab = {
     title: string;
@@ -55,7 +55,7 @@ export const NavBar = ({isAdmin, pathname}: NavBarProps) => {
     ] : [
         {title: 'Home', path: '/'},
         {title: 'Jobs', path: '/jobs'},
-        {title: 'Job Application', path: '/job-application'}
+        {title: 'Job Application', path: '/my-applications'}
     ]
     
     return (
@@ -102,9 +102,9 @@ export const NavBar = ({isAdmin, pathname}: NavBarProps) => {
                 aria-expanded={isMobileMenuOpen}
             >
                 {isMobileMenuOpen ? (
-                    <FaTimes className="w-5 h-5" />
+                    <X className="w-5 h-5" />
                 ) : (
-                    <FaBars className="w-5 h-5" />
+                    <Menu className="w-5 h-5" />
                 )}
             </button>
 
@@ -137,7 +137,7 @@ export const NavBar = ({isAdmin, pathname}: NavBarProps) => {
                                     className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
                                     aria-label="Close menu"
                                 >
-                                    <FaTimes className="w-5 h-5" />
+                                    <X className="w-5 h-5" />
                                 </button>
                             </div>
                             

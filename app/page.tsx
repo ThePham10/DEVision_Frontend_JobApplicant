@@ -8,7 +8,7 @@ import SecondaryButton from "@/components/reusable-component/SecondaryButton";
 import { useRouter } from "next/navigation";
 import { motion, useInView } from "motion/react";
 import { useMainPageScroll } from "@/hooks/useMainPageScroll";
-import { FaSearch, FaUsers, FaDollarSign } from "react-icons/fa";
+import {Search, Users, DollarSign } from "lucide-react";
 import React, { useRef } from "react";
 
 type DoodleIconData = {
@@ -81,9 +81,9 @@ export default function Page() {
     const { visibleCards, servicesRef } = useMainPageScroll();
 
     const services = [
-        { title: "Smart Job Search", description: "Advanced search filters to find jobs matching your skills, location, and salary expectations.", icon: FaSearch, colSpan: 1 },
-        { title: "Profile Management", description: "Create a comprehensive profile showcasing your education, experience, and technical skills.", icon: FaUsers, colSpan: 1 },
-        { title: "Premium Features", description: "Get real-time notifications for new jobs matching your criteria with our premium subscription.", icon: FaDollarSign, colSpan: 2 },
+        { title: "Smart Job Search", description: "Advanced search filters to find jobs matching your skills, location, and salary expectations.", icon: Search, colSpan: 1 },
+        { title: "Profile Management", description: "Create a comprehensive profile showcasing your education, experience, and technical skills.", icon: Users, colSpan: 1 },
+        { title: "Premium Features", description: "Get real-time notifications for new jobs matching your criteria with our premium subscription.", icon: DollarSign, colSpan: 2 },
     ];
 
     return (

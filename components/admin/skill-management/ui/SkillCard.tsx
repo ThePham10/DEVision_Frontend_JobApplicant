@@ -1,7 +1,7 @@
 "use client";
 
 import { Skill, JobCategory } from "../types";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { Edit, Trash } from "lucide-react";
 import { motion } from "framer-motion";
 import { icons } from "@/components/reusable-component/Icon";
 
@@ -70,7 +70,7 @@ export default function SkillCard({ skill, jobCategories, onEdit, onDelete, onCh
                     whileTap={{ scale: 0.95 }}
                     aria-label="Edit skill"
                 >
-                    <FaEdit size={16} />
+                    <Edit size={16} />
                 </motion.button>
                 
                 <motion.button
@@ -80,7 +80,7 @@ export default function SkillCard({ skill, jobCategories, onEdit, onDelete, onCh
                     whileTap={{ scale: 0.95 }}
                     aria-label="Delete skill"
                 >
-                    <FaTrash size={16} />
+                    <Trash size={16} />
                 </motion.button>
             </div>
         </motion.div>

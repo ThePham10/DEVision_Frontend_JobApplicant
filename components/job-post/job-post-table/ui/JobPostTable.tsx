@@ -1,28 +1,27 @@
 "use client";
 
 import { Activity } from "react"
-import Table from "@/components/headless-table/Table"
 import JobPostCard from "../JobPostCard"
-import { JobPostFilters, JobPost } from "../types"
 import { HeadlessForm } from "@/components/headless-form/Form"
 import { X } from "lucide-react"
 import Modal from "@/components/reusable-component/Modal"
 import JobPostDetail from "@/components/job-post/job-post-table/ui/JobPostDetail"
 import { useJobPostTable } from "../hook/JobPostTableHook";
+import ApplicationModal from "@/components/job-application/ui/ApplicationModal";
 
 
 const JobPostTable = () => {
     const {
         filterFormConfig,
-        jobApplicationFormConfig,
         filters,
+        jobPosts,
+        loading,
+        error,
         isOpen,
         isJobApplicationOpen,
         selectedJob,
-        user,
         setIsOpen,
         setIsJobApplicationOpen,
-        loadJobPostWithFilters,
         handleFilterSubmit,
         removeFilter,
         handleViewDetail,
@@ -87,18 +86,39 @@ const JobPostTable = () => {
                 </div>
             )}
 
-            {/* Job Post Table */}
-            <Table<JobPost, JobPostFilters>
-                className="flex flex-col gap-5"
-                title="Available Positions"
-                CardComponent={JobPostCard}
-                onViewDetail={handleViewDetail}
-                onApply={handleApply}
-                loadItemService={loadJobPostWithFilters}
-                limit={10}
-                showTotal={true}
-                getItemId={(job) => job.id}
-            />
+            {/* Job Post List */}
+            <div className="flex flex-col gap-5">
+                <div className="flex justify-between">
+                    <div className="text-2xl font-bold">Available Positions</div>
+                    <div className="text-sm text-gray-500">
+                        Showing {jobPosts.length} results
+                    </div>
+                </div>
+
+                {loading && (
+                    <div className="text-center py-8">Loading job posts...</div>
+                )}
+
+                {error && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                        {error}
+                    </div>
+                )}
+
+                {!loading && !error && jobPosts.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">No job posts found</div>
+                )}
+
+                {!loading && !error && jobPosts.map((job) => (
+                    <JobPostCard
+                        key={job.jobId}
+                        item={job}
+                        onViewDetail={handleViewDetail}
+                        onApply={handleApply}
+                    />
+                ))}
+            </div>
+
 
 
             <Modal
@@ -114,22 +134,16 @@ const JobPostTable = () => {
                     </Activity>
             </Modal>
 
-            <Modal
-                isOpen={isJobApplicationOpen}
-                onClose={() => setIsJobApplicationOpen(false)}
-                title="Job Application"
-                size="large">
-                <HeadlessForm
-                    config={jobApplicationFormConfig}
-                    onSubmit={() => console.log("Submmited")}
-                    initialValues={
-                        {
-                            fullName: user?.name || "",
-                            email: user?.email || "",
-                        }
-                    }
+            {/* Application Modal */}
+            {selectedJob && (
+                <ApplicationModal
+                    isOpen={isJobApplicationOpen}
+                    onClose={() => setIsJobApplicationOpen(false)}
+                    jobId={String(selectedJob?.jobId)}
+                    jobTitle={selectedJob?.title}
+                    company={selectedJob?.companyName}
                 />
-            </Modal>
+            )}
         </div>
     )
 }

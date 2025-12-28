@@ -1,7 +1,7 @@
 "use client";
 
 import { JobCategory } from "../types";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { Edit, Trash } from "lucide-react";
 import { motion } from "framer-motion";
 import { icons } from "@/components/reusable-component/Icon";
 
@@ -62,7 +62,7 @@ export default function JobCategoryCard({ category, onDeactivate, onActivate, on
                     whileTap={{ scale: 0.95 }}
                     aria-label="Edit category"
                 >
-                    <FaEdit size={16} />
+                    <Edit size={16} />
                 </motion.button>
                 
                 <motion.button
@@ -72,7 +72,7 @@ export default function JobCategoryCard({ category, onDeactivate, onActivate, on
                     whileTap={{ scale: 0.95 }}
                     aria-label="Delete category"
                 >
-                    <FaTrash size={16} />
+                    <Trash size={16} />
                 </motion.button>
             </div>
         </motion.div>

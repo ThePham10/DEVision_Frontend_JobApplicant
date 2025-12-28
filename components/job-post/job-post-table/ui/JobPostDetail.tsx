@@ -1,5 +1,5 @@
 import Badge from "@/components/reusable-component/Badge";
-import { JobPost } from "../types";
+import { JobPost } from "../../types";
 import { MapPinned, DollarSign, Calendar } from "lucide-react";
 import SecondaryButton from "@/components/reusable-component/SecondaryButton";
 
@@ -17,10 +17,10 @@ const JobPostDetail = ({ job }: JobPostDetailProps) => {
                         {job.title}
                     </h3>
                     <p className="text-xl text-[#65758B] mt-1">
-                        {job.company}
+                        {job.companyName}
                     </p>
                 </div>
-                <Badge text={job.employmentType} />
+                <Badge text={job.primaryEmploymentType} />
             </div>
 
             {/* Info rows with icons */}
@@ -31,11 +31,11 @@ const JobPostDetail = ({ job }: JobPostDetailProps) => {
                 </div>
                 <div className="flex jobs-center gap-2">
                     <DollarSign />
-                    <span>${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}</span>
+                    <span>{job.salaryDisplay}</span>
                 </div>
                 <div className="flex jobs-center gap-2">
                     <Calendar />
-                    <span>Posted on 2025-11-10</span>
+                    <span>Posted on {job.postedDate}</span>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import { JobPost } from "./types"
+import { JobPost } from "../types"
 import Badge from "@/components/reusable-component/Badge"
 import { MapPinned, DollarSign, Calendar } from "lucide-react"
 import Button from "@/components/reusable-component/Button"
@@ -14,7 +14,7 @@ const JobPostCard = ({ item, onViewDetail, onApply }: { item: JobPost, onViewDet
                         {item.title}
                     </h3>
                     <p className="font-[Inter] text-sm text-[#65758B] mt-1">
-                        {item.company}
+                        {item.companyName}
                     </p>
                 </div>
                 <Badge text={item.employmentType} />
@@ -28,12 +28,20 @@ const JobPostCard = ({ item, onViewDetail, onApply }: { item: JobPost, onViewDet
                 </div>
                 <div className="flex items-center gap-2">
                     <DollarSign className="flex-shrink-0" />
-                    <span>${item.minSalary.toLocaleString()} - ${item.maxSalary.toLocaleString()}</span>
+                    <span>{item.salaryDisplay}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Calendar className="flex-shrink-0" />
-                    <span>Posted on 2025-11-10</span>
-                </div>
+                {item.postedDate && (
+                    <div className="flex items-center gap-2">
+                        <Calendar className="flex-shrink-0" />
+                        <span>Posted {new Date(item.postedDate).toLocaleDateString()}</span>
+                    </div>
+                )}
+                {item.expireDate && (
+                    <div className="flex items-center gap-2">
+                        <Calendar className="flex-shrink-0" />
+                        <span>Expiry {new Date(item.expireDate).toLocaleDateString()}</span>
+                    </div>
+                )}
             </div>
 
             {/* Skills badges */}

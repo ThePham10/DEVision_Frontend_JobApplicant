@@ -1,9 +1,9 @@
 
-import { useState, useCallback } from "react"
-import { loadJobPost } from "../service/JobPostTableService"
-import { JobPostFilters, PaginatedResponse, JobPost } from "../types"
-import { useAuthStore } from "@/store/authStore";
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { JobPostFilters, JobPost } from "../../types"
 import type { FormConfig } from "@/components/headless-form/types/types"
+import { loadJobPost } from "../service/JobPostTableService"
 
 const employmentType = [
     { id: "1", name: "All Types", value: "", icon: "briefcase-business" },
@@ -54,57 +54,35 @@ const filterFormConfig: FormConfig = {
     formClassName: "w-full",
 }
 
-const jobApplicationFormConfig : FormConfig = {
-    children: [
-        {
-            title: "Full Name",
-            name: "fullName",
-            type: "text",
-            placeholder: "Enter your full name",
-        },
-        {
-            title: "Email",
-            name: "email",
-            type: "email",
-            placeholder: "Enter your email",
-        },
-        {
-            title: "Phone Number",
-            name: "phoneNumber",
-            type: "text",
-            placeholder: "Enter your phone number",
-        },
-        {
-            title: "Cover Letter",
-            name: "coverLetter",
-            type: "file",
-            placeholder: "Upload your cover letter",
-        },
-    ],
-    buttonText: "Submit Application",
-    layout: {
-        type: "flex",
-        direction: "column",
-        gap: "4",
-    },
-    formClassName: "w-full",
-}
-
 const useJobPostTable = () => {
-        // State for filters
-    const [filters, setFilters] = useState<JobPostFilters>({})
-    const [ isOpen, setIsOpen] = useState(false)
-    const [ isJobApplicationOpen, setIsJobApplicationOpen] = useState(false)
-    const [ selectedJob, setSelectedJob ] = useState<JobPost | null>(null)
-    const { user } = useAuthStore();
+    const router = useRouter()
     
-    // Create a service function that includes current filters
-    const loadJobPostWithFilters = useCallback(
-        (page: number, limit: number): Promise<PaginatedResponse<JobPost>> => {
-            return loadJobPost(page, limit, filters)
-        },
-        [filters]
-    )
+    // State for job posts and UI
+    const [jobPosts, setJobPosts] = useState<JobPost[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+    const [filters, setFilters] = useState<JobPostFilters>({})
+    const [isOpen, setIsOpen] = useState(false)
+    const [isJobApplicationOpen, setIsJobApplicationOpen] = useState(false)
+    const [selectedJob, setSelectedJob] = useState<JobPost | null>(null)
+    
+    // Fetch job posts whenever filters change
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                setLoading(true)
+                setError(null)
+                const jobs = await loadJobPost(filters)
+                setJobPosts(jobs)
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to load job posts')
+            } finally {
+                setLoading(false)
+            }
+        }
+        
+        fetchJobs()
+    }, [filters])
     
     // Handle filter form submission
     const handleFilterSubmit = (formData: Record<string, unknown>) => {
@@ -133,9 +111,7 @@ const useJobPostTable = () => {
     }
 
     const handleViewDetail = (post: JobPost) => {
-        console.log(post)
-        setSelectedJob(post)
-        setIsOpen(true)
+        router.push(`/jobs/${post.jobId}`)
     }
 
     const handleApply = (post: JobPost) => {
@@ -147,15 +123,15 @@ const useJobPostTable = () => {
     return {
         employmentType,
         filterFormConfig,
-        jobApplicationFormConfig,
         filters,
+        jobPosts,
+        loading,
+        error,
         isOpen,
         isJobApplicationOpen,
         selectedJob,
-        user,
         setIsOpen,
         setIsJobApplicationOpen,
-        loadJobPostWithFilters,
         handleFilterSubmit,
         removeFilter,
         handleViewDetail,
