@@ -14,6 +14,7 @@ import { NotificationButton } from "@/components/reusable-component/Notification
 import { usePathname } from "next/navigation";
 import { NavBar } from "@/components/reusable-component/NavBar";
 import { Settings, Settings2, LogOut } from "lucide-react";
+import PremiumButton from "@/components/reusable-component/PremiumButton";
 
 export default function Header() {
     const router = useRouter();
@@ -69,6 +70,7 @@ export default function Header() {
 
                     {isAuthenticated && !isAdmin && (
                         <>
+                            <PremiumButton />
                             <NotificationButton />
                             <PopUpBox
                                 trigger={
