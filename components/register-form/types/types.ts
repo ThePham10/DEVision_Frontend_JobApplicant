@@ -19,6 +19,7 @@ type User = {
   role: string;
   country: string;
   emailVerified: boolean;
+  isPremium: boolean;
 }
 
 export type { RegisterData, UserData }

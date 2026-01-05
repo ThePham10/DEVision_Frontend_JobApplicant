@@ -9,12 +9,14 @@ type AuthUser = {
     role: string,
     country?: string,
     emailVerified: boolean,
+    isPremium: boolean,  // Premium user flag
 }
 
 interface AuthStore {
     user: AuthUser | null;
     isAuthenticated: boolean;
     isAdmin: boolean;
+    isPremium: boolean;  // Premium user flag
     _hasHydrated: boolean;
 
     setUser: (user : AuthUser) => void;
@@ -29,20 +31,23 @@ export const useAuthStore = create<AuthStore>()(
             user: null,
             isAuthenticated: false,
             isAdmin: false,
+            isPremium: false,  // Default to non-premium
             _hasHydrated: false,
 
             setUser: (user : AuthUser) => 
                 set({
                     user,
                     isAuthenticated: true,
-                    isAdmin: user.role === "admin"
+                    isAdmin: user.role === "admin",
+                    isPremium: user.isPremium  // Set from user data
                 }),
             
             clearUser: () => 
                 set({
                     user: null,
                     isAuthenticated: false,
-                    isAdmin: false
+                    isAdmin: false,
+                    isPremium: false  // Reset to non-premium
                 }),
 
             setIsAuthenticated: (state: boolean) =>

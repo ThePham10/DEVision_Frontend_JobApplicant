@@ -29,6 +29,7 @@ export const ContinueWithGoogleButton = () => {
                         role: response.data.user.role,
                         country: response.data.user.country,
                         emailVerified: response.data.user.emailVerified,
+                        isPremium: response.data.user.isPremium
                     });
                     router.push("/jobs");
                 }

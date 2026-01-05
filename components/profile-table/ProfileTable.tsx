@@ -6,6 +6,7 @@ import ProfileSkillBox from "./profile-box/skill-box/ui/ProfileSkillBox";
 import ProfileEducationBox from "./profile-box/education-box/ui/ProfileEducationBox";
 import ProfileWorkExpBox from "./profile-box/work-experience-box/ui/ProfileWorkExpBox";
 import SummaryBox from "./profile-box/summary-box/ui/SummaryBox";
+import SearchProfileBox from "./profile-box/search-profile-box/ui/SearchProfileBox";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -40,6 +41,10 @@ export const ProfileTable = () => {
         >
             <motion.div variants={itemVariants}>
                 <AvatarBox />
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+                <SearchProfileBox />
             </motion.div>
             
             <motion.div variants={itemVariants}>

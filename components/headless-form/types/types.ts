@@ -19,6 +19,7 @@ type FormChild = {
     colSpan?: number;
     rowSpan?: number;
     options?: SelectOption[];  // For select/dropdown fields
+    multiple?: boolean;  // For multi-select dropdowns
     // Range slider properties
     min?: number;
     max?: number;
@@ -64,7 +65,7 @@ type UseFormReturn = {
     touched: Record<string, boolean>;
     isSubmitting: boolean;
     isValid: boolean;
-    handleChange: (name: string, value: string) => void;
+    handleChange: (name: string, value: FormFieldValue) => void;
     handleFileChange: (name: string, file: File | null) => void;
     handleBlur: (name: string) => void;
     handleSubmit: (e?: React.FormEvent) => void;
@@ -100,8 +101,8 @@ type FieldValidation = {
 
 export type ValidationErrors = Record<string, string>;
 
-// FormFieldValue can be a string (text inputs) or File (file inputs)
-export type FormFieldValue = string | File | null;
+// FormFieldValue can be a string (text inputs), string[] (tags/multi-checkbox), or File (file inputs)
+export type FormFieldValue = string | string[] | File | null;
 
 export type FormValues = Record<string, FormFieldValue>;
 

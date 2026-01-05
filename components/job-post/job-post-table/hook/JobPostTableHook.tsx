@@ -38,11 +38,11 @@ const filterFormConfig: FormConfig = {
         {
             name: "salaryRange", 
             title: "Salary Range", 
-            type: "range", 
+            type: "dual-range", 
             placeholder: "Select salary range",
             min: 0,
-            max: 10000,
-            step: 100,
+            max: 200000,
+            step: 1000,
         }
     ],
     buttonText: "Search Jobs",
@@ -90,7 +90,9 @@ const useJobPostTable = () => {
             jobTitle: formData.jobTitle as string || undefined,
             location: formData.location as string || undefined,
             employmentType: employmentType.find((type) => type.id === formData.employmentType)?.value || undefined,
-            minSalary: formData.salaryRange ? Number(formData.salaryRange) : undefined,
+            // Dual-range slider creates {name}_min and {name}_max fields
+            minSalary: formData.salaryRange_min ? Number(formData.salaryRange_min) : undefined,
+            maxSalary: formData.salaryRange_max ? Number(formData.salaryRange_max) : undefined,
         }
         
         // Remove undefined/empty values

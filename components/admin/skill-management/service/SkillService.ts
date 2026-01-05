@@ -1,22 +1,6 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { Skill, PaginatedResponse} from "../types";
-import { JobCategory } from "../../job-category-management/types";
-import { SKILL_URL, JOB_CATEGORY_URL } from "@/config/URLConfig";
-
-/**
- * Load job categories
- */
-async function loadJobCategories(limit: number): Promise<JobCategory[]> {
-    const response = await httpHelper.get<PaginatedResponse<JobCategory>>(JOB_CATEGORY_URL + "?limit=" + limit);
-    return response.data.data;
-}
-
-/**
- * Get category by ID
- */
-// function getCategoryById(categoryId: string): JobCategory | undefined {
-//     return mockJobCategories.find(cat => cat.id === categoryId);
-// }
+import { SKILL_URL } from "@/config/URLConfig";
 
 /**
  * Load all skills with pagination
@@ -140,4 +124,4 @@ async function deleteSkill(id: string): Promise<boolean> {
     return response.status === 200;
 }
 
-export { loadSkills, loadSkillsByCategory, createSkill, updateSkill, deActiveSkill, deleteSkill, loadJobCategories };
+export { loadSkills, loadSkillsByCategory, createSkill, updateSkill, deActiveSkill, deleteSkill };

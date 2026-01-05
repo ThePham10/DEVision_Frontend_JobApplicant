@@ -73,11 +73,14 @@ const JobPostTable = () => {
                             />
                         </span>
                     )}
-                    {filters.minSalary && (
+                    {(filters.minSalary || filters.maxSalary) && (
                         <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                            Min Salary: ${filters.minSalary.toLocaleString()}
+                            Salary: ${filters.minSalary?.toLocaleString() ?? '0'} - ${filters.maxSalary?.toLocaleString() ?? '∞'}
                             <X
-                                onClick={() => removeFilter('minSalary')}
+                                onClick={() => {
+                                    removeFilter('minSalary');
+                                    removeFilter('maxSalary');
+                                }}
                                 className="ml-1 hover:bg-blue-200 rounded-full p-0.5"
                                 aria-label="Remove salary filter"
                             />
@@ -141,7 +144,7 @@ const JobPostTable = () => {
                     onClose={() => setIsJobApplicationOpen(false)}
                     jobId={String(selectedJob?.jobId)}
                     jobTitle={selectedJob?.title}
-                    company={selectedJob?.companyName}
+                    company={selectedJob?.companyName as string}
                 />
             )}
         </div>

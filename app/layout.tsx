@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import QueryProvider from "@/providers/QueryProvider";
+import {DataInitializer} from "@/providers/data-initializer-provider/DataInitializer";
 
 // Load Inter font with all weights you need
 const inter = Inter({ 
@@ -26,7 +27,9 @@ export default function RootLayout({children,}: Readonly<{
         <html lang="en" suppressHydrationWarning>
             <body className={`${inter.className} antialiased`}>
                 <QueryProvider>
-                    {children}
+                    <DataInitializer>
+                        {children}
+                    </DataInitializer>
                 </QueryProvider>
             </body>
         </html>

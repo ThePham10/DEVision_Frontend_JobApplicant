@@ -71,7 +71,12 @@ export default function SkillManagement() {
 
                     <Dropdown 
                         items={jobCategories}
-                        onChange={((value) => setCategoryFilter(value.id))}
+                        onChange={(value) => {
+                            if (value && !Array.isArray(value)) {
+                                setCategoryFilter(value.id);
+                                setFilters(prev => ({ ...prev, jobCategoryId: value.id }));
+                            }
+                        }}
                     />
                     <Button text="Search" onClick={handleSearch} style="w-full sm:w-auto" />
                 </div>

@@ -8,8 +8,9 @@ import { useForm } from "./hook/useForm";
 import { Country } from "@/components/headless-form/country-drop-down-menu/api/countryDropDownMenuService";
 import { HeadlessFormProps, FormChild, FieldValidation } from "./types/types";
 import PhoneNumberInputField from "./PhoneNumberInputField";
-import SalarySlider from "./SalarySlider"
 import Dropdown from "../headless-dropdown/ui/Dropdown";
+import MultiCheckbox from "./MultiCheckbox";
+import DualRangeSlider from "./DualRangeSlider";
 
 
 export const HeadlessForm: React.FC<HeadlessFormProps> = ({ 
@@ -114,16 +115,33 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
 
         // Generic select/dropdown field
         if (child.type === "select" && child.options) {
+            const handleDropdownChange = (value: { id: string } | { id: string }[] | null) => {
+                if (child.multiple) {
+                    // Multi-select: extract array of IDs
+                    const ids = Array.isArray(value) ? value.map(v => v.id) : [];
+                    handleChange(child.name, ids as unknown as string);
+                } else {
+                    // Single select: extract single ID
+                    const id = value && !Array.isArray(value) ? value.id : "";
+                    handleChange(child.name, id);
+                }
+            };
+
             return (
-                <div key={index}>
-                    <label>
+                <div key={index} className={colSpanClass}>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
                         {child.title}
                     </label>
                     <Dropdown
-                        items = {child.options}
-                        onChange={(value) => handleChange(child.name, value.id)}
+                        items={child.options}
+                        onChange={handleDropdownChange}
+                        multiple={child.multiple}
+                        placeholder={child.placeholder}
                         width="w-full"
                     />
+                    {fieldError && (
+                        <p className="mt-1 text-sm text-red-500">{fieldError}</p>
+                    )}
                 </div>
             );
         }
@@ -167,19 +185,47 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
             );
         }
 
-        // Range slider field
-        if (child.type === "range") {
+        // Multi-checkbox field (for employment status)
+        if (child.type === "multi-checkbox" && child.options) {
+            const selectedValues = Array.isArray(values[child.name])
+                ? values[child.name] as string[]
+                : [];
             return (
-                <SalarySlider 
-                    key={index}
-                    title = {child.title}
-                    name = {child.name}
-                    min = {child.min}
-                    max = {child.max}
-                    step = {child.step}
-                    currentValue = {Number(values[child.name]) || (child.min ?? 0)}
-                    onChange = {(e) => handleChange(child.name, e.target.value)}
-                />
+                <div key={index} className={colSpanClass}>
+                    <MultiCheckbox
+                        title={child.title}
+                        name={child.name}
+                        options={child.options}
+                        value={selectedValues}
+                        onChange={(selected) => handleChange(child.name, selected as unknown as string)}
+                        errorMessage={fieldError}
+                    />
+                </div>
+            );
+        }
+
+        // Dual range slider (for salary min/max)
+        if (child.type === "dual-range") {
+            const minKey = `${child.name}_min`;
+            const maxKey = `${child.name}_max`;
+            const minVal = Number(values[minKey]) || (child.min ?? 0);
+            const maxVal = Number(values[maxKey]) || (child.max ?? 200000);
+            return (
+                <div key={index} className={colSpanClass}>
+                    <DualRangeSlider
+                        title={child.title}
+                        name={child.name}
+                        min={child.min}
+                        max={child.max}
+                        step={child.step}
+                        minValue={minVal}
+                        maxValue={maxVal}
+                        onChange={(newMin, newMax) => {
+                            handleChange(minKey, String(newMin));
+                            handleChange(maxKey, String(newMax));
+                        }}
+                    />
+                </div>
             );
         }
 
@@ -187,17 +233,19 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         if (child.type === "tel" && child.name === phoneFieldName) {
             const phoneValue = String(values[child.name] || "");
             return (
-                <PhoneNumberInputField 
-                    key={index}
-                    title = {child.title}
-                    name = {child.name}
-                    selectedDialCode = {selectedDialCode}
-                    fieldError = {fieldError} 
-                    placeholder = {child.placeholder}
-                    value = {selectedDialCode ? extractLocalNumber(phoneValue) : phoneValue}
-                    onChange = {(e) => handlePhoneChange(e.target.value)}
-                    onBlur = {() => handleBlur(child.name)}
-                />
+                <div key={index} className={colSpanClass}>
+                    <PhoneNumberInputField 
+                        key={index}
+                        title = {child.title}
+                        name = {child.name}
+                        selectedDialCode = {selectedDialCode}
+                        fieldError = {fieldError} 
+                        placeholder = {child.placeholder}
+                        value = {selectedDialCode ? extractLocalNumber(phoneValue) : phoneValue}
+                        onChange = {(e) => handlePhoneChange(e.target.value)}
+                        onBlur = {() => handleBlur(child.name)}
+                    />
+                </div>
             );
         }
 

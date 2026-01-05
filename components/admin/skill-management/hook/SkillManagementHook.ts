@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Skill, SkillFilters} from "../types";
-import { loadSkills, loadSkillsByCategory, createSkill, updateSkill, deleteSkill, loadJobCategories, deActiveSkill } from "../service/SkillService";
-import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { loadSkills, createSkill, updateSkill, deleteSkill, deActiveSkill } from "../service/SkillService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useDataStore } from "@/store/dataStore";
+
+const PAGE_SIZE = 10; // Number of items to show per "page"
 
 export default function useSkillManagement() {
     const queryClient = useQueryClient();
@@ -19,40 +22,40 @@ export default function useSkillManagement() {
     const [categoryFilter, setCategoryFilter] = useState("");
     const [filters, setFilters] = useState<SkillFilters>({});
 
-    const { data: categoriesData} = useQuery ({
-        queryKey: ["jobCategories"],
-        queryFn: () => loadJobCategories(1000),
-    })
+    // Client-side pagination state
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-    const jobCategories = categoriesData ?? [];
+    const {jobCategories} = useDataStore();
 
+    // Load ALL skills at once (use a high limit)
     const {
         data: skillData,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
         isLoading,
-    } = useInfiniteQuery({
-        queryKey: ["skills", filters],
-        queryFn: ({pageParam}) => {
-            // Use different API based on whether category filter is active
-            if (filters.jobCategoryId) {
-                return loadSkillsByCategory(filters.jobCategoryId);
-            }
-            return loadSkills(pageParam, 10);
-        },
-        initialPageParam: 1,
-        getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
-    })
+    } = useQuery({
+        queryKey: ["skills"],
+        queryFn: () => loadSkills(1, 1000), // Load all skills with high limit
+    });
     
-    // Derived state - React 19 Compiler handles memoization automatically
-    const allSkills = skillData?.pages.flatMap(page => page.data) ?? [];
-    const totalSkills = skillData?.pages[0]?.total ?? 0;
+    // Get all skills from data
+    const allSkills = skillData?.data ?? [];
+    const totalSkills = skillData?.total ?? 0;
 
-    // Filter skills by name if filter is active
-    const skills = filters.name
-        ? allSkills.filter(s => s.name.toLowerCase().includes(filters.name!.toLowerCase()))
-        : allSkills;
+    // Apply client-side filters
+    const filteredSkills = allSkills.filter(skill => {
+        // Filter by name
+        if (filters.name && !skill.name.toLowerCase().includes(filters.name.toLowerCase())) {
+            return false;
+        }
+        // Filter by category
+        if (filters.jobCategoryId && skill.jobCategoryId !== filters.jobCategoryId) {
+            return false;
+        }
+        return true;
+    });
+
+    // Apply client-side lazy loading (pagination)
+    const skills = filteredSkills.slice(0, visibleCount);
+    const hasNextPage = visibleCount < filteredSkills.length;
 
     const createMutation = useMutation({
         mutationFn: createSkill,
@@ -92,7 +95,7 @@ export default function useSkillManagement() {
     })
 
     const handleLoadMore = () => {
-        fetchNextPage();
+        setVisibleCount(prev => prev + PAGE_SIZE);
     }
     
     // Handle search
@@ -102,6 +105,7 @@ export default function useSkillManagement() {
             jobCategoryId: categoryFilter || undefined,
         };
         setFilters(newFilters);
+        setVisibleCount(PAGE_SIZE); // Reset pagination when searching
     };
     
     // Clear filters
@@ -109,6 +113,7 @@ export default function useSkillManagement() {
         setSearchTerm("");
         setCategoryFilter("");
         setFilters({});
+        setVisibleCount(PAGE_SIZE); // Reset pagination when clearing filters
     };  
     
     // Open add modal
@@ -166,7 +171,6 @@ export default function useSkillManagement() {
         handleLoadMore,
         handleDeActivate,
         hasNextPage,
-        isFetchingNextPage,
         totalSkills,
         isModalOpen, setIsModalOpen,
         editingSkill, setEditingSkill,

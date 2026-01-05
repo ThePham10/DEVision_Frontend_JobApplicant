@@ -35,9 +35,9 @@ export function useForm({
         [validations]
     );
 
-    // Handle value change
+    // Handle value change (supports string, string[], File, or null)
     const handleChange = useCallback(
-        (name: string, value: string) => {
+        (name: string, value: FormFieldValue) => {
             setValues(prev => {
                 const newValues = { ...prev, [name]: value };
                 

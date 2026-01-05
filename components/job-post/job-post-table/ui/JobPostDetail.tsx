@@ -20,7 +20,7 @@ const JobPostDetail = ({ job }: JobPostDetailProps) => {
                         {job.companyName}
                     </p>
                 </div>
-                <Badge text={job.primaryEmploymentType} />
+                <Badge text={job.employmentType} />
             </div>
 
             {/* Info rows with icons */}

@@ -1,5 +1,3 @@
-
-import { JOB_POST_URL } from "@/config/URLConfig"
 import { JobPost, JobPostFilters, allJobPosts } from "../../types"
 
 /**
