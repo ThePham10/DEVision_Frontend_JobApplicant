@@ -2,15 +2,15 @@
 
 import { Activity } from "react"
 import JobPostCard from "../JobPostCard"
-import { HeadlessForm } from "@/components/headless-form/Form"
+import { HeadlessForm } from "@/components/headless-form"
 import { X } from "lucide-react"
-import Modal from "@/components/reusable-component/Modal"
-import JobPostDetail from "@/components/job-post/job-post-table/ui/JobPostDetail"
+import { Modal } from "@/components/reusable-component"
+import JobPostDetail from "./JobPostDetail"
 import { useJobPostTable } from "../hook/JobPostTableHook";
-import ApplicationModal from "@/components/job-application/ui/ApplicationModal";
+import { ApplicationModal } from "@/components/job-application";
 
 
-const JobPostTable = () => {
+export const JobPostTable = () => {
     const {
         filterFormConfig,
         filters,
@@ -150,5 +150,3 @@ const JobPostTable = () => {
         </div>
     )
 }
-
-export default JobPostTable

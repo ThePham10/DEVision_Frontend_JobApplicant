@@ -1,4 +1,4 @@
-import { HeadlessForm } from "@/components/headless-form/Form";
+import { HeadlessForm } from "@/components/headless-form/ui/Form";
 import type { FormConfig } from "@/components/headless-form/types/types";
 import { useAuthStore } from "@/store/authStore";
 

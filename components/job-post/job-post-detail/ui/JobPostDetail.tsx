@@ -1,8 +1,7 @@
 
-import Header from "@/components/header/ui/header"
-import Button from "@/components/reusable-component/Button"
-import SecondaryButton from "@/components/reusable-component/SecondaryButton"
-import ApplicationModal from "@/components/job-application/ui/ApplicationModal"
+import { Header } from "@/components/header/ui/header"
+import { Button, SecondaryButton } from "@/components/reusable-component"
+import {ApplicationModal} from "@/components/job-application/ui/ApplicationModal"
 import { motion } from "motion/react"
 import { MapPinned, DollarSign, Calendar, Building, CheckCircle } from "lucide-react"
 import { useJobPostDetail } from "../hook/JobPostDetailHook"

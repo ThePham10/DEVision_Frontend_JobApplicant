@@ -1,12 +1,11 @@
-import Button from "@/components/reusable-component/Button";
+import { Button, Modal } from "@/components/reusable-component";
 import { mockProfile } from "../../../Data";
 import ProfileEducationCard from "../ui/ProfileEducationCard";
-import Modal from "@/components/reusable-component/Modal";
 import { useState } from "react";
 import AddEducationForm from "./AddEducationForm";
 
 
-const ProfileEducationBox = () => {
+export const ProfileEducationBox = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -69,5 +68,3 @@ const ProfileEducationBox = () => {
         </div>
     )
 }
-
-export default ProfileEducationBox;

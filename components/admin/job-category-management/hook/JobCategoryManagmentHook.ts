@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { JobCategory, JobCategoryFilters } from "@/components/admin/job-category-management/types";
+import { JobCategory, JobCategoryFilters } from "../types";
 import { loadJobCategories, createJobCategory, updateJobCategory, deleteJobCategory, deActiveJobCategory, activateJobCategory } from "@/components/admin/job-category-management/service/JobCategoryService"
 
 export default function useJobCategoryManagment() {

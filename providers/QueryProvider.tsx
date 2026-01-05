@@ -7,7 +7,7 @@ interface QueryProviderProps {
     children: React.ReactNode;
 }
 
-export default function QueryProvider({ children }: QueryProviderProps) {
+export function QueryProvider({ children }: QueryProviderProps) {
     // Create a new QueryClient instance for each session
     // Using useState ensures the client is only created once per component lifecycle
     const [queryClient] = useState(

@@ -1,7 +1,7 @@
 import { uploadAvatar } from "../service/AvatarBoxService";
 import { useAuthStore } from "@/store/authStore";
 import { useState } from "react";
-import { FormConfig, FormValues } from "@/components/headless-form/types/types"
+import { FormConfig, FormValues } from "@/components/headless-form"
 
 const useAvatarBox = () => {
     const { user, isAuthenticated } = useAuthStore();

@@ -1,6 +1,5 @@
-import Header from "@/components/header/ui/header";
-import { PersonalBox } from "@/components/account-box/personal-box/ui/PersonalBox";
-import { ChangePasswordBox } from "@/components/account-box/change-password-box/ui/ChangePasswordBox";
+import { Header } from "@/components/header";
+import { ChangePasswordBox, PersonalBox } from "@/components/account-box";
 
 export default function Page() {
     return (

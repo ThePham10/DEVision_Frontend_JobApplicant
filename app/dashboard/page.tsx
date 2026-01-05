@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "@/components/header/ui/header";
+import { Header } from "@/components/header";
 import { useAuthStore } from "@/store/authStore";
-import { AuthGuard } from "@/components/auth-guard/authGuard";
+import { AuthGuard } from "@/components/reusable-component";
 
 export default function Page() {
     const { user } = useAuthStore();

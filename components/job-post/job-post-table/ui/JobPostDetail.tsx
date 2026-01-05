@@ -1,7 +1,6 @@
-import Badge from "@/components/reusable-component/Badge";
+import { Badge, SecondaryButton } from "@/components/reusable-component";
 import { JobPost } from "../../types";
 import { MapPinned, DollarSign, Calendar } from "lucide-react";
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
 
 interface JobPostDetailProps {
     job: JobPost;

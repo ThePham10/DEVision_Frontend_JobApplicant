@@ -3,7 +3,7 @@
 import { Skill, JobCategory } from "../types";
 import { Edit, Trash } from "lucide-react";
 import { motion } from "framer-motion";
-import { icons } from "@/components/reusable-component/Icon";
+import { icons } from "@/components/reusable-component";
 
 interface SkillCardProps {
     skill: Skill;

@@ -7,7 +7,7 @@ type ServiceCardProps = {
     Icon: IconType;
 }
 
-export default function ServiceCard({ title, description, Icon}: ServiceCardProps) {
+export const ServiceCard = ({ title, description, Icon}: ServiceCardProps) => {
     return (
         <motion.div
             className="h-auto min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[260px] group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/50 overflow-hidden flex items-center"

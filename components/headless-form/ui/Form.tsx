@@ -1,14 +1,13 @@
 "use client";
 
-import Input from "@/components/reusable-component/Input";
-import React, { useState } from "react";
-import Button from "@/components/reusable-component/Button";
+import { useState } from "react";
+import {Button, Input} from "@/components/reusable-component";
 import CountryDropdown from "@/components/headless-form/country-drop-down-menu/CountryDropdown";
-import { useForm } from "./hook/useForm";
+import { useForm } from "../hook/useForm";
 import { Country } from "@/components/headless-form/country-drop-down-menu/api/countryDropDownMenuService";
-import { HeadlessFormProps, FormChild, FieldValidation } from "./types/types";
+import { HeadlessFormProps, FormChild, FieldValidation } from "../types/types";
 import PhoneNumberInputField from "./PhoneNumberInputField";
-import Dropdown from "../headless-dropdown/ui/Dropdown";
+import Dropdown from "../../headless-dropdown/ui/Dropdown";
 import MultiCheckbox from "./MultiCheckbox";
 import DualRangeSlider from "./DualRangeSlider";
 
@@ -302,4 +301,4 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
     );
 };
 
-export { commonValidations, loginValidations, patterns } from "./hook/validation";
+export { commonValidations, loginValidations, patterns } from "../hook/validation";

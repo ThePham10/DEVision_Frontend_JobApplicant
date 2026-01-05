@@ -1,10 +1,8 @@
 "use client";
 
 import { JobCategory } from "../types";
-import { HeadlessForm } from "@/components/headless-form/Form";
-import { FormConfig, FormValues } from "@/components/headless-form/types/types";
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
-import { icons } from "@/components/reusable-component/Icon";
+import { HeadlessForm , FormConfig, FormValues} from "@/components/headless-form";
+import { SecondaryButton, icons } from "@/components/reusable-component";
 
 interface JobCategoryFormProps {
     category?: JobCategory | null;

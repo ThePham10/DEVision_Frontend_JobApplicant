@@ -21,7 +21,7 @@ const statusFilters = [
 /**
  * Main list component for displaying job applications
  */
-const JobApplicationList = () => {
+export const JobApplicationList = () => {
     const { filters, loadApplicationsWithFilters, filterByStatus } = useJobApplication()
     const [applications, setApplications] = useState<JobApplication[]>([])
     const [allApplications, setAllApplications] = useState<JobApplication[]>([])
@@ -242,5 +242,3 @@ const JobApplicationList = () => {
         </div>
     )
 }
-
-export default JobApplicationList

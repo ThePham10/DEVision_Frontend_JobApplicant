@@ -2,14 +2,13 @@
 
 import JobCategoryCard from "./JobCategoryCard";
 import JobCategoryForm from "./JobCategoryForm";
-import Modal from "@/components/reusable-component/Modal";
-import Button from "@/components/reusable-component/Button";
+import { Modal, Button} from "@/components/reusable-component";
 import { Search, X } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import useJobCategoryManagment from "../hook/JobCategoryManagmentHook";
 import Dropdown from "@/components/headless-dropdown/ui/Dropdown";
 
-export default function JobCategoryManagement() {
+export function JobCategoryManagement() {
     const {
         searchTerm, setSearchTerm,
         setActiveFilter,
@@ -78,7 +77,11 @@ export default function JobCategoryManagement() {
                                 {id: "3", value: "inactive", name: "Inactive Only", icon: "eye-closed" },
                             ]}
                             placeholder="Select Status"
-                            onChange={(e) => setActiveFilter(e.value)}
+                            onChange={(e) => {
+                                if (e && !Array.isArray(e)) {
+                                    setActiveFilter(e.value);
+                                }
+                            }}
                             showSearch={false}
                         />
                         <Button text="Search" onClick={handleSearch} style="w-full sm:w-auto" />

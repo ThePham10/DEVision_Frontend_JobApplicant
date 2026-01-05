@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Mail, ArrowRight, CheckCircle } from "lucide-react";
-import { DEVisionLogoButton } from "@/components/reusable-component/DEVisionLogoButton";
-import { Ribbon } from "@/components/reusable-component/Ribbon";
+import { DEVisionLogoButton, Ribbon } from "@/components/reusable-component";
 
 export default function VerifyEmailPage() {
     const router = useRouter();

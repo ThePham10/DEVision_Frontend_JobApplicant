@@ -1,6 +1,6 @@
 import { SummaryForm } from "./SummaryForm"
 
-const SummaryBox = () => {
+export const SummaryBox = () => {
     return (
         <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
             {/* Subtle gradient overlay on hover */}
@@ -15,5 +15,3 @@ const SummaryBox = () => {
         </div>
     )
 }
-
-export default SummaryBox;

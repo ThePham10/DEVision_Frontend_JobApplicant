@@ -2,9 +2,8 @@
 
 import { motion } from "motion/react";
 import { Crown, Zap, Bell, Shield, Sparkles, Check, X } from "lucide-react";
-import Header from "@/components/header/ui/header";
-import { AuthGuard } from "@/components/auth-guard/authGuard";
-import PricingCard from "@/components/reusable-component/PricingCard";
+import { Header } from "@/components/header";
+import { PricingCard, AuthGuard } from "@/components/reusable-component";
 import { useRouter } from "next/navigation";
 
 export default function PremiumPage() {

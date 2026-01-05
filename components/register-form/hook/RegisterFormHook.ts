@@ -1,4 +1,4 @@
-import { commonValidations } from "@/components/headless-form/Form";
+import { commonValidations } from "@/components/headless-form/ui/Form";
 import { FormValues } from "@/components/headless-form/types/types";
 import registerUser from "../service/RegisterFormService";
 import { useRouter } from "next/navigation";

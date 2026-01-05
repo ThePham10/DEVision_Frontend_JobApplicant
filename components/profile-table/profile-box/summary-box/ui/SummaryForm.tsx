@@ -1,5 +1,4 @@
-import { HeadlessForm } from "@/components/headless-form/Form";
-import type { FormConfig } from "@/components/headless-form/types/types";
+import { HeadlessForm, FormConfig } from "@/components/headless-form";
 import { useAuthStore } from "@/store/authStore";
 
 export const SummaryForm = () => {

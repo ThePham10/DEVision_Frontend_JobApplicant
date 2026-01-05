@@ -1,6 +1,5 @@
-import { loginValidations } from "@/components/headless-form/Form";
 import loginAdmin from "../service/LoginAdminFormService";
-import { FormValues } from "@/components/headless-form/types/types";
+import { FormValues, loginValidations } from "@/components/headless-form";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 

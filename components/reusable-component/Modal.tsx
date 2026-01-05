@@ -30,14 +30,14 @@ const sizeClasses = {
   large: "max-w-4xl",
 };
 
-export default function Modal({
+export const Modal = ({
   isOpen,
   onClose,
   title,
   isDisplayedReturnLink,
   children,
   size = "medium",
-}: ModalProps) {
+}: ModalProps) => {
     const isClient = useIsClient();
 
     // Close on Escape key

@@ -1,10 +1,8 @@
 "use client";
 
-import Footer from "@/components/footer/ui/footer";
-import Header from "@/components/header/ui/header";
-import ServiceCard from "@/components/reusable-component/ServiceCard";
-import Button from "@/components/reusable-component/Button";
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import { ServiceCard, Button, SecondaryButton } from "@/components/reusable-component";
 import { useRouter } from "next/navigation";
 import { motion, useInView } from "motion/react";
 import { useMainPageScroll } from "@/hooks/useMainPageScroll";

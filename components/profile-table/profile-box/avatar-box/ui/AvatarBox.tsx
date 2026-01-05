@@ -1,13 +1,11 @@
 "use client"
 
-import { AvatarFrame } from "@/components/reusable-component/AvatarFrame"
-import { EditButton } from "@/components/reusable-component/EditButton"
 import { MapPinned } from "lucide-react";
-import Modal from "@/components/reusable-component/Modal";
-import { HeadlessForm } from "@/components/headless-form/Form";
+import { Modal, AvatarFrame, EditButton } from "@/components/reusable-component";
+import { HeadlessForm } from "@/components/headless-form";
 import { useAvatarBox } from "../hook/AvatarBoxHook";
 
-const AvatarBox = () => {
+export const AvatarBox = () => {
     const avatarBoxData = useAvatarBox();
     
     // Return null or a placeholder if not authenticated
@@ -54,5 +52,3 @@ const AvatarBox = () => {
         </div>
     )
 }
-
-export default AvatarBox;

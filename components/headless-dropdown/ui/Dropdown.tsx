@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Search, Check, Folder, X } from "lucide-react";
 import { useDropdown, DropdownItem } from "../hook/useDropdown";
-import { icons } from "@/components/reusable-component/Icon";
+import { icons } from "@/components/reusable-component";
 
 export interface DropdownProps<T extends DropdownItem> {
     items: T[];

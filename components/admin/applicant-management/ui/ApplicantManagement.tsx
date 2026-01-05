@@ -1,13 +1,12 @@
 "use client";
 
 import { Search, X } from "lucide-react";
-import Button from "@/components/reusable-component/Button";
+import { Button, Modal} from "@/components/reusable-component";
 import { AnimatePresence } from "framer-motion";
 import ApplicantManagementCard from "../applicant-management-card/ui/ApplicantManagementCard";
-import Modal from "@/components/reusable-component/Modal";
 import useApplicantManagement from "../hook/ApplicantManagementHook";
 
-const ApplicantManagement = () => {
+export const ApplicantManagement = () => {
 
     const {
         allApplicants,
@@ -176,5 +175,3 @@ const ApplicantManagement = () => {
         </div>
     ) 
 }
-
-export default ApplicantManagement;

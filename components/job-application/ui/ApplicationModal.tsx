@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Modal from "@/components/reusable-component/Modal"
-import Button from "@/components/reusable-component/Button"
+import { Modal, Button } from "@/components/reusable-component"
 import { useJobApplication } from "../hook/useJobApplication"
 import { ApplicationFormData } from "../types"
 import { useRouter } from "next/navigation"
@@ -16,7 +15,7 @@ type ApplicationModalProps = {
     company: string
 }
 
-export default function ApplicationModal({ isOpen, onClose, jobId, jobTitle, company }: ApplicationModalProps) {
+export function ApplicationModal({ isOpen, onClose, jobId, jobTitle, company }: ApplicationModalProps) {
     const router = useRouter()
     const { handleSubmit, isSubmitting } = useJobApplication()
     const [coverLetterFile, setCoverLetterFile] = useState<File | null>(null)

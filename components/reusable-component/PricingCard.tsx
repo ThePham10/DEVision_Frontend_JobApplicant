@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
-import Button from "./Button";
+import { Button } from "./Button";
 
 interface PricingCardProps {
     title: string;
@@ -16,7 +16,7 @@ interface PricingCardProps {
     isCurrent?: boolean;
 }
 
-const PricingCard = ({
+export const PricingCard = ({
     title,
     price,
     period,
@@ -80,5 +80,3 @@ const PricingCard = ({
         </motion.div>
     );
 };
-
-export default PricingCard;

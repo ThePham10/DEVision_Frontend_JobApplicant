@@ -1,8 +1,6 @@
 import { JobPost } from "../types"
-import Badge from "@/components/reusable-component/Badge"
+import { Badge, Button, SecondaryButton } from "@/components/reusable-component"
 import { MapPinned, DollarSign, Calendar } from "lucide-react"
-import Button from "@/components/reusable-component/Button"
-import SecondaryButton from "@/components/reusable-component/SecondaryButton"
 
 const JobPostCard = ({ item, onViewDetail, onApply }: { item: JobPost, onViewDetail?: (job: JobPost) => void, onApply?: (job: JobPost) => void }) => {
     return (

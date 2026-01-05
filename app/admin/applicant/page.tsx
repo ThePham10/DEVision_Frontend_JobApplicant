@@ -1,6 +1,6 @@
-import Header from "@/components/header/ui/header";
-import { AuthGuard } from "@/components/auth-guard/authGuard";
-import ApplicantManagement from "@/components/admin/applicant-management/ui/ApplicantManagement";
+import { Header } from "@/components/header";
+import { AuthGuard } from "@/components/reusable-component";
+import { ApplicantManagement } from "@/components/admin";
 
 export default function Page() {
     return (

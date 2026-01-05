@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectOption } from "./types/types";
+import { SelectOption } from "../types/types";
 
 interface MultiCheckboxProps {
     title: string;

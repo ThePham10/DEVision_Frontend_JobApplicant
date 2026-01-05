@@ -11,14 +11,14 @@ type InfoCardProps = {
     Icon?: IconType;
 }
 
-export default function InfoCard({ 
+export const InfoCard = ({ 
     title, 
     description, 
     className = "", 
     onClick, 
     variant = "default",
     Icon
-}: InfoCardProps) {
+}: InfoCardProps) => {
     const isDanger = variant === "danger";
     
     return (

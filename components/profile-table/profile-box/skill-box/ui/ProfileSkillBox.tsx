@@ -1,11 +1,10 @@
-import Button from "@/components/reusable-component/Button";
+import { Button, Modal } from "@/components/reusable-component";
 import { mockProfile } from "../../../Data";
 import ProfileSkillCard from "../ui/ProfileSkillCard";
 import { useState } from "react";
-import Modal from "@/components/reusable-component/Modal";
 import AddSkillForm from "./AddSkillForm";
 
-const ProfileSkillBox = () => {
+export const ProfileSkillBox = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openAddModal = () => {
@@ -61,5 +60,3 @@ const ProfileSkillBox = () => {
         </div>
     )
 }
-
-export default ProfileSkillBox;

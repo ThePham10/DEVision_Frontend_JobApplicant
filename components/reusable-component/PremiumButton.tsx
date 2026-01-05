@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { Crown } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const PremiumButton = () => {
+export const PremiumButton = () => {
     const router = useRouter();
 
     const handleClick = () => {
@@ -35,5 +35,3 @@ const PremiumButton = () => {
         </motion.button>
     );
 };
-
-export default PremiumButton;

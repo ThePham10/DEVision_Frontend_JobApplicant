@@ -1,9 +1,8 @@
 "use client";
 
 import { Education } from "../../../types/types";
-import { HeadlessForm } from "@/components/headless-form/Form";
-import { FormConfig } from "@/components/headless-form/types/types";
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
+import { HeadlessForm, FormConfig } from "@/components/headless-form";
+import { SecondaryButton } from "@/components/reusable-component";
 
 interface AddWorkExpFormProps {
     //onSubmit: (data: { name: string; description?: string; }) => void;

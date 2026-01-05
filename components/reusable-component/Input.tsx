@@ -67,7 +67,7 @@ const stateStyles: Record<InputState, { border: string; ring: string; text: stri
     },
 };
 
-export default function Input({
+export const Input = ({
     title,
     type = "text",
     placeholder,
@@ -84,7 +84,7 @@ export default function Input({
     labelClassName = "",
     disabled,
     ...props
-}: InputProps) {
+}: InputProps) => {
     const [showPassword, setShowPassword] = useState(false);
     const isPasswordField = type === "password";
     

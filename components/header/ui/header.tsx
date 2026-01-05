@@ -1,22 +1,13 @@
 "use client";
 
-import Button from "@/components/reusable-component/Button";
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
-import { useRouter } from "next/navigation";
+import { Button, SecondaryButton, DEVisionLogoButton, PopUpBox, PremiumButton, NavBar, InfoCard, AvatarFrame } from "@/components/reusable-component";
+import { NotificationDropDownButton } from "@/components/notification-drop-down-list";
 import { useAuthStore } from "@/store/authStore";
 import logoutUser from "../service/HeaderService";
-import { DEVisionLogoButton } from "@/components/reusable-component/DEVisionLogoButton";
-import { AvatarFrame } from "@/components/reusable-component/AvatarFrame";
-import { PopUpBox } from "@/components/reusable-component/PopUpBox";
-import InfoCard from "@/components/reusable-component/InfoCard";
-import { NotificationButton } from "@/components/reusable-component/NotificationButton";
-
-import { usePathname } from "next/navigation";
-import { NavBar } from "@/components/reusable-component/NavBar";
+import { usePathname, useRouter } from "next/navigation";
 import { Settings, Settings2, LogOut } from "lucide-react";
-import PremiumButton from "@/components/reusable-component/PremiumButton";
 
-export default function Header() {
+export const Header = () => {
     const router = useRouter();
     const { isAuthenticated, isAdmin, clearUser } = useAuthStore();
     const pathname = usePathname();
@@ -71,7 +62,7 @@ export default function Header() {
                     {isAuthenticated && !isAdmin && (
                         <>
                             <PremiumButton />
-                            <NotificationButton />
+                            <NotificationDropDownButton />
                             <PopUpBox
                                 trigger={
                                     <AvatarFrame 

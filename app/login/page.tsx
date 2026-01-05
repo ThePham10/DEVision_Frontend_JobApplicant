@@ -1,8 +1,6 @@
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
-import {DEVisionLogoButton} from "@/components/reusable-component/DEVisionLogoButton";
-import { LoginForm } from "@/components/login-form/login-form-for-applicant/ui/LoginForm";
-import { ContinueWithGoogleButton } from "@/components/ContinueWithGoogleButton/ContinueWithGoogleButton";
-import { Ribbon } from "@/components/reusable-component/Ribbon";
+import { SecondaryButton, DEVisionLogoButton, Ribbon } from "@/components/reusable-component";
+import { LoginForm } from "@/components/login-form";
+import { ContinueWithGoogleButton } from "@/components/ContinueWithGoogleButton";
 
 export default function Page() {
     return (

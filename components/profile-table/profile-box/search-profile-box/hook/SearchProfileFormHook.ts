@@ -1,7 +1,7 @@
 import { useDataStore } from "@/store/dataStore";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
-import { FormConfig } from "@/components/headless-form/types/types";
+import { FormConfig } from "@/components/headless-form";
 
 const useSearchProfileForm = () => {
     const { skills } = useDataStore();

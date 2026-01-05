@@ -1,6 +1,8 @@
+"use client"
+
 import { use, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useJobApplication } from "@/components/job-application/hook/useJobApplication"
+import { useJobApplication } from "@/components/job-application"
 import { loadJobPostById } from "../service/JobPostDetailService"
 import { JobPost } from "../../types"
 

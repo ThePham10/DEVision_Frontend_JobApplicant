@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { useAuthStore } from "@/store/authStore";
 

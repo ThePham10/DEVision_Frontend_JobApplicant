@@ -1,8 +1,8 @@
 "use client";
 
-import { HeadlessForm } from "@/components/headless-form/Form";
-import { FormConfig } from "@/components/headless-form/types/types";
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
+import { HeadlessForm, FormConfig } from "@/components/headless-form";
+import { SecondaryButton } from "@/components/reusable-component";
+import { useDataStore } from "@/store/dataStore";
 
 interface AddEducationFormProps {
     //onSubmit: (data: { name: string; description?: string; }) => void;
@@ -11,12 +11,16 @@ interface AddEducationFormProps {
 }
 
 export default function AddSkillForm({ onCancel, isLoading = false }: AddEducationFormProps) {
+    const { skills } = useDataStore()
+
     const formConfig: FormConfig = {
         children: [
             {
                 title: "Name",
                 name: "name",
-                type: "text",
+                type: "select",
+                options: skills,
+                multiple: true,
                 placeholder: "e.g., JavaScript, Python, React, Node.js",
                 colSpan: 1,
             },

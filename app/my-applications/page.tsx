@@ -1,13 +1,11 @@
 "use client"
 
-import Header from "@/components/header/ui/header"
-import JobApplicationList from "@/components/job-application/ui/ApplicationList"
+import { Header } from "@/components/header"
+import { JobApplicationList, getMyApplications, JobApplicationStatus } from "@/components/job-application"
 import { useAuthStore } from "@/store/authStore"
 import { motion } from "motion/react"
 import { Briefcase, CheckCircle, XCircle, Clock } from "lucide-react"
 import { useEffect, useState } from "react"
-import { getMyApplications } from "@/components/job-application/service/JobApplicationService"
-import { JobApplicationStatus } from "@/components/job-application/types"
 
 export default function MyApplicationsPage() {
     const { isAuthenticated } = useAuthStore()

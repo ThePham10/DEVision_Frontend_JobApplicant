@@ -1,8 +1,9 @@
+"use client"
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { JobPostFilters, JobPost } from "../../types"
-import type { FormConfig } from "@/components/headless-form/types/types"
+import type { FormConfig } from "@/components/headless-form"
 import { loadJobPost } from "../service/JobPostTableService"
 
 const employmentType = [

@@ -2,14 +2,13 @@
 
 import SkillCard from "./SkillCard";
 import SkillForm from "./SkillForm";
-import Modal from "@/components/reusable-component/Modal";
-import Button from "@/components/reusable-component/Button";
+import { Modal, Button } from "@/components/reusable-component";
 import { Search, X } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import useSkillManagement from "../hook/SkillManagementHook";
 import Dropdown from "@/components/headless-dropdown/ui/Dropdown";
 
-export default function SkillManagement() {
+export function SkillManagement() {
     const {
         skills,
         jobCategories,

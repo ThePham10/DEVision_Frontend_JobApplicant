@@ -1,6 +1,6 @@
-import Header from "@/components/header/ui/header";
-import { AuthGuard } from "@/components/auth-guard/authGuard";
-import SkillManagement from "@/components/admin/skill-management/ui/SkillManagement";
+import { Header } from "@/components/header";
+import { AuthGuard } from "@/components/reusable-component";
+import { SkillManagement } from "@/components/admin";
 
 export default function Page() {
     return (

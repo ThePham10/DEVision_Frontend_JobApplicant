@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 
-export default function Button({ text, onClick, style, type = "submit", destination, disabled = false}: { text: string; onClick?: React.MouseEventHandler<HTMLButtonElement>; style?: string; type?: "submit" | "button" | "reset"; destination?: string; disabled?: boolean}) {
+export const Button = ({ text, onClick, style, type = "submit", destination, disabled = false}: { text: string; onClick?: React.MouseEventHandler<HTMLButtonElement>; style?: string; type?: "submit" | "button" | "reset"; destination?: string; disabled?: boolean}) => {
     const router = useRouter();
     
     return (

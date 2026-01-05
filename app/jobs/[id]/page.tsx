@@ -1,6 +1,6 @@
 "use client"
 
-import { JobPostDetail } from "@/components/job-post/job-post-detail/ui/JobPostDetail"
+import { JobPostDetail } from "@/components/job-post"
 
 // Mock job data - replace with actual API call
 

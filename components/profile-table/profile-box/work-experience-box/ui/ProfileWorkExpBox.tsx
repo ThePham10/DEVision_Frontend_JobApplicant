@@ -1,12 +1,10 @@
-import Button from "@/components/reusable-component/Button";
+import { Button, Modal } from "@/components/reusable-component";
 import { mockProfile } from "../../../Data";
-import ProfileWorkExpCard from "../ui/ProfileWorkExpCard";
-import Modal from "@/components/reusable-component/Modal";
+import ProfileWorkExpCard from "./ProfileWorkExpCard";
 import { useState } from "react";
-import AddWorkExpForm from "../ui/AddWorkExpForm";
+import AddWorkExpForm from "./AddWorkExpForm";
 
-
-const ProfileWorkExpBox = () => {
+export const ProfileWorkExpBox = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -69,5 +67,3 @@ const ProfileWorkExpBox = () => {
         </div>
     )
 }
-
-export default ProfileWorkExpBox;

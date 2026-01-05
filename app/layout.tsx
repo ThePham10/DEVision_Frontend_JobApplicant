@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
-import QueryProvider from "@/providers/QueryProvider";
-import {DataInitializer} from "@/providers/data-initializer-provider/DataInitializer";
+import { QueryProvider, DataInitializer } from "@/providers";
 
 // Load Inter font with all weights you need
 const inter = Inter({ 
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({children,}: Readonly<{
+export default function RootLayout({ children }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (

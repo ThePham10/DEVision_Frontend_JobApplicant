@@ -1,5 +1,5 @@
-import Header from "@/components/header/ui/header";
-import JobPostTable from "@/components/job-post/job-post-table/ui/JobPostTable";
+import { Header } from "@/components/header";
+import { JobPostTable } from "@/components/job-post";
 
 
 export default function Page() {

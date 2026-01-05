@@ -1,9 +1,8 @@
 "use client";
 
 import { Skill, JobCategory } from "../types";
-import { HeadlessForm } from "@/components/headless-form/Form";
-import { FormConfig, FormValues } from "@/components/headless-form/types/types";
-import { icons } from "@/components/reusable-component/Icon";
+import { HeadlessForm, FormConfig, FormValues } from "@/components/headless-form";
+import { icons } from "@/components/reusable-component";
 
 // Convert icons object to array format for dropdown
 const iconOptions = Object.keys(icons).map((key) => ({

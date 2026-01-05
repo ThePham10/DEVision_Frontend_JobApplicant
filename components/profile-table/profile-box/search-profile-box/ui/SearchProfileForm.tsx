@@ -1,6 +1,6 @@
 "use client"
 
-import { HeadlessForm } from "@/components/headless-form/Form"
+import { HeadlessForm } from "@/components/headless-form"
 import { LockKeyhole } from "lucide-react"
 import useSearchProfileForm from "../hook/SearchProfileFormHook"
 
