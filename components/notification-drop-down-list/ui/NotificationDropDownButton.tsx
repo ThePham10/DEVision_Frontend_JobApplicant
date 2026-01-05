@@ -5,6 +5,7 @@ import { Bell } from "lucide-react";
 import { NotificationCard } from "./NotificationCard";
 import useNotificationDropDownButton from "../hook/NotificationDropDownButtonHook";
 
+
 export const NotificationDropDownButton = () => {
     const { 
         isOpen, 
@@ -13,11 +14,11 @@ export const NotificationDropDownButton = () => {
         buttonRef, 
         notifications, 
         unreadCount,
-        handleMarkAllAsRead,
-        handleMarkAsRead,
+        markAllAsRead,
+        markAsRead,
         getNotificationIcon,
         getNotificationBg,
-        handleDismiss
+        wsStatus,
     } = useNotificationDropDownButton();
 
     return (
@@ -63,10 +64,19 @@ export const NotificationDropDownButton = () => {
                                         {unreadCount} new
                                     </span>
                                 )}
+                                {/* WebSocket Status Indicator */}
+                                <span 
+                                    className={`w-2 h-2 rounded-full ${
+                                        wsStatus === 'connected' ? 'bg-green-500' :
+                                        wsStatus === 'connecting' ? 'bg-yellow-500 animate-pulse' :
+                                        'bg-red-500'
+                                    }`}
+                                    title={`WebSocket: ${wsStatus}`}
+                                />
                             </div>
                             {unreadCount > 0 && (
                                 <button 
-                                    onClick={handleMarkAllAsRead}
+                                    onClick={markAllAsRead}
                                     className="text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
                                 >
                                     Mark all read
@@ -102,10 +112,9 @@ export const NotificationDropDownButton = () => {
                                         <NotificationCard
                                             key={item.id}
                                             notification={item}
-                                            handleMarkAsRead={handleMarkAsRead}
+                                            markAsRead={markAsRead}
                                             getNotificationBg={getNotificationBg}
                                             getNotificationIcon={getNotificationIcon}
-                                            handleDismiss={handleDismiss}
                                         />
                                     ))}
                                 </div>

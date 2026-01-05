@@ -1,8 +1,11 @@
 import { useRef, useState, useEffect } from "react";
 import { Bell, SquareCheckBig, TriangleAlert, Siren } from "lucide-react";
-import { Notification, NotificationType } from "../types/types"
+import { NotificationType } from "../types/types"
+import { useNotificationStore } from "@/store";
 
 const useNotificationDropDownButton = () => {
+    const { notifications, markAsRead, markAllAsRead, wsStatus, unreadCount } = useNotificationStore()
+
     const getNotificationIcon = (type: NotificationType) => {
         const iconClass = "w-5 h-5";
         switch (type) {
@@ -34,35 +37,6 @@ const useNotificationDropDownButton = () => {
     const popupRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
-    const [notifications, setNotifications] = useState<Notification[]>([
-        {
-            id: "1",
-            type: "ApplicationAlert_Pass",
-            title: "Application accepted",
-            description: "Your application for Senior Developer was accepted!",
-            time: "2m ago",
-            read: false,
-        },
-        {
-            id: "2",
-            type: "ApplicationAlert_Reject",
-            title: "Application rejected",
-            description: "Your application for Senior Developer was rejected!",
-            time: "1h ago",
-            read: false,
-        },
-        {
-            id: "3",
-            type: "JobMatchingAlert",
-            title: "FPT has posted job that match your search profile",
-            description: "FPT has posted job that match your search profile!",
-            time: "Yesterday",
-            read: false,
-        },
-    ]);
-
-    const unreadCount = notifications.filter(n => !n.read).length;
-
     // Close popup when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -85,20 +59,6 @@ const useNotificationDropDownButton = () => {
         };
     }, [isOpen]);
 
-    const handleMarkAsRead = (id: string) => {
-        setNotifications(prev => 
-            prev.map(n => n.id === id ? { ...n, read: true } : n)
-        );
-    };
-
-    const handleMarkAllAsRead = () => {
-        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-    };
-
-    const handleDismiss = (id: string) => {
-        setNotifications(prev => prev.filter(n => n.id !== id));
-    };
-
     return {
         isOpen, 
         setIsOpen, 
@@ -106,11 +66,11 @@ const useNotificationDropDownButton = () => {
         buttonRef, 
         notifications, 
         unreadCount,
-        handleMarkAllAsRead,
-        handleMarkAsRead,
+        markAllAsRead,
+        markAsRead,
         getNotificationIcon,
         getNotificationBg,
-        handleDismiss
+        wsStatus,
     }
 }
 

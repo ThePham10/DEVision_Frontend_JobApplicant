@@ -1,15 +1,13 @@
-import { X } from "lucide-react"
 import { Notification, NotificationType } from "../types/types"
 
 type NotificationCardProps = {
     notification: Notification,
-    handleMarkAsRead: (notificationId: string) => void,
+    markAsRead: (notificationId: string) => void,
     getNotificationBg: (type: NotificationType) => string,
     getNotificationIcon: (type: NotificationType) => React.ReactNode,
-    handleDismiss: (notificationId: string) => void,
 }
 
-export const NotificationCard = ({ notification, handleMarkAsRead, getNotificationBg, getNotificationIcon, handleDismiss }: NotificationCardProps) => {
+export const NotificationCard = ({ notification, markAsRead, getNotificationBg, getNotificationIcon }: NotificationCardProps) => {
     return (
         <div
             key={notification.id}
@@ -18,7 +16,7 @@ export const NotificationCard = ({ notification, handleMarkAsRead, getNotificati
                     ? "bg-white hover:bg-slate-50" 
                     : "bg-gradient-to-r from-indigo-50/50 to-white hover:from-indigo-50"
             }`}
-            onClick={() => handleMarkAsRead(notification.id)}
+            onClick={() => markAsRead(notification.id)}
         >
             {/* Unread indicator */}
             {!notification.read && (
@@ -26,7 +24,7 @@ export const NotificationCard = ({ notification, handleMarkAsRead, getNotificati
             )}
             
             {/* Icon */}
-            <div className={`flex-shrink-0 w-9 h-9 rounded-lg ${getNotificationBg(notification.type)} flex notifications-center justify-center`}>
+            <div className={`flex-shrink-0 w-9 h-9 rounded-lg ${getNotificationBg(notification.type)} flex notifications-center justify-center items-center`}>
                 {getNotificationIcon(notification.type)}
             </div>
 
@@ -36,12 +34,6 @@ export const NotificationCard = ({ notification, handleMarkAsRead, getNotificati
                     <span className={`text-sm leading-tight ${notification.read ? "font-medium text-slate-700" : "font-semibold text-slate-900"}`}>
                         {notification.title}
                     </span>
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); handleDismiss(notification.id); }}
-                        className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-slate-200 transition-all"
-                    >
-                        <X className="w-3.5 h-3.5 text-slate-400" />
-                    </button>
                 </div>
                 <p className="text-xs text-slate-500 leading-relaxed mt-0.5 line-clamp-2">
                     {notification.description}
