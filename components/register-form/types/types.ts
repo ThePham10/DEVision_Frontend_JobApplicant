@@ -14,11 +14,11 @@ type UserData = {
 
 type User = {
   id: string;
-    email: string;
-    name: string;
-    role: string;
-    country: string;
-    emailVerified: boolean;
+  email: string;
+  name: string;
+  role: string;
+  country: string;
+  emailVerified: boolean;
 }
 
 export type { RegisterData, UserData }

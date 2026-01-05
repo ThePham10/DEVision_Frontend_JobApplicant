@@ -29,8 +29,7 @@ export default function ApplicationModal({ isOpen, onClose, jobId, jobTitle, com
         if (!file) return
 
         // Validate file type
-        const validTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-        if (!validTypes.includes(file.type)) {
+        if (file.type !== "application/pdf") {
             setError("Please upload a PDF or Word document for cover letter")
             return
         }
@@ -50,8 +49,7 @@ export default function ApplicationModal({ isOpen, onClose, jobId, jobTitle, com
         if (!file) return
 
         // Validate file type
-        const validTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
-        if (!validTypes.includes(file.type)) {
+        if (file.type !== "application/pdf") {
             setError("Please upload a PDF or Word document for CV")
             return
         }
