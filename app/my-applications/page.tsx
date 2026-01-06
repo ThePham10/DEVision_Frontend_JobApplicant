@@ -1,6 +1,5 @@
 "use client"
 
-import { Header } from "@/components/header"
 import { JobApplicationList, getMyApplications, JobApplicationStatus } from "@/components/job-application"
 import { useAuthStore } from "@/store/authStore"
 import { motion } from "motion/react"
@@ -74,7 +73,6 @@ export default function MyApplicationsPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            <Header />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
                 {/* Animated Page Header */}
                 <motion.div

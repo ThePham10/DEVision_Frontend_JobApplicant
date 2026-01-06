@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import { QueryProvider, DataInitializer, WebSocketProvider } from "@/providers";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 // Load Inter font with all weights you need
 const inter = Inter({ 
@@ -24,11 +26,15 @@ export default function RootLayout({ children }: Readonly<{
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`${inter.className} antialiased`}>
+            <body className={`${inter.className} antialiased min-h-screen flex flex-col`}>
                 <QueryProvider>
                     <WebSocketProvider>
                         <DataInitializer>
-                            {children}
+                            <Header />
+                            <main className="flex-1">
+                                {children}
+                            </main>
+                            <Footer />
                         </DataInitializer>
                     </WebSocketProvider>
                 </QueryProvider>

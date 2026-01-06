@@ -53,7 +53,6 @@ export const NavBar = ({isAdmin, pathname}: NavBarProps) => {
         {title: 'Skill', path: '/admin/skill'},
         {title: 'Job Category', path: '/admin/job-category'},
     ] : [
-        {title: 'Home', path: '/'},
         {title: 'Jobs', path: '/jobs'},
         {title: 'Job Application', path: '/my-applications'}
     ]

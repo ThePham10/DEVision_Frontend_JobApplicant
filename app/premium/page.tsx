@@ -2,7 +2,6 @@
 
 import { motion } from "motion/react";
 import { Crown, Zap, Bell, Shield, Sparkles, Check, X } from "lucide-react";
-import { Header } from "@/components/header";
 import { PricingCard, AuthGuard } from "@/components/reusable-component";
 import { useRouter } from "next/navigation";
 
@@ -80,8 +79,6 @@ export default function PremiumPage() {
 
     return (
         <AuthGuard>
-            <Header />
-            
             <div className="min-h-screen bg-gradient-to-b from-white via-amber-50/20 to-white font-[Inter]">
                 {/* Hero Section */}
                 <section className="relative overflow-hidden pt-20 pb-24 px-4 sm:px-6 lg:px-8">
