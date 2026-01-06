@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { JobCategory, JobCategoryFilters } from "@/components/admin/job-category-management/types";
+import { JobCategory, JobCategoryFilters } from "../types";
 import { loadJobCategories, createJobCategory, updateJobCategory, deleteJobCategory, deActiveJobCategory, activateJobCategory } from "@/components/admin/job-category-management/service/JobCategoryService"
 
 export default function useJobCategoryManagment() {
@@ -20,12 +20,12 @@ export default function useJobCategoryManagment() {
     // Query for fetching categories - data is cached and automatically managed
     const { data, isLoading, isFetching } = useQuery({
         queryKey: ["jobCategories", page, filters],
-        queryFn: () => loadJobCategories(page, 10, filters),
+        queryFn: () => loadJobCategories(page, 10000, filters),
     });
     
     const categories = data?.data ?? [];
     const total = data?.total ?? 0;
-    const hasMore = page * 10 < total;
+    const hasMore = page * 10000 < total;
     
     // Mutation for creating category
     const createMutation = useMutation({
@@ -102,7 +102,7 @@ export default function useJobCategoryManagment() {
     };
     
     // Handle form submit
-    const handleFormSubmit = (data: { name: string; description?: string }) => {
+    const handleFormSubmit = (data: { name: string; description?: string; icon?: string }) => {
         if (editingCategory) {
             updateMutation.mutate({ id: editingCategory.id, data });
         } else {

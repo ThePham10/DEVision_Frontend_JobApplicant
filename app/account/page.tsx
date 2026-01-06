@@ -1,14 +1,13 @@
-import Header from "@/components/header/ui/header";
-import { PersonalBox } from "@/components/account-box/personal-box/ui/PersonalBox";
-import { ChangePasswordBox } from "@/components/account-box/change-password-box/ui/ChangePasswordBox";
+import { Header } from "@/components/header";
+import { ChangePasswordBox, PersonalBox } from "@/components/account-box";
 
 export default function Page() {
     return (
         <>
             <Header />
 
-            <div className="flex flex-col gap-4 mt-4 ml-40 mr-40">
-                <div className="text-3xl font-bold text-foreground mb-8">Account Setting</div>
+            <div className="flex flex-col gap-4 mt-4 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40 pb-8">
+                <div className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-8">Account Setting</div>
                 <PersonalBox />
                 <ChangePasswordBox />
             </div>

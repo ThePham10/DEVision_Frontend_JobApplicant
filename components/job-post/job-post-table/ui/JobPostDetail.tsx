@@ -1,7 +1,6 @@
-import Badge from "@/components/reusable-component/Badge";
-import { JobPost } from "../types";
-import { FaLocationDot, FaDollarSign, FaCalendar } from "react-icons/fa6";
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
+import { Badge, SecondaryButton } from "@/components/reusable-component";
+import { JobPost } from "../../types";
+import { MapPinned, DollarSign, Calendar } from "lucide-react";
 
 interface JobPostDetailProps {
     job: JobPost;
@@ -17,7 +16,7 @@ const JobPostDetail = ({ job }: JobPostDetailProps) => {
                         {job.title}
                     </h3>
                     <p className="text-xl text-[#65758B] mt-1">
-                        {job.company}
+                        {job.companyName}
                     </p>
                 </div>
                 <Badge text={job.employmentType} />
@@ -26,16 +25,16 @@ const JobPostDetail = ({ job }: JobPostDetailProps) => {
             {/* Info rows with icons */}
             <div className="flex flex-col gap-5 text-gray-600">
                 <div className="flex jobs-center gap-2">
-                    <FaLocationDot />
+                    <MapPinned />
                     <div>{job.location}</div>
                 </div>
                 <div className="flex jobs-center gap-2">
-                    <FaDollarSign />
-                    <span>${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}</span>
+                    <DollarSign />
+                    <span>{job.salaryDisplay}</span>
                 </div>
                 <div className="flex jobs-center gap-2">
-                    <FaCalendar />
-                    <span>Posted on 2025-11-10</span>
+                    <Calendar />
+                    <span>Posted on {job.postedDate}</span>
                 </div>
             </div>
 

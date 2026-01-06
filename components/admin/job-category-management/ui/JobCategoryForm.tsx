@@ -1,16 +1,22 @@
 "use client";
 
 import { JobCategory } from "../types";
-import { HeadlessForm } from "@/components/headless-form/Form";
-import { FormConfig, FormValues } from "@/components/headless-form/types/types";
-import SecondaryButton from "@/components/reusable-component/SecondaryButton";
+import { HeadlessForm , FormConfig, FormValues} from "@/components/headless-form";
+import { SecondaryButton, icons } from "@/components/reusable-component";
 
 interface JobCategoryFormProps {
     category?: JobCategory | null;
-    onSubmit: (data: { name: string; description?: string; }) => void;
+    onSubmit: (data: { name: string; description?: string; icon?: string; }) => void;
     onCancel: () => void;
     isLoading?: boolean;
 }
+
+// Convert icons object to array format for dropdown
+const iconOptions = Object.keys(icons).map((key) => ({
+    id: key,
+    name: key,
+    icon: key,
+}));
 
 export default function JobCategoryForm({ category, onSubmit, onCancel, isLoading = false }: JobCategoryFormProps) {
     const isEditing = !!category;
@@ -38,6 +44,14 @@ export default function JobCategoryForm({ category, onSubmit, onCancel, isLoadin
                 placeholder: "Brief description of this category...",
                 colSpan: 1,
             },
+            {
+                title: "Icon",
+                name: "icon",
+                type: "select",
+                options: iconOptions,
+                placeholder: "Select an icon",
+                colSpan: 1,
+            }
         ],
         buttonText: isLoading ? "Saving..." : isEditing ? "Update Category" : "Add Category",
         layout: {
@@ -51,8 +65,9 @@ export default function JobCategoryForm({ category, onSubmit, onCancel, isLoadin
     // Handle form submission
     const handleFormSubmit = (formData: FormValues) => {
         onSubmit({
-            name: formData.name,
-            description: formData.description || undefined,
+            name: formData.name as string,
+            description: (formData.description as string) || undefined,
+            icon: formData.icon as string || undefined,
         });
     };
     
@@ -64,6 +79,10 @@ export default function JobCategoryForm({ category, onSubmit, onCancel, isLoadin
     
     return (
         <div className="space-y-4">
+            <div className="text-2xl font-semibold mb-6">
+                Create new job category
+            </div>
+
             <HeadlessForm
                 key={category?.id ?? "new"}
                 config={formConfig}

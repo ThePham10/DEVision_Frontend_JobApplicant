@@ -1,6 +1,6 @@
-import Header from "@/components/header/ui/header";
-import { AuthGuard } from "@/components/auth-guard/authGuard";
-import JobCategoryManagement from "@/components/admin/job-category-management/ui/JobCategoryManagement";
+import { Header } from "@/components/header";
+import { AuthGuard } from "@/components/reusable-component";
+import { JobCategoryManagement } from "@/components/admin";
 
 export default function Page() {
     return (

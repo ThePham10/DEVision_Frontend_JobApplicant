@@ -9,3 +9,36 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* Range slider thumb styles */
+.slider-thumb {
+  @apply absolute w-full h-2 appearance-none bg-transparent pointer-events-none;
+}
+
+.slider-thumb::-webkit-slider-thumb {
+  @apply pointer-events-auto appearance-none w-5 h-5 bg-white 
+         rounded-full shadow-md cursor-pointer transition-transform hover:scale-110;
+}
+
+.slider-thumb::-moz-range-thumb {
+  @apply pointer-events-auto appearance-none w-5 h-5 bg-white 
+         rounded-full shadow-md cursor-pointer border-0;
+}
+
+/* Blue variant (for min slider) */
+.slider-thumb-blue::-webkit-slider-thumb {
+  @apply border-2 border-[#2463eb];
+}
+
+.slider-thumb-blue::-moz-range-thumb {
+  @apply border-2 border-[#2463eb];
+}
+
+/* Purple variant (for max slider) */
+.slider-thumb-purple::-webkit-slider-thumb {
+  @apply border-2 border-[#7C3AED];
+}
+
+.slider-thumb-purple::-moz-range-thumb {
+  @apply border-2 border-[#7C3AED];
+}

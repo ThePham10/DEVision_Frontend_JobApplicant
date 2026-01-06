@@ -8,7 +8,7 @@ import authUserWithGoogleAccount from "./service/ContinueWithGoogleButtonService
 import { authUserWithGoogleAccountData } from "./type/types";
 
 export const ContinueWithGoogleButton = () => {
-    const {setUser} = useAuthStore();
+    const { setUser } = useAuthStore();
     const router = useRouter();
 
     const handleAuthWithGoogle = async () => {
@@ -23,14 +23,15 @@ export const ContinueWithGoogleButton = () => {
                 if (response.status === 201) {
                     console.log("Authentication successful!");
                     setUser({
-                        id: response.data.id,
-                        email: response.data.email,
-                        name: response.data.name,
-                        role: response.data.role,
-                        country: response.data.country,
-                        emailVerified: response.data.emailVerified,
+                        id: response.data.user.id,
+                        email: response.data.user.email,
+                        name: response.data.user.name,
+                        role: response.data.user.role,
+                        country: response.data.user.country,
+                        emailVerified: response.data.user.emailVerified,
+                        isPremium: response.data.user.isPremium
                     });
-                    router.push("/dashboard");
+                    router.push("/jobs");
                 }
             } catch (error) {
                 console.error("Google sign-in failed:", error);

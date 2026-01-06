@@ -1,5 +1,5 @@
-import Header from "@/components/header/ui/header";
-import JobPostTable from "@/components/job-post/job-post-table/ui/JobPostTable";
+import { Header } from "@/components/header";
+import { JobPostTable } from "@/components/job-post";
 
 
 export default function Page() {
@@ -7,8 +7,8 @@ export default function Page() {
         <>
             <Header />
 
-            <div className="flex flex-col gap-4 mt-4 ml-40 mr-40">
-                <div className="text-3xl font-bold text-foreground mb-8">Find Your Next Opportunity</div>
+            <div className="flex flex-col gap-4 mt-4 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40">
+                <div className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-8">Find Your Next Opportunity</div>
                 <JobPostTable />
             </div>
         </>

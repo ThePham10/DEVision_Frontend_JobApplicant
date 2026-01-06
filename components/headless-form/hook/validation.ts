@@ -96,7 +96,6 @@ export const patterns = {
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     phone: /^\+[\d\s]{7,15}$/,
     password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~])[a-zA-Z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]{8,}$/,
-    url: /^https?:\/\/.+/,
     alphanumeric: /^[a-zA-Z0-9]+$/,
 };
 
@@ -127,6 +126,25 @@ export function validateField(
     if (value === null || value === undefined) {
         if (validation.required) {
             return validation.requiredMessage || "This field is required";
+        }
+        return null;
+    }
+
+    // Handle string[] (multi-select) validation
+    if (Array.isArray(value)) {
+        // Required check for arrays
+        if (validation.required && value.length === 0) {
+            return validation.requiredMessage || "This field is required";
+        }
+        // Skip other validations if empty and not required
+        if (value.length === 0) return null;
+        // Custom validations for arrays
+        if (validation.custom) {
+            for (const rule of validation.custom) {
+                if (!rule.validate(value, allValues)) {
+                    return rule.message;
+                }
+            }
         }
         return null;
     }

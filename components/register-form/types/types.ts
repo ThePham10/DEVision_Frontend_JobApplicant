@@ -9,12 +9,17 @@ type RegisterData = {
 }
 
 type UserData = {
-    id: string;
-    email: string;
-    name: string;
-    role: string;
-    country: string;
-    emailVerified: boolean;
+    user: User;
+}
+
+type User = {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  country: string;
+  emailVerified: boolean;
+  isPremium: boolean;
 }
 
 export type { RegisterData, UserData }

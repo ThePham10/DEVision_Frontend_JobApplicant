@@ -1,7 +1,7 @@
 "use client";
 
-import Header from "@/components/header/ui/header";
-import { ProfileTable } from "@/components/profile-table/ProfileTable";
+import { Header } from "@/components/header";
+import { ProfileTable } from "@/components/profile-table";
 import { useAuthStore } from "@/store/authStore";
 import { motion } from "motion/react";
 

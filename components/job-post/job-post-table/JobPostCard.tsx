@@ -1,52 +1,61 @@
-import { JobPost } from "./types"
-import Badge from "@/components/reusable-component/Badge"
-import { FaLocationDot, FaDollarSign, FaCalendar } from "react-icons/fa6"
-import Button from "@/components/reusable-component/Button"
-import SecondaryButton from "@/components/reusable-component/SecondaryButton"
+import { JobPost } from "../types"
+import { Badge, Button, SecondaryButton } from "@/components/reusable-component"
+import { MapPinned, DollarSign, Calendar } from "lucide-react"
 
 const JobPostCard = ({ item, onViewDetail, onApply }: { item: JobPost, onViewDetail?: (job: JobPost) => void, onApply?: (job: JobPost) => void }) => {
     return (
-        <div className="relative flex flex-col gap-4 border border-gray-200 bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+        <div className="relative flex flex-col gap-3 sm:gap-4 border border-gray-200 bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Header: Title + Employment Type Badge */}
-            <div className="flex justify-between items-start">
-                <div>
-                    <h3 className="font-[Inter] text-xl font-bold text-gray-900">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                <div className="flex-1 min-w-0">
+                    <h3 className="font-[Inter] text-lg sm:text-xl font-bold text-gray-900 truncate">
                         {item.title}
                     </h3>
                     <p className="font-[Inter] text-sm text-[#65758B] mt-1">
-                        {item.company}
+                        {item.companyName}
                     </p>
                 </div>
                 <Badge text={item.employmentType} />
             </div>
 
             {/* Info rows with icons */}
-            <div className="flex flex-col gap-2 text-sm text-gray-600">
+            <div className="flex flex-col gap-2 text-xs sm:text-sm text-gray-600">
                 <div className="flex items-center gap-2">
-                    <FaLocationDot />
-                    <span>{item.location}</span>
+                    <MapPinned className="flex-shrink-0" />
+                    <span className="truncate">{item.location}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <FaDollarSign />
-                    <span>${item.minSalary.toLocaleString()} - ${item.maxSalary.toLocaleString()}</span>
+                    <DollarSign className="flex-shrink-0" />
+                    <span>{item.salaryDisplay}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <FaCalendar />
-                    <span>Posted on 2025-11-10</span>
-                </div>
+                {item.postedDate && (
+                    <div className="flex items-center gap-2">
+                        <Calendar className="flex-shrink-0" />
+                        <span>Posted {new Date(item.postedDate).toLocaleDateString()}</span>
+                    </div>
+                )}
+                {item.expireDate && (
+                    <div className="flex items-center gap-2">
+                        <Calendar className="flex-shrink-0" />
+                        <span>Expiry {new Date(item.expireDate).toLocaleDateString()}</span>
+                    </div>
+                )}
             </div>
 
             {/* Skills badges */}
-            <div className="flex flex-wrap gap-2">
-                {item.skills.map((skill, index) => (
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                {item.skills.slice(0, 5).map((skill, index) => (
                     <Badge key={index} text={skill} />
                 ))}
+                {item.skills.length > 5 && (
+                    <span className="text-xs text-gray-500 self-center">+{item.skills.length - 5} more</span>
+                )}
             </div>
 
-            {/* Action buttons */}
-            <div className="flex gap-4 mt-2">
-                <Button style="w-full" text="View Details" onClick={() => onViewDetail?.(item)}/>
-                <SecondaryButton style="w-full" text="Apply Now" onClick={() => onApply?.(item)}/>
+            {/* Action buttons - Stack on mobile */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-2">
+                <Button style="w-full sm:flex-1" text="View Details" onClick={() => onViewDetail?.(item)}/>
+                <SecondaryButton style="w-full sm:flex-1" text="Apply Now" onClick={() => onApply?.(item)}/>
             </div>
         </div>
     )

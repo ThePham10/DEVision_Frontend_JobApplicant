@@ -1,6 +1,6 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { ApplicantAccount, ApplicantFilters, PaginatedResponse } from "../types";
-import { APPLICANT_URL } from "@/Config/URLConfig";
+import { APPLICANT_URL } from "@/config/URLConfig";
 
 async function loadApplicants(
     page: number,
@@ -11,7 +11,7 @@ async function loadApplicants(
 
     if (response.status === 200) {
         const items = response.data.data ?? [];
-        const total = (response.data as any).total ?? items.length;
+        const total = response.data.total ?? items.length;
         const hasMore = page * limit < total;
 
         return {

@@ -1,4 +1,4 @@
-import { HeadlessForm } from "@/components/headless-form/Form";
+import { HeadlessForm } from "@/components/headless-form/ui/Form";
 import type { FormConfig } from "@/components/headless-form/types/types";
 import { useAuthStore } from "@/store/authStore";
 import { FormValues } from "@/components/headless-form/types/types";
@@ -30,15 +30,14 @@ export const PersonalBoxForm = () => {
     const formConfig: FormConfig = {
         children: [
             { name: "name", title: "Name", type: "text", placeholder: user.name, colSpan: 1 },
-            { name: "phone", title: "Phone number", type: "tel", placeholder: "", colSpan: 2 },
-            { name: "street", title: "Address", type: "text", placeholder: "", colSpan: 1 },
-            { name: "city", title: "City", type: "text", placeholder: "", colSpan: 1 },
-            { name: "country", title: "Country", type: "country", placeholder: user.country ?? "", colSpan: 2 },
+            { name: "email", title: "Email", type: "text", placeholder: user.email, colSpan: 1 },
+            { name: "country", title: "Country", type: "text", placeholder: user.country ?? "", colSpan: 1 },
         ],
         buttonText: "Save Changes",
+        buttonClassName: "col-span-2",
         layout: {
             type: "grid",
-            columns: 4,
+            columns: 2,
             gap: "6",
         },
     };  

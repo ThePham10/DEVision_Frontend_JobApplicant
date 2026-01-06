@@ -11,6 +11,7 @@ type User = {
     role: string;
     country?: string;
     emailVerified: boolean;
+    isPremium: boolean;
 }
 
 type UserData = {

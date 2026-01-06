@@ -1,6 +1,6 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { JobCategory, JobCategoryFilters, PaginatedResponse } from "../types";
-import { JOB_CATEGORY_URL } from "@/Config/URLConfig";
+import { JOB_CATEGORY_URL } from "@/config/URLConfig";
 
 /**
  * Load job categories with pagination and filtering
@@ -10,7 +10,7 @@ async function loadJobCategories(
     limit: number,
     filters?: JobCategoryFilters
 ): Promise<PaginatedResponse<JobCategory>> {
-    const response = await httpHelper.get<PaginatedResponse<JobCategory>>(JOB_CATEGORY_URL);
+    const response = await httpHelper.get<PaginatedResponse<JobCategory>>(`${JOB_CATEGORY_URL}?limit=${limit}`);
     
     if (response.status === 200) {
         let filteredItems = response.data.data;
