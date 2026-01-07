@@ -101,12 +101,31 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         const colSpanClass = child.colSpan ? `col-span-${child.colSpan}` : "";
 
         if (child.type === "country") {
+            // Handle country selection based on returnType config
+            const handleCountrySelect = (country: Country) => {
+                const returnType = child.returnType || "value"; // Default to value (code)
+                
+                if (returnType === "label") {
+                    handleChange(child.name, country.label); // Return country name
+                } else if (returnType === "object") {
+                    handleChange(child.name, JSON.stringify(country)); // Return full object
+                } else {
+                    handleChange(child.name, country.value); // Return country code (default)
+                }
+                
+                // Also handle phone dial code if this is the main country field
+                if (child.name === "country") {
+                    handleCountryChange(country);
+                }
+            };
+
             return (
                 <div key={index} className={colSpanClass}>
                     <CountryDropdown 
                         title={child.title}
-                        onChange={(country) => handleCountryChange(country)}
+                        onChange={handleCountrySelect}
                         errorMessage={fieldError}
+                        initialValue={values[child.name] as string}
                     />
                 </div>
             );
@@ -126,6 +145,15 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                 }
             };
 
+            // Get initial values for dropdown from form state
+            const currentValue = values[child.name];
+            const defaultValues = child.multiple && Array.isArray(currentValue) 
+                ? currentValue as string[] 
+                : [];
+            const defaultValue = !child.multiple && typeof currentValue === 'string' 
+                ? currentValue 
+                : undefined;
+
             return (
                 <div key={index} className={colSpanClass}>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -137,6 +165,8 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                         multiple={child.multiple}
                         placeholder={child.placeholder}
                         width="w-full"
+                        defaultValue={defaultValue}
+                        defaultValues={defaultValues}
                     />
                     {fieldError && (
                         <p className="mt-1 text-sm text-red-500">{fieldError}</p>

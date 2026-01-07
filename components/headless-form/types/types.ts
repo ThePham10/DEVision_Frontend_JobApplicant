@@ -9,7 +9,7 @@ type SelectOption = {
 
 type FormChild = {
     title: string;
-    name: string; 
+    name: string;
     type: string;
     placeholder: string;
     validation?: FieldValidation;
@@ -25,14 +25,16 @@ type FormChild = {
     max?: number;
     step?: number;
     formatValue?: (value: number) => string;  // Custom value formatter (e.g., for currency)
+    // Country dropdown return type
+    returnType?: "value" | "label" | "object";  // What to return: code, name, or full object
 }
 
 type FormConfig = {
     className?: string;
     children: FormChild[];
     buttonText: string;
-    phoneFieldName?: string; 
-    layout? : {
+    phoneFieldName?: string;
+    layout?: {
         type: "flex" | "grid";
         direction?: "row" | "column";
         columns?: number;

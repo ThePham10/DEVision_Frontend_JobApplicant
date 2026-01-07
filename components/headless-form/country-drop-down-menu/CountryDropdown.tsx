@@ -6,9 +6,10 @@ type CountryDropdownProps = {
     title: string;
     onChange?: (country: Country) => void;
     errorMessage?: string;
+    initialValue?: string; // Country code or label to pre-select
 };
 
-export default function CountryDropdown({ title, onChange, errorMessage }: CountryDropdownProps) {
+export default function CountryDropdown({ title, onChange, errorMessage, initialValue }: CountryDropdownProps) {
     const {
         loading,
         isOpen,
@@ -19,7 +20,7 @@ export default function CountryDropdown({ title, onChange, errorMessage }: Count
         setSearchTerm,
         handleSelect,
         toggleDropdown,
-    } = useCountryDropdown(onChange);
+    } = useCountryDropdown(onChange, initialValue);
 
     return (
         <div className="mb-4" ref={dropdownRef}>
