@@ -13,20 +13,44 @@ export interface UseDropdownOptions<T> {
     multiple?: boolean;
     onChange?: (item: T | T[] | null) => void;
     searchableFields?: (keyof T)[];
+    defaultValue?: string; // ID of default selected item (single select)
+    defaultValues?: string[]; // IDs of default selected items (multi select)
 }
 
 export function useDropdown<T extends DropdownItem>(
     items: T[],
     options: UseDropdownOptions<T> = {}
 ) {
-    const { multiple = false, onChange, searchableFields = ["name"] } = options;
-    
+    const {
+        multiple = false,
+        onChange,
+        searchableFields = ["name"],
+        defaultValue,
+        defaultValues = []
+    } = options;
+
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<T | null>(null);
     const [selectedItems, setSelectedItems] = useState<T[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const dropdownRef = useRef<HTMLDivElement>(null);
-    
+
+    // Initialize selection from default values when items load
+    useEffect(() => {
+        if (multiple && defaultValues.length > 0 && items.length > 0) {
+            setSelectedItems(prev => {
+                if (prev.length > 0) return prev;
+                return items.filter(item => defaultValues.includes(item.id));
+            });
+        } else if (!multiple && defaultValue && items.length > 0) {
+            setSelectedItem(prev => {
+                if (prev !== null) return prev;
+                return items.find(item => item.id === defaultValue) || null;
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [items.length]);
+
     // Store onChange in a ref to avoid stale closures and prevent effect re-runs
     const onChangeRef = useRef(onChange);
     useEffect(() => {
@@ -37,7 +61,7 @@ export function useDropdown<T extends DropdownItem>(
     const filteredItems = items.filter((item) => {
         if (!searchTerm.trim()) return true;
         const lowerSearch = searchTerm.toLowerCase();
-        
+
         return searchableFields.some((field) => {
             const value = item[field];
             if (typeof value === "string") {
@@ -75,12 +99,12 @@ export function useDropdown<T extends DropdownItem>(
                 const newSelection = isAlreadySelected
                     ? prev.filter((i) => i.id !== item.id)
                     : [...prev, item];
-                
+
                 // Defer onChange to next tick to avoid updating parent during render
                 setTimeout(() => {
                     onChangeRef.current?.(newSelection);
                 }, 0);
-                
+
                 return newSelection;
             });
             // Don't close dropdown in multi-select mode
@@ -89,7 +113,7 @@ export function useDropdown<T extends DropdownItem>(
             setSelectedItem(item);
             setIsOpen(false);
             setSearchTerm("");
-            
+
             // Defer onChange to next tick to avoid updating parent during render
             setTimeout(() => {
                 onChangeRef.current?.(item);

@@ -23,7 +23,8 @@ type UseCountryDropdownReturn = {
 };
 
 export function useCountryDropdown(
-    onChange?: (country: Country) => void
+    onChange?: (country: Country) => void,
+    initialValue?: string // Country code or label to pre-select
 ): UseCountryDropdownReturn {
     const [countries, setCountries] = useState<Country[]>([]);
     const [loading, setLoading] = useState(true);
@@ -38,6 +39,16 @@ export function useCountryDropdown(
             try {
                 const data = await fetchCountries();
                 setCountries(data);
+                
+                // Set initial selected country if provided
+                if (initialValue) {
+                    const matchedCountry = data.find(
+                        (c) => c.value === initialValue || c.label === initialValue
+                    );
+                    if (matchedCountry) {
+                        setSelectedCountry(matchedCountry);
+                    }
+                }
             } catch (error) {
                 console.error("Failed to fetch countries:", error);
             } finally {
@@ -46,7 +57,7 @@ export function useCountryDropdown(
         };
 
         loadCountries();
-    }, []);
+    }, [initialValue]);
 
     // Close dropdown when clicking outside
     useEffect(() => {

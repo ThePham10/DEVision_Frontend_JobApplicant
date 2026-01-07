@@ -9,7 +9,9 @@ const SearchProfileForm = () => {
         isPremium,
         router,
         formConfig,
-        handleSubmit
+        handleSubmit,
+        initialValues,
+        isProfileLoaded
     } = useSearchProfileForm();
 
 	return (
@@ -48,7 +50,12 @@ const SearchProfileForm = () => {
                 
                 {/* Form - grayscale and reduced opacity when locked */}
                 <div className={!isPremium ? "pointer-events-none select-none opacity-60 grayscale-[30%]" : ""}>
-                    <HeadlessForm config={formConfig} onSubmit={handleSubmit}/>
+                    <HeadlessForm 
+                        key={isProfileLoaded ? "loaded" : "loading"}
+                        config={formConfig} 
+                        onSubmit={handleSubmit} 
+                        initialValues={initialValues}
+                    />
                 </div>
             </div>
         </div>

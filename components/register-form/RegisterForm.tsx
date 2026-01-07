@@ -1,6 +1,6 @@
 "use client";
 
-import { HeadlessForm } from "@/components/headless-form/ui/Form";
+import { HeadlessForm } from "@/components/headless-form";
 import { useRegisterForm } from "./hook/RegisterFormHook";
 
 export const RegisterForm = () => {

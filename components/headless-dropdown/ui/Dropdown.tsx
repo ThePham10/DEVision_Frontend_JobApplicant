@@ -21,6 +21,8 @@ export interface DropdownProps<T extends DropdownItem> {
     renderItem?: (item: T, isSelected: boolean) => ReactNode;
     renderSelectedItem?: (item: T) => ReactNode;
     countLabel?: { singular: string; plural: string };
+    defaultValue?: string; // ID of default selected item (single select)
+    defaultValues?: string[]; // IDs of default selected items (multi select)
 }
 
 export default function Dropdown<T extends DropdownItem>({
@@ -37,6 +39,8 @@ export default function Dropdown<T extends DropdownItem>({
     renderItem,
     renderSelectedItem,
     countLabel = { singular: "item", plural: "items" },
+    defaultValue,
+    defaultValues = [],
 }: DropdownProps<T>) {
     const {
         isOpen,
@@ -53,7 +57,9 @@ export default function Dropdown<T extends DropdownItem>({
     } = useDropdown(items, { 
         multiple, 
         onChange, 
-        searchableFields: searchableFields as (keyof T)[] 
+        searchableFields: searchableFields as (keyof T)[],
+        defaultValue,
+        defaultValues,
     });
 
     // Default icon renderer

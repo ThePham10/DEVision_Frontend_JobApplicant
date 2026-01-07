@@ -1,8 +1,6 @@
-import { commonValidations } from "@/components/headless-form/ui/Form";
-import { FormValues } from "@/components/headless-form/types/types";
+import { commonValidations, FormValues, FormConfig } from "@/components/headless-form";
 import registerUser from "../service/RegisterFormService";
 import { useRouter } from "next/navigation";
-import type { FormConfig } from "@/components/headless-form/types/types"
 
 
 export const useRegisterForm = () => {
@@ -105,7 +103,7 @@ export const useRegisterForm = () => {
             };
 
             const response = await registerUser(registerData);
-            if (response.success && response.emailSent) {
+            if (response.success) {
                 router.push("/verify-email");
             }
 
