@@ -2,10 +2,12 @@ import loginAdmin from "../service/LoginAdminFormService";
 import { FormValues, loginValidations } from "@/components/headless-form";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export const useLoginFormAdmin = () => {
     const { setUser } = useAuthStore();
     const router = useRouter();
+    const [ error, setError ] = useState<string | null>(null);
 
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
@@ -39,9 +41,10 @@ export const useLoginFormAdmin = () => {
             const response = await loginAdmin(adminLoginData);
             if (response.status === 201) {
                 setUser(response.data.user);
-                router.push("/");
+                router.push("/admin/applicant");
             }
         } catch (err) {
+            setError("Login failed. Your email or password is incorrect. Please try again.")
             console.error("Login error:", err);
         }
 
@@ -50,5 +53,6 @@ export const useLoginFormAdmin = () => {
     return {
         formConfig,
         handleAdminLogin,
+        error
     }
 }

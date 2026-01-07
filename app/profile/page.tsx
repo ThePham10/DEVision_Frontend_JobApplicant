@@ -1,6 +1,5 @@
 "use client";
 
-import { Header } from "@/components/header";
 import { ProfileTable } from "@/components/profile-table";
 import { useAuthStore } from "@/store/authStore";
 import { motion } from "motion/react";
@@ -11,7 +10,6 @@ export default function Page() {
     
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            <Header />
             {isAuthenticated && 
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {/* Animated Page Header */}

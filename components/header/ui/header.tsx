@@ -28,7 +28,7 @@ export const Header = () => {
 
     return (
         <header>
-            <div className="relative h-14 sm:h-16 md:h-18 flex flex-row items-center gap-2 sm:gap-4 justify-between border-b border-[#E1E7EF] font-[Inter] px-4 sm:px-6 md:px-8 lg:px-0">
+            <div className="bg-white relative h-14 sm:h-16 md:h-18 flex flex-row items-center gap-2 sm:gap-4 justify-between border-b border-[#E1E7EF] font-[Inter] px-4 sm:px-6 md:px-8 lg:px-0">
                 {/* Logo - Left side */}
                 <div className="flex items-center justify-center lg:ml-[162px]">
                     <DEVisionLogoButton />

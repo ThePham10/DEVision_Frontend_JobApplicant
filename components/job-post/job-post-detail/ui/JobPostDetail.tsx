@@ -1,5 +1,4 @@
 
-import { Header } from "@/components/header/ui/header"
 import { Button, SecondaryButton } from "@/components/reusable-component"
 import {ApplicationModal} from "@/components/job-application/ui/ApplicationModal"
 import { motion } from "motion/react"
@@ -19,7 +18,6 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
     if (loading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-                <Header />
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="animate-pulse space-y-6">
                         <div className="h-10 bg-gray-200 rounded w-3/4"></div>
@@ -34,7 +32,6 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
     if (!job) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-                <Header />
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
                     <h1 className="text-2xl font-bold text-gray-900">Job not found</h1>
                 </div>
@@ -44,8 +41,6 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            <Header />
-            
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
                 {/* Header Section */}
                 <motion.div

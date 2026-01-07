@@ -1,13 +1,13 @@
 "use client";
 
 import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
 import { ServiceCard, Button, SecondaryButton } from "@/components/reusable-component";
 import { useRouter } from "next/navigation";
 import { motion, useInView } from "motion/react";
 import { useMainPageScroll } from "@/hooks/useMainPageScroll";
 import {Search, Users, DollarSign } from "lucide-react";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { useAuthStore } from "@/store/authStore";
 
 type DoodleIconData = {
     position: string;
@@ -77,6 +77,7 @@ const DoodleIconsSection = ({ children }: { children: React.ReactNode }) => {
 export default function Page() {
     const router = useRouter();
     const { visibleCards, servicesRef } = useMainPageScroll();
+    const { isAuthenticated } = useAuthStore();
 
     const services = [
         { title: "Smart Job Search", description: "Advanced search filters to find jobs matching your skills, location, and salary expectations.", icon: Search, colSpan: 1 },
@@ -84,10 +85,14 @@ export default function Page() {
         { title: "Premium Features", description: "Get real-time notifications for new jobs matching your criteria with our premium subscription.", icon: DollarSign, colSpan: 2 },
     ];
 
+    useEffect(() => {
+        if ( isAuthenticated ) {
+            router.push("/jobs")
+        }
+    })
+
     return (
         <div className="overflow-y-auto">
-            <Header />
-
             {/* First section */}
             <DoodleIconsSection>
                 <div className="flex flex-col items-center justify-center font-[Inter] gap-4 min-h-screen px-4 sm:px-6 lg:px-8 overflow-hidden">

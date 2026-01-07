@@ -7,11 +7,15 @@ import { useAuthStore } from "@/store/authStore";
 
 export const DEVisionLogoButton = () => {
     const router = useRouter();
-    const { isAuthenticated } = useAuthStore();
+    const { isAdmin, isAuthenticated } = useAuthStore();
 
     const handleOnClick = () => {
         if (isAuthenticated) {
-            router.push('/jobs');
+            if (isAdmin) {
+                router.push('/admin/applicant');
+            } else {
+                router.push('/jobs');
+            }
         } else {
             router.push('/');
         }
