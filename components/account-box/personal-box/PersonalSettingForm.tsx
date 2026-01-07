@@ -4,34 +4,40 @@ import { useAuthStore } from "@/store/authStore";
 import { FormValues } from "@/components/headless-form/types/types";
 import { getUserInfo, updateUserInfo } from "../personal-box/api/PersonalBoxService";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import type { AccountData } from "./types";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const PersonalBoxForm = () => {
-    const { isAuthenticated, user, setUser } = useAuthStore();
-    const [formKey, setFormKey] = useState(0);
-    
-    const { mutate: updateUser } = useMutation({
-        mutationFn: (data: any) => updateUserInfo(data),
+    const { isAuthenticated, user } = useAuthStore();
+
+    const queryClient = useQueryClient();
+
+    const { data: fetchedData } = useQuery({
+        queryKey: ['userInfo', user?.id],
+        queryFn: () => {
+            if (!user) throw new Error("User not found");
+            return getUserInfo(user.id);
+        },
+        enabled: isAuthenticated && !!user,
+    });
+
+    const userAccount = fetchedData?.data;
+
+    const updateMutation = useMutation({
+        mutationFn: (data: Partial<AccountData>) => updateUserInfo(data),
         onSuccess: async () => {
             if (!user) return;
-            const response = await getUserInfo(user.id);
-            if (response.status === 200) {
-                const updatedUser = response.data.user || response.data;
-                if (updatedUser) {
-                    setUser(updatedUser);
-                    setFormKey(prev => prev + 1);
-                }
-            }
-        },
+            await getUserInfo(user.id);
+            queryClient.invalidateQueries({ queryKey: ['userInfo', user.id] });
+        }
     });
 
     if (!isAuthenticated || !user) return null;
 
     const formConfig: FormConfig = {
         children: [
-            { name: "name", title: "Name", type: "text", placeholder: user.name, colSpan: 1 },
-            { name: "email", title: "Email", type: "email", placeholder: user.email, colSpan: 1 },
-            { name: "phone", title: "Phone Number", type: "text", placeholder: "Enter new phone number", colSpan: 1 },
+            { name: "name", title: "Name", type: "text", placeholder: userAccount?.name || "", colSpan: 1 },
+            { name: "phone", title: "Phone Number", type: "text", placeholder: userAccount?.phone || "", colSpan: 1 },
         ],
         buttonText: "Save Changes",
         buttonClassName: "col-span-2",
@@ -43,20 +49,28 @@ export const PersonalBoxForm = () => {
     };  
 
     const handleSubmit = async (values: FormValues) => {
-        try {
-            const updatedData = {
-                name: values.name ? (values.name as string) : undefined,
-                email: values.email ? (values.email as string) : undefined,
-                phone: values.phone ? (values.phone as string) : undefined,
-            };
-            
-            updateUser(updatedData);
-        } catch (err) {
-            console.error("Login error:", err);
-        }
+        updateMutation.mutate(values as Partial<AccountData>);
     }
 
     return (
-        <HeadlessForm key={formKey} config={formConfig} onSubmit={handleSubmit}/>
+        <div className="space-y-8">
+            {/* Profile Header */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 p-6">
+                <div className="flex items-start gap-4">
+                    <div className="flex-1">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-3">{userAccount?.name || "Your Profile"}</h2>
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-gray-500">Email:</span>
+                            <p className="text-lg text-gray-700 font-medium">{userAccount?.email}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Edit Your Information</h3>
+                <HeadlessForm config={formConfig} onSubmit={handleSubmit} />
+            </div>
+        </div>
     )
 }

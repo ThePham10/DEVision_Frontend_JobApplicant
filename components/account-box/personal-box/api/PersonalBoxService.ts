@@ -2,6 +2,7 @@ import { httpHelper, ApiResponse } from "@/utils/httpHelper";
 import { User, UserData } from "@/components/login-form/types/types";
 import { APPLICANT_URL } from "@/config/URLConfig";
 import { useAuthStore } from "@/store/authStore";
+import { AccountData } from "../types";
 
 export const updateUserInfo = async (
     data: Partial<User>,
@@ -21,9 +22,10 @@ export const updateUserInfo = async (
 
 export const getUserInfo = async (
     userId: string,
-): Promise<ApiResponse<UserData>> => {
+): Promise<ApiResponse<AccountData>> => {
     const endpoint = `${APPLICANT_URL}/${userId}`;
-    const response = await httpHelper.get<UserData>(endpoint);
+    const response = await httpHelper.get<AccountData>(endpoint);
+    console.log("getUserInfo response:", response);
 
     return response;
 }
