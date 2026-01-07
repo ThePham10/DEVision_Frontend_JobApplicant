@@ -1,6 +1,6 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { Company, CompanyFilters, PaginatedResponse } from "../types";
-import { COMPANY_URL } from "@/Config/URLConfig";
+import { COMPANY_URL } from "@/config/URLConfig";
 
 export const MOCK_COMPANIES: Company[] = [
     { id: "cmp-001", name: "Atalanta Tech Solutions", email: "contact@atalanta.tech", address: "12 Innovation Way, Melbourne VIC 3000", isActive: true, createdAt: new Date("2024-08-05T09:30:00Z"), updatedAt: new Date("2024-08-05T09:30:00Z"), description: "Atalanta Tech Solutions is a leading provider of innovative technology services and solutions, specializing in software development, cloud computing, and IT consulting. Our mission is to empower businesses through cutting-edge technology and exceptional service.", field: "Information Technology" },
