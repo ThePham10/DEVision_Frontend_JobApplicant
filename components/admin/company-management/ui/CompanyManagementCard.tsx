@@ -3,7 +3,7 @@
 import { Company } from "../types";
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
-import Modal from "@/components/reusable-component/Modal";
+import { Modal } from "@/components/reusable-component/Modal";
 import { useState } from "react";
 import CompanyDetails from "./CompanyDetails";
 import { Building2 } from "lucide-react";

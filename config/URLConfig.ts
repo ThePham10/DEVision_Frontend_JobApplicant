@@ -1,0 +1,8 @@
+export const APPLICANT_URL = "/applicants"
+export const SKILL_URL = "/skills"
+export const JOB_CATEGORY_URL = "/job-categories"
+export const JOB_POST_URL = "/jobpost-service/api/job-posts"
+export const JOB_APPLICATION_URL = "/job-applications"
+export const REGISTER_URL = "/auth/applicant/register"
+export const LOGIN_APPLICANT_URL = "/auth/applicant/login"
+export const LOGIN_ADMIN_URL = "/auth/admin/login"

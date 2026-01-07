@@ -1,9 +1,9 @@
 "use client";
 
 import { FaSearch } from "react-icons/fa";
-import Button from "@/components/reusable-component/Button";
+import { Button } from "@/components/reusable-component/Button";
 import { AnimatePresence } from "framer-motion";
-import Modal from "@/components/reusable-component/Modal";
+import { Modal } from "@/components/reusable-component/Modal";
 import CompanyManagementCard from "./CompanyManagementCard";
 import useCompanyManagement from "../hook/CompanyManagementHook";
 

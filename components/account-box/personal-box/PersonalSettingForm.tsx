@@ -30,8 +30,8 @@ export const PersonalBoxForm = () => {
     const formConfig: FormConfig = {
         children: [
             { name: "name", title: "Name", type: "text", placeholder: user.name, colSpan: 1 },
-            { name: "email", title: "Email", type: "text", placeholder: user.email, colSpan: 1 },
-            { name: "country", title: "Country", type: "text", placeholder: user.country ?? "", colSpan: 1 },
+            { name: "email", title: "Email", type: "email", placeholder: user.email, colSpan: 1 },
+            { name: "phone", title: "Phone Number", type: "text", placeholder: "Enter new phone number", colSpan: 1 },
         ],
         buttonText: "Save Changes",
         buttonClassName: "col-span-2",
@@ -45,10 +45,11 @@ export const PersonalBoxForm = () => {
     const handleSubmit = async (values: FormValues) => {
         try {
             const updatedData = {
-                name: values.name as string,
-                
+                name: values.name ? (values.name as string) : undefined,
+                email: values.email ? (values.email as string) : undefined,
+                phone: values.phone ? (values.phone as string) : undefined,
             };
-            // Use mutation instead of direct API call
+            
             updateUser(updatedData);
         } catch (err) {
             console.error("Login error:", err);
