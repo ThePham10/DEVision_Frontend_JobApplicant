@@ -1,17 +1,36 @@
 import { Button, Modal } from "@/components/reusable-component";
 import { mockProfile } from "../../../Data";
 import ProfileWorkExpCard from "./ProfileWorkExpCard";
-import { useState } from "react";
+import { use, useState } from "react";
 import AddWorkExpForm from "./AddWorkExpForm";
+import { useAuthStore } from "@/store/authStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { getWorkExperiences } from "../api/WorkExpService";
 
 export const ProfileWorkExpBox = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
+    const { isAuthenticated, user } = useAuthStore();
+    const queryClient = useQueryClient();
 
     const openAddModal = () => {
         setEditingId(null);
         setIsModalOpen(true);
     };
+
+    const { data: fetchedData } = useQuery({
+        queryKey: ['userWorkExp', user?.id],
+        queryFn: () => {
+            if (!user) throw new Error("User not found");
+            return getWorkExperiences("695ea8790a8e3db63ec5ea48");
+        },
+        enabled: isAuthenticated && !!user,
+    });
+
+    const userWorkExp = fetchedData?.data;
+
+    if (!isAuthenticated || !user) return null;
 
     const handleEdit = (id: string) => {
         console.log("Editing work experience:", id);
@@ -39,11 +58,22 @@ export const ProfileWorkExpBox = () => {
                     />
                 </div>
 
-                <ProfileWorkExpCard 
-                    item={mockProfile[0]} 
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                />
+                {/* {workExpList.map((exp) => (
+                    <ProfileWorkExpCard 
+                        key={exp.id}
+                        item={exp} 
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                    />
+                ))} */}
+
+                {userWorkExp && (
+                    <ProfileWorkExpCard 
+                        item={userWorkExp} 
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                    />
+                )}
             </div>
 
             <Modal
