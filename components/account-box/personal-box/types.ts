@@ -3,8 +3,7 @@ type AccountData = {
     name: string;
     email: string;
     phone?: string;
-    street?: string;
-    city?: string;
+    address?: string;
     country?: string;
     addressProvinceCode?: string;
     addressProvinceName?: string;

@@ -57,6 +57,14 @@ export function getDialCodeFromCache(countryCode: string): string {
     return country?.dialCode || "";
 }
 
+// Get country name for a country code (uses cached data)
+export function getCountryNameFromCache(countryCode: string): string {
+    const country = countriesCache.find(
+        c => c.value.toUpperCase() === countryCode.toUpperCase()
+    );
+    return country?.label || countryCode; // Return code if not found
+}
+
 // Get all cached countries
 export function getCachedCountries(): Country[] {
     return countriesCache;
