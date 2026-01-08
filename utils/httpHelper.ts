@@ -3,7 +3,7 @@ import { useAuthStore } from "@/store/authStore";
 const API_BASE_URL =
     process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
-interface HttpError extends Error {
+export interface HttpError extends Error {
     status: number;
     data?: unknown;
 }
@@ -64,7 +64,7 @@ class HttpHelper {
 
         return { status: response.status, data };
     }
-    
+
     private async refreshToken(): Promise<boolean> {
         try {
             const isAdmin = useAuthStore.getState().isAdmin;
@@ -153,8 +153,8 @@ class HttpHelper {
      */
     async put<T>(endpoint: string, data: unknown): Promise<ApiResponse<T>> {
         return this.request<T>(endpoint, {
-        method: "PUT",
-        body: JSON.stringify(data),
+            method: "PUT",
+            body: JSON.stringify(data),
         });
     }
 
@@ -166,8 +166,8 @@ class HttpHelper {
      */
     async patch<T>(endpoint: string, data: unknown): Promise<ApiResponse<T>> {
         return this.request<T>(endpoint, {
-        method: "PATCH",
-        body: JSON.stringify(data),
+            method: "PATCH",
+            body: JSON.stringify(data),
         });
     }
 
