@@ -8,7 +8,9 @@ import { LucideIcon, Accessibility, AlertTriangle, Atom, Badge, BookOpen,
     Phone, PhoneOutgoing, PiggyBank, Pill, Presentation, Receipt, Ruler, Scan, School, Scroll, Search, Server, 
     Share2, ShieldCheck, Smartphone, Stethoscope, Table, Tablet, Target, Terminal, Ticket, TrendingUp, Type, User, 
     UserCheck, UserPlus, UserSearch, Users, Video, Wallet, Wrench, Zap, LayoutDashboard, Languages, LayoutGrid, LifeBuoy, Layout,
-    HeartPulse, Banknote, Megaphone, GraduationCap, Palette, Scale, Headphones, Eye, EyeClosed, BadgeCheck, BadgeAlert, BriefcaseBusiness } from "lucide-react";
+    HeartPulse, Banknote, Megaphone, GraduationCap, Palette, Scale, Headphones, Eye, EyeClosed, BadgeCheck, BadgeAlert, BriefcaseBusiness, 
+    Landmark,
+    University} from "lucide-react";
 
 const icons : Record<string, LucideIcon> = {
     "accessibility" : Accessibility,    
@@ -59,7 +61,8 @@ const icons : Record<string, LucideIcon> = {
     "heart" : Heart,               
     "heart-handshake" : HeartHandshake,
     "image" : Image,            
-    "languages" : Languages,           
+    "languages" : Languages,    
+    "landmark": Landmark,       
     "layout" : Layout,
     "layout-dashboard" : LayoutDashboard, 
     "layout-grid" : LayoutGrid,         
@@ -103,7 +106,8 @@ const icons : Record<string, LucideIcon> = {
     "user-check" : UserCheck,       
     "user-plus" : UserPlus,           
     "user-search" : UserSearch,
-    "users" : Users,            
+    "users" : Users,    
+    "university" : University,         
     "video" : Video,               
     "wallet" : Wallet,
     "wrench" : Wrench,           

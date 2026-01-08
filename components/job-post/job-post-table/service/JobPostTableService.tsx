@@ -1,4 +1,6 @@
-import { JobPost, JobPostFilters, allJobPosts } from "../../types"
+import { JobPost, JobPostFilters } from "../../types"
+import { jmHttpHelper } from "@/utils/jmhttpHelper";
+import { JOB_POST_URL } from "@/config/URLConfig"
 
 /**
  * Fetches job posts from JM team backend
@@ -9,8 +11,8 @@ async function loadJobPost(
 ): Promise<JobPost[]> {
     try {
         // Fetch ALL job posts from JM team backend
-        // const response = await jmHttpHelper.get<JobPost[]>(JOB_POST_URL);
-        // const allJobPosts = response.data;
+        const response = await jmHttpHelper.get<JobPost[]>(JOB_POST_URL);
+        const allJobPosts = response.data;
         
         // Apply CLIENT-SIDE filtering
         let filteredItems = [...allJobPosts];

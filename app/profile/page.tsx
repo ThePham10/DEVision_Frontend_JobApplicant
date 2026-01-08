@@ -1,16 +1,13 @@
 "use client";
 
 import { ProfileTable } from "@/components/profile-table";
-import { useAuthStore } from "@/store/authStore";
+import { AuthGuard } from "@/components/reusable-component";
 import { motion } from "motion/react";
 
 export default function Page() {
-    const { isAuthenticated } = useAuthStore();
-    if (!isAuthenticated) return null;
-    
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            {isAuthenticated && 
+            <AuthGuard>
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {/* Animated Page Header */}
                     <motion.div 
@@ -29,7 +26,7 @@ export default function Page() {
                     
                     <ProfileTable />
                 </div>
-            }
+            </AuthGuard>
         </div>
     )
 }

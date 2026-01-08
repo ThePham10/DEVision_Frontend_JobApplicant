@@ -77,7 +77,7 @@ const DoodleIconsSection = ({ children }: { children: React.ReactNode }) => {
 export default function Page() {
     const router = useRouter();
     const { visibleCards, servicesRef } = useMainPageScroll();
-    const { isAuthenticated } = useAuthStore();
+    const { isAuthenticated, isAdmin } = useAuthStore();
 
     const services = [
         { title: "Smart Job Search", description: "Advanced search filters to find jobs matching your skills, location, and salary expectations.", icon: Search, colSpan: 1 },
@@ -87,7 +87,11 @@ export default function Page() {
 
     useEffect(() => {
         if ( isAuthenticated ) {
-            router.push("/jobs")
+            if ( isAdmin ) {
+                router.push("/admin/applicant")
+            } else {
+                router.push("/jobs")
+            }
         }
     })
 

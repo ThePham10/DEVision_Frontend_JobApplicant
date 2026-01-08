@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { JobPostFilters, JobPost } from "../../types"
 import type { FormConfig } from "@/components/headless-form"
 import { loadJobPost } from "../service/JobPostTableService"
+import { useQuery } from "@tanstack/react-query"
 
 const employmentType = [
     { id: "1", name: "All Types", value: "", icon: "briefcase-business" },
@@ -58,32 +59,24 @@ const filterFormConfig: FormConfig = {
 const useJobPostTable = () => {
     const router = useRouter()
     
-    // State for job posts and UI
-    const [jobPosts, setJobPosts] = useState<JobPost[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    // State for filters and UI
     const [filters, setFilters] = useState<JobPostFilters>({})
     const [isOpen, setIsOpen] = useState(false)
     const [isJobApplicationOpen, setIsJobApplicationOpen] = useState(false)
     const [selectedJob, setSelectedJob] = useState<JobPost | null>(null)
     
-    // Fetch job posts whenever filters change
-    useEffect(() => {
-        const fetchJobs = async () => {
-            try {
-                setLoading(true)
-                setError(null)
-                const jobs = await loadJobPost(filters)
-                setJobPosts(jobs)
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to load job posts')
-            } finally {
-                setLoading(false)
-            }
-        }
-        
-        fetchJobs()
-    }, [filters])
+    // Use TanStack Query to fetch job posts - automatically refetches when filters change
+    const { 
+        data: jobPosts = [], 
+        isLoading: loading, 
+        error: queryError 
+    } = useQuery({
+        queryKey: ["jobPosts", filters],  // Query key includes filters for automatic refetching
+        queryFn: () => loadJobPost(filters),
+    })
+    
+    // Convert error to string for backwards compatibility
+    const error = queryError ? (queryError instanceof Error ? queryError.message : 'Failed to load job posts') : null
     
     // Handle filter form submission
     const handleFilterSubmit = (formData: Record<string, unknown>) => {

@@ -1,17 +1,24 @@
-import { Profile as ProfileType } from "../../../types/types"
+import { Education } from "../types"
 import { motion } from "motion/react";
-import { Pencil, University, Trash2 } from "lucide-react";
+import { Pencil, University, Trash2, AtSign } from "lucide-react";
 
 type ProfileEducationCardProps = {
-    item: ProfileType;
-    onEdit?: (id: string) => void;
-    onDelete?: (id: string) => void;
+    educationList: Education[];
+    openEditModal: (education: Education) => void;
+    onDelete: (education: Education) => void;
 };
 
-const ProfileEducationCard = ({ item, onEdit, onDelete }: ProfileEducationCardProps) => {
+const ProfileEducationCard = ({ educationList, openEditModal, onDelete }: ProfileEducationCardProps) => {
+    function convertTime(timestamp: string): string {
+        const date = new Date(timestamp);
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is 0-indexed
+        const year = date.getFullYear();
+        return `${month}-${year}`;
+    }
+
     return (
-        <div className="flex flex-col gap-4">
-            {item.education.map((educationItem) => (
+        <div className="flex flex-col gap-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+            {educationList.map((educationItem) => (
                 <motion.div 
                     key={educationItem.id} 
                     className="group relative"
@@ -27,12 +34,17 @@ const ProfileEducationCard = ({ item, onEdit, onDelete }: ProfileEducationCardPr
                         
                         {/* Content */}
                         <div className="flex-1 min-w-0">
-                            <h3 className="font-[Inter] text-lg font-bold text-gray-900 mb-1">
-                                {educationItem.degree} of {educationItem.fieldOfStudy}
-                            </h3>
-                            <p className="text-gray-600 text-sm mb-1">{educationItem.school}</p>
+                            <span className="font-[Inter] text-lg font-bold text-gray-900 mb-1">
+                                {educationItem.levelStudy} of {educationItem.major} 
+                            </span>
+
+                            <span className="flex items-center gap-2 text-gray-600">
+                                <AtSign className="w-4 h-4" />
+                                {educationItem.schoolName}
+                            </span>
+                            
                             <div className="flex items-center gap-4 text-sm text-gray-500">
-                                <span>{educationItem.startYear} - {educationItem.endYear}</span>
+                                <span>{convertTime(educationItem.startDate)} - {educationItem.endDate ? convertTime(educationItem.endDate) : "Present"}</span>
                                 {educationItem.gpa && (
                                     <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
                                         GPA: {educationItem.gpa}
@@ -44,14 +56,14 @@ const ProfileEducationCard = ({ item, onEdit, onDelete }: ProfileEducationCardPr
                         {/* Action buttons - appear on hover */}
                         <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                             <button
-                                onClick={() => onEdit?.(educationItem.id)}
+                                onClick={() => openEditModal(educationItem)}
                                 className="p-2 bg-white hover:bg-blue-50 text-gray-500 hover:text-blue-600 rounded-lg border border-gray-200 shadow-sm transition-colors duration-200"
                                 title="Edit"
                             >
                                 <Pencil className="w-4 h-4" />
                             </button>
                             <button
-                                onClick={() => onDelete?.(educationItem.id)}
+                                onClick={() => onDelete(educationItem)}
                                 className="p-2 bg-white hover:bg-red-50 text-gray-500 hover:text-red-600 rounded-lg border border-gray-200 shadow-sm transition-colors duration-200"
                                 title="Delete"
                             >

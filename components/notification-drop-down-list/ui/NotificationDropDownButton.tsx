@@ -7,19 +7,19 @@ import useNotificationDropDownButton from "../hook/NotificationDropDownButtonHoo
 
 
 export const NotificationDropDownButton = () => {
-    const { 
+    const {
         isOpen, 
-        setIsOpen, 
-        popupRef, 
-        buttonRef, 
-        notifications, 
+        popupRef, loaderRef, buttonRef,
+        wsStatus,
+        hasMore,
+        displayedNotifications,
         unreadCount,
+        setIsOpen, 
         handleMarkAllAsRead,
         handleMarkAsRead,
         getNotificationIcon,
         getNotificationBg,
         getRelativeTime,
-        wsStatus,
     } = useNotificationDropDownButton();
 
     return (
@@ -99,7 +99,7 @@ export const NotificationDropDownButton = () => {
                                 e.currentTarget.style.scrollbarColor = 'transparent transparent';
                             }}
                         >
-                            {notifications.length === 0 ? (
+                            {displayedNotifications.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-10 px-4">
                                     <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
                                         <Bell className="w-6 h-6 text-slate-400" />
@@ -109,7 +109,7 @@ export const NotificationDropDownButton = () => {
                                 </div>
                             ) : (
                                 <div>
-                                    {notifications.map((item) => (
+                                    {displayedNotifications.map((item) => (
                                         <NotificationCard
                                             key={item.id}
                                             notification={item}
@@ -119,6 +119,9 @@ export const NotificationDropDownButton = () => {
                                             getRelativeTime={getRelativeTime}
                                         />
                                     ))}
+                                    {hasMore && (
+                                        <div ref={loaderRef} className="py-2 text-center text-xs text-slate-400">Loading...</div>
+                                    )}
                                 </div>
                             )}
                         </div>
