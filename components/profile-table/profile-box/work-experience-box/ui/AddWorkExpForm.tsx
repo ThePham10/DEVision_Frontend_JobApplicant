@@ -1,58 +1,78 @@
 "use client";
 
-import { Education } from "../../../types/types";
-import { HeadlessForm, FormConfig } from "@/components/headless-form";
+import { HeadlessForm, FormConfig, FormValues } from "@/components/headless-form";
 import { SecondaryButton } from "@/components/reusable-component";
+import { WorkExpData } from "../types";
 
 interface AddWorkExpFormProps {
-    //onSubmit: (data: { name: string; description?: string; }) => void;
+    onSubmit: (data: Omit<WorkExpData, "id" | "applicantId" | "createdAt" | "updatedAt">) => void;
     onCancel: () => void;
     isLoading?: boolean;
 }
 
-export default function AddWorkExpForm({ onCancel, isLoading = false }: AddWorkExpFormProps) {
+export default function AddWorkExpForm({ onSubmit, onCancel, isLoading = false }: AddWorkExpFormProps) {
+
+    const handleSubmit = (values: FormValues) => {
+        const data: Omit<WorkExpData, "id" | "applicantId" | "createdAt" | "updatedAt"> = {
+            title: String(values.title || ""),
+            companyId: String(values.companyId || ""),
+            description: String(values.description || ""),
+            startDate: String(values.startDate || ""),
+            endDate: String(values.endDate || ""),
+            skillCategories: (values.skillCategories as string[]) || [],
+        };
+        onSubmit(data);
+    };
+
     const formConfig: FormConfig = {
         children: [
             {
                 title: "Job Title",
-                name: "jobTitle",
+                name: "title",
                 type: "text",
-                placeholder: "e.g., Software Engineer, Product Manager",
-                colSpan: 1,
+                placeholder: "Enter job title",
+                colSpan: 2,
+            },
+            {
+                title: "Company ID",
+                name: "companyId",
+                type: "text",
+                placeholder: "Enter company ID",
+                colSpan: 2,
             },
             {
                 title: "Start Date",
                 name: "startDate",
-                type: "text",
-                placeholder: "e.g., 2015",
+                type: "date",
+                placeholder: "",
                 colSpan: 1,
             },
             {
                 title: "End Date",
                 name: "endDate",
-                type: "text",
-                placeholder: "e.g., 2019 or Present",
+                type: "date",
+                placeholder: "",
                 colSpan: 1,
             },
             {
                 title: "Job Description",
-                name: "jobDescription",
-                type: "text",
-                placeholder: "e.g., Developed software applications, managed product teams",
-                colSpan: 1,
+                name: "description",
+                type: "textarea",
+                placeholder: "Enter job description",
+                colSpan: 2,
             },
         ],
-        buttonText: isLoading ? "Saving..." : "Add New Work Experience",
+        buttonText: isLoading ? "Saving..." : "Add Work Experience",
         layout: {
-            type: "flex",
-            direction: "column",
-            gap: "2",
+            type: "grid",
+            columns: 2,
+            gap: "4",
         },
     };
 
     return (
         <div className="space-y-4">
-            <HeadlessForm config={formConfig} onSubmit={(data) => console.log(data)} />
+            <HeadlessForm config={formConfig} onSubmit={handleSubmit} />
             <SecondaryButton text="Cancel" onClick={onCancel} style="w-full" />
         </div>
     );
