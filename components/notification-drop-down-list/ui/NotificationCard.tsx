@@ -5,9 +5,10 @@ type NotificationCardProps = {
     markAsRead: (notificationId: string) => void,
     getNotificationBg: (type: NotificationType) => string,
     getNotificationIcon: (type: NotificationType) => React.ReactNode,
+    getRelativeTime: (timestamp: string) => string,
 }
 
-export const NotificationCard = ({ notification, markAsRead, getNotificationBg, getNotificationIcon }: NotificationCardProps) => {
+export const NotificationCard = ({ notification, markAsRead, getNotificationBg, getNotificationIcon, getRelativeTime }: NotificationCardProps) => {
     return (
         <div
             key={notification.id}
@@ -39,7 +40,7 @@ export const NotificationCard = ({ notification, markAsRead, getNotificationBg, 
                     {notification.description}
                 </p>
                 <span className="text-[11px] text-slate-400 mt-1.5 block">
-                    {notification.time}
+                    {getRelativeTime(notification.time)}
                 </span>
             </div>
         </div>
