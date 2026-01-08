@@ -1,10 +1,20 @@
 import { useRef, useState, useEffect } from "react";
-import { Bell, SquareCheckBig, TriangleAlert, Siren } from "lucide-react";
+import { Bell, SquareCheckBig, TriangleAlert, Siren, AlarmClockPlus } from "lucide-react";
 import { NotificationType } from "../types/types"
 import { useNotificationStore } from "@/store";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { markAllAsRead, markAsRead } from "../service/NotificationDropDownService";
+import { getNotificationDropDownList } from "../service/NotificationDropDownService";
 
 const useNotificationDropDownButton = () => {
-    const { notifications, markAsRead, markAllAsRead, wsStatus, unreadCount } = useNotificationStore()
+    const queryClient = useQueryClient();
+
+    const { 
+        notifications,       
+        setNotifications,
+        unreadCount,
+        wsStatus,
+    } = useNotificationStore()
 
     const getNotificationIcon = (type: NotificationType) => {
         const iconClass = "w-5 h-5";
@@ -15,6 +25,8 @@ const useNotificationDropDownButton = () => {
                 return <TriangleAlert className={`${iconClass} text-red-500`} />;
             case "JobMatchingAlert":
                 return <Siren className={`${iconClass} text-amber-500`} />;
+            case "ProfileUpdateAlert":
+                return <AlarmClockPlus className={`${iconClass} text-blue-500`} />;
             default:
                 return <Bell className={`${iconClass} text-slate-500`} />;
         }
@@ -28,14 +40,48 @@ const useNotificationDropDownButton = () => {
                 return "bg-red-50";
             case "JobMatchingAlert":
                 return "bg-yellow-50";
+            case "ProfileUpdateAlert":
+                return "bg-blue-50";
             default:
                 return "bg-slate-50";
         }
     };
 
+    function getRelativeTime(timestamp: string): string {
+        const now = new Date();
+        const date = new Date(timestamp);
+        const diffMs = now.getTime() - date.getTime();
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+        if (diffMins < 1) return "Just now";
+        if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        
+        return date.toLocaleDateString();
+    }
+
     const [isOpen, setIsOpen] = useState(false);
     const popupRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+
+    // Fetch historical notifications from REST API
+    const {
+        data: NotificationData,
+        isLoading
+    } = useQuery({
+        queryKey: ["notifications"],
+        queryFn: () => getNotificationDropDownList(),
+    })
+
+    // Load historical notifications into the store when REST data arrives
+    // This only runs once on initial load, WebSocket will add new ones on top
+    useEffect(() => {
+        if (NotificationData?.notifications && Array.isArray(NotificationData.notifications)) {
+            setNotifications(NotificationData.notifications, NotificationData.unreadCount);
+        }
+    }, [NotificationData, setNotifications]);
 
     // Close popup when clicking outside
     useEffect(() => {
@@ -59,18 +105,43 @@ const useNotificationDropDownButton = () => {
         };
     }, [isOpen]);
 
+    const markAsReadMutation = useMutation({
+        mutationFn: ({id}: {id: string}) => 
+            markAsRead(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        }
+    })
+
+    function handleMarkAsRead(id: string) {
+        markAsReadMutation.mutate({id});
+    }
+
+    const markAllAsReadMutation = useMutation({
+        mutationFn: () => markAllAsRead(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        }
+    })
+
+    function handleMarkAllAsRead() {
+        markAllAsReadMutation.mutate();
+    }
+
     return {
         isOpen, 
         setIsOpen, 
         popupRef, 
         buttonRef, 
-        notifications, 
+        notifications,
         unreadCount,
-        markAllAsRead,
-        markAsRead,
+        handleMarkAllAsRead,
+        handleMarkAsRead,
         getNotificationIcon,
         getNotificationBg,
+        getRelativeTime,
         wsStatus,
+        isLoading,
     }
 }
 

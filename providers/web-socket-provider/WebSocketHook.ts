@@ -52,8 +52,11 @@ export function useWebSocket() {
                         time: data.time,
                         read: data.read,
                     }
-                    console.log("🔔 Adding notification:", notification)
-                    addNotification(notification)
+                    if (notification.type !== "connected") {
+                        addNotification(notification)
+                    } else {
+                        console.log("Connected successfully!")
+                    }
                 } catch (error) {
                     console.error("Error parsing notification data:", error)
                 }

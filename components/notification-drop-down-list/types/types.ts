@@ -1,4 +1,4 @@
-export type NotificationType = "ApplicationAlert_Pass" | "ApplicationAlert_Reject" | "JobMatchingAlert";
+export type NotificationType = "ApplicationAlert_Pass" | "ApplicationAlert_Reject" | "JobMatchingAlert" | "connected" | "ProfileUpdateAlert";
 
 export type Notification = {
     id: string;
@@ -8,6 +8,16 @@ export type Notification = {
     time: string;
     read: boolean;
 };
+
+export type GetResponse = {
+    notifications: Notification[];
+    total: number;
+    unreadCount: number;
+}
+
+export type PatchResponse = {
+    success: boolean;
+}
 
 export type NotificationCardProps = {
     notification: Notification,

@@ -14,10 +14,11 @@ export const NotificationDropDownButton = () => {
         buttonRef, 
         notifications, 
         unreadCount,
-        markAllAsRead,
-        markAsRead,
+        handleMarkAllAsRead,
+        handleMarkAsRead,
         getNotificationIcon,
         getNotificationBg,
+        getRelativeTime,
         wsStatus,
     } = useNotificationDropDownButton();
 
@@ -76,7 +77,7 @@ export const NotificationDropDownButton = () => {
                             </div>
                             {unreadCount > 0 && (
                                 <button 
-                                    onClick={markAllAsRead}
+                                    onClick={handleMarkAllAsRead}
                                     className="text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
                                 >
                                     Mark all read
@@ -112,9 +113,10 @@ export const NotificationDropDownButton = () => {
                                         <NotificationCard
                                             key={item.id}
                                             notification={item}
-                                            markAsRead={markAsRead}
+                                            markAsRead={handleMarkAsRead}
                                             getNotificationBg={getNotificationBg}
                                             getNotificationIcon={getNotificationIcon}
+                                            getRelativeTime={getRelativeTime}
                                         />
                                     ))}
                                 </div>

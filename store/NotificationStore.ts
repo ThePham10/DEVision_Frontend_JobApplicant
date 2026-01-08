@@ -9,6 +9,7 @@ interface NotificationStore {
     wsStatus: WebSocketStatus;
     
     // Actions
+    setNotifications: (notifications: Notification[], unreadCount: number) => void;
     addNotification: (notification: Notification) => void;
     markAsRead: (id: string) => void;
     markAllAsRead: () => void;
@@ -23,9 +24,9 @@ export const useNotificationStore = create<NotificationStore> (
         unreadCount: 0,
         wsStatus: 'disconnected',
         
-        setNotifications: (notifications : Notification[]) => set({
+        setNotifications: (notifications : Notification[], unreadCount: number) => set({
             notifications,
-            unreadCount: notifications.filter(n => !n.read).length,
+            unreadCount,
         }),
         
         addNotification: (notification) => set((state) => {
