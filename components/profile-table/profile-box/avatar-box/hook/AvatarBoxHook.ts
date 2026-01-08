@@ -17,7 +17,7 @@ const useAvatarBox = () => {
         setIsModalOpen(false);
     }
 
-    const formConfig : FormConfig = {
+    const formAvaConfig : FormConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
         children: [
             {
@@ -34,7 +34,7 @@ const useAvatarBox = () => {
         buttonText: "Upload"
     }
 
-    const handleSubmit = async (values: FormValues) => {
+    const handleAvatarSubmit = async (values: FormValues) => {
         const file = values.avatar;
             
         // Ensure we have a file
@@ -61,8 +61,8 @@ const useAvatarBox = () => {
         isModalOpen,
         handleOpenModal,
         handleCloseModal,
-        formConfig,
-        handleSubmit
+        formAvaConfig,
+        handleAvatarSubmit
     }
 }
 

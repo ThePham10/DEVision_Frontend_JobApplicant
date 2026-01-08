@@ -1,19 +1,17 @@
-type ApplicantAccount = {
+type Company = {
     id: string;
     name: string;
     email: string;
-    phone?: string;
     address?: string;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
+    description?: string;
+    field?: string;
 }
 
-type ApplicantFilters = {
+type CompanyFilters = {
     name?: string;
-    email?: string;
-    phone?: string;
-    isActive?:boolean;
 }
 
 type PaginatedResponse<T> = {
@@ -24,4 +22,4 @@ type PaginatedResponse<T> = {
     hasMore: boolean;
 }
 
-export type { ApplicantAccount, ApplicantFilters, PaginatedResponse };
+export type { Company, CompanyFilters, PaginatedResponse };

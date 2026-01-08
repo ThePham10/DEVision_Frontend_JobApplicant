@@ -9,7 +9,7 @@ import useApplicantManagement from "../hook/ApplicantManagementHook";
 export const ApplicantManagement = () => {
 
     const {
-        allApplicants,
+        applicants,
         totalApplicantsCount,
         hasNextPage,
         isLoading,
@@ -19,7 +19,18 @@ export const ApplicantManagement = () => {
         activateConfirm,
         setActivateConfirm,
         handleDeActivate,
-        handleActivate
+        handleActivate,
+        searchName,
+        setSearchName,
+        searchPhone,
+        setSearchPhone,
+        searchEmail,
+        setSearchEmail,
+        statusFilter,
+        setStatusFilter,
+        handleSearch,
+        filters,
+        clearFilters,
     } = useApplicantManagement();
 
     return (
@@ -42,17 +53,52 @@ export const ApplicantManagement = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            //value={searchName}
-                            //onChange={(e) => setSearchName(e.target.value)}
-                            //onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                            value={searchName}
+                            onChange={(e) => setSearchName(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                             placeholder="Search by name"
                             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
                         />
                     </div>
-                    <Button text="Search" />
+
+                    <div className="flex-1 relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            value={searchPhone}
+                            onChange={(e) => setSearchPhone(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                            placeholder="Search by phone"
+                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
+                        />
+                    </div>
+
+                    <div className="flex-1 relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            value={searchEmail}
+                            onChange={(e) => setSearchEmail(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                            placeholder="Search by email"
+                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter]"
+                        />
+                    </div>
+
+                    <select
+                        value={statusFilter}
+                        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-[Inter] bg-white"
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+
+                    <Button text="Search" onClick={handleSearch} style="w-full sm:w-auto" />
                 </div>
                 
-                {/* {(filters.name !== undefined) && (
+                {(filters.name !== undefined || filters.email !== undefined || filters.phone !== undefined || filters.isActive !== undefined) && (
                     <div className="flex flex-wrap gap-2 mt-4 items-center">
                         <span className="text-sm text-gray-500">Active filters:</span>
                         {filters.name && (
@@ -61,12 +107,51 @@ export const ApplicantManagement = () => {
                                 <X
                                     onClick={() => {
                                         setSearchName("");
-                                        setFilters(prev => ({ ...prev, name: undefined }));
+                                        handleSearch();
                                     }}
                                     className="cursor-pointer ml-1 hover:bg-blue-200 rounded-full p-0.5"
                                 />
                             </span>
                         )}
+                        {filters.phone && (
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                Phone: {filters.phone}
+                                <X
+                                    onClick={() => {
+                                        setSearchPhone("");
+                                        handleSearch();
+                                    }}
+                                    className="cursor-pointer ml-1 hover:bg-blue-200 rounded-full p-0.5"
+                                />
+                            </span>
+                        )}
+
+                        {filters.email && (
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                Email: {filters.email}
+                                <X
+                                    onClick={() => {
+                                        setSearchEmail("");
+                                        handleSearch();
+                                    }}
+                                    className="cursor-pointer ml-1 hover:bg-blue-200 rounded-full p-0.5"
+                                />
+                            </span>
+                        )}
+                        
+                        {filters.isActive !== undefined && (
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                Status: {filters.isActive ? "Active" : "Inactive"}
+                                <X
+                                    onClick={() => {
+                                        setStatusFilter("");
+                                        handleSearch();
+                                    }}
+                                    className="cursor-pointer ml-1 hover:bg-blue-200 rounded-full p-0.5"
+                                />
+                            </span>
+                        )}
+
                         <button
                             onClick={clearFilters}
                             className="text-sm text-gray-500 hover:text-gray-700 underline"
@@ -74,28 +159,28 @@ export const ApplicantManagement = () => {
                             Clear all
                         </button>
                     </div>
-                )} */}
+                )} 
             </div>
 
             <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-500 font-[Inter]">
-                    Showing {allApplicants.length} of {totalApplicantsCount} applicants
+                    Showing {applicants.length} of {totalApplicantsCount} applicants
                     {isLoading && <span className="ml-2 text-blue-500">(Updating...)</span>}
                 </div>
             </div>
             
             <div className="flex flex-col gap-3">
-                {isLoading && allApplicants.length === 0 ? (
+                {isLoading && applicants.length === 0 ? (
                     <div className="text-center py-10 text-gray-500 font-[Inter]">
                         Loading applicants...
                     </div>
-                ) : allApplicants.length === 0 ? (
+                ) : applicants.length === 0 ? (
                     <div className="text-center py-10 text-gray-500 font-[Inter]">
                         No applicants found.
                     </div>
                 ) : (
                     <AnimatePresence>
-                        {allApplicants.map((applicant) => (
+                        {applicants.map((applicant) => (
                             <ApplicantManagementCard
                                 key={applicant.id}
                                 applicant={applicant}
@@ -167,7 +252,7 @@ export const ApplicantManagement = () => {
                             disabled={!deactivateConfirm}
                             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-[Inter] disabled:opacity-50"
                         >
-                            {isLoading ? "Deleting..." : "Delete"}
+                            {isLoading ? "Deactivating..." : "Deactivate"}
                         </button>
                     </div>
                 </div>

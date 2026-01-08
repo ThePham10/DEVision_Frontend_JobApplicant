@@ -6,30 +6,24 @@ async function loadApplicants(
     page: number,
     limit: number,
 ): Promise<PaginatedResponse<ApplicantAccount>> {
-    const endpoint = `${APPLICANT_URL}?page=${page}&limit=${limit}`;
+    const endpoint = `${APPLICANT_URL}?limit=${limit}&page=${page}`;
+
     const response = await httpHelper.get<PaginatedResponse<ApplicantAccount>>(endpoint);
 
     if (response.status === 200) {
-        const items = response.data.data ?? [];
-        const total = response.data.total ?? items.length;
-        const hasMore = page * limit < total;
-
+        const data = response.data;
+        // Calculate hasMore if API doesn't return it
+        const hasMore = data.hasMore ?? (data.page * data.limit < data.total);
+        return { ...data, hasMore };
+    } else {
         return {
-            data: items,
-            total,
+            data: [],
+            total: 0,
             page,
             limit,
-            hasMore,
+            hasMore: false,
         };
     }
-
-    return {
-        data: [],
-        total: 0,
-        page: 0,
-        limit: 0,
-        hasMore: false,
-    };
 }
 
 async function deactivateApplicant(

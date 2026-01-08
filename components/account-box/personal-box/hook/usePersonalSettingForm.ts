@@ -1,0 +1,69 @@
+import { useAuthStore } from "@/store/authStore";
+import { FormValues } from "@/components/headless-form/types/types";
+import { getUserInfo, updateUserInfo } from "../api/PersonalBoxService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { AccountData } from "../types";
+import { fetchCountries, Country } from "@/components/headless-form/country-drop-down-menu/api/countryDropDownMenuService";
+
+export function usePersonalSettingForm() {
+    const { isAuthenticated, user } = useAuthStore();
+    const queryClient = useQueryClient();
+
+    // Fetch user info
+    const { data: fetchedData } = useQuery({
+        queryKey: ['userInfo', user?.id],
+        queryFn: () => {
+            if (!user) throw new Error("User not found");
+            return getUserInfo(user.id);
+        },
+        enabled: isAuthenticated && !!user,
+    });
+
+    // Fetch countries to get full names
+    const { data: countries = [] } = useQuery({
+        queryKey: ['countries'],
+        queryFn: fetchCountries,
+        staleTime: Infinity, // Countries don't change often
+    });
+
+    const userAccount = fetchedData?.data;
+
+    // Get full country name from code
+    const getCountryName = (code: string | undefined): string => {
+        if (!code) return "";
+        const country = countries.find(
+            (c: Country) => c.value.toUpperCase() === code.toUpperCase()
+        );
+        return country?.label || code;
+    };
+
+    // Update mutation
+    const updateMutation = useMutation({
+        mutationFn: (data: Partial<AccountData>) => updateUserInfo(data),
+        onSuccess: async () => {
+            if (!user) return;
+            await getUserInfo(user.id);
+            queryClient.invalidateQueries({ queryKey: ['userInfo', user.id] });
+        }
+    });
+
+    const handleSubmit = async (values: FormValues) => {
+        updateMutation.mutate(values as Partial<AccountData>);
+    };
+
+    // Initial values for the form
+    const initialValues = {
+        name: userAccount?.name || "",
+        phone: userAccount?.phone || "",
+        country: userAccount?.country || "",
+    };
+
+    return {
+        isAuthenticated,
+        user,
+        userAccount,
+        getCountryName,
+        handleSubmit,
+        initialValues,
+    };
+}
