@@ -23,7 +23,7 @@ export const ProfileWorkExpBox = () => {
         queryKey: ['userWorkExp', user?.id],
         queryFn: () => {
             if (!user) throw new Error("User not found");
-            return getWorkExperiences("695ea8790a8e3db63ec5ea48");
+            return getWorkExperiences(user.id);
         },
         enabled: isAuthenticated && !!user,
     });
@@ -58,22 +58,16 @@ export const ProfileWorkExpBox = () => {
                     />
                 </div>
 
-                {/* {workExpList.map((exp) => (
+                {userWorkExp?.map((exp) => (
                     <ProfileWorkExpCard 
                         key={exp.id}
                         item={exp} 
                         onEdit={handleEdit}
                         onDelete={handleDelete}
                     />
-                ))} */}
+                ))} 
 
-                {userWorkExp && (
-                    <ProfileWorkExpCard 
-                        item={userWorkExp} 
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                    />
-                )}
+
             </div>
 
             <Modal

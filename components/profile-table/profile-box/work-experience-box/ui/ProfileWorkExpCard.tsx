@@ -1,9 +1,7 @@
 import { WorkExpData } from "../types";
 import { motion } from "motion/react";
 import { Pencil, Trash2, BriefcaseBusiness } from "lucide-react";
-import { useAuthStore } from "@/store/authStore";
-import { useQuery } from "@tanstack/react-query";
-import { fetchSkillDetailsByIds } from "../api/WorkExpService";
+import { useDataStore } from "@/store";
 
 type ProfileWorkExpCardProps = {
     item: WorkExpData ;
@@ -22,18 +20,9 @@ const ProfileWorkExpCard = ({ item, onEdit, onDelete }: ProfileWorkExpCardProps)
         });
     };
 
-    const { isAuthenticated, user } = useAuthStore();
-    const { data: fetchedData } = useQuery({
-        queryKey: ['userWorkExpSkill', item?.skillCategories],
-        queryFn: () => {
-            if (!user) throw new Error("User not found");
-            
-            return fetchSkillDetailsByIds(item.skillCategories);
-        },
-        enabled: isAuthenticated && !!user && !!item.skillCategories?.length,
-    });
+    const { skills } = useDataStore(); 
 
-    const userWorkExpSkills = fetchedData?.data || [];
+    const userWorkExpSkills = skills.filter(skill => item.skillCategories.includes(skill.id));
 
     return (
         <div className="flex flex-col gap-4">
@@ -73,6 +62,7 @@ const ProfileWorkExpCard = ({ item, onEdit, onDelete }: ProfileWorkExpCardProps)
                                     >
                                         <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
                                         {skill.name}
+                                        {skill.icon && (<img src={skill.icon} alt={skill.name} className="w-3 h-3 ml-1" />)}
                                     </span>
                                 ))}
                             </div>
