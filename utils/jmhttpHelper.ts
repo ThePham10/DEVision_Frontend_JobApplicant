@@ -1,7 +1,7 @@
 import { ApiResponse, HttpError } from "./httpHelper";
 
-const JM_API_BASE_URL = process.env.NEXT_PUBLIC_JM_API_URL || "https://api-gateway-khhr.onrender.com";
-const JM_API_KEY = process.env.NEXT_PUBLIC_JM_API_KEY || "cd368f7f2c4fdb195f6e5deb9b1a63b0";
+const JM_API_BASE_URL = process.env.NEXT_PUBLIC_JM_API_URL || "";
+const JM_API_KEY = process.env.NEXT_PUBLIC_JM_API_KEY || "";
 
 class JmHttpHelper {
     private baseUrl: string;
