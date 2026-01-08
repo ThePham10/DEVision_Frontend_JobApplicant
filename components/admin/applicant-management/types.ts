@@ -13,6 +13,7 @@ type ApplicantFilters = {
     name?: string;
     email?: string;
     phone?: string;
+    isActive?:boolean;
 }
 
 type PaginatedResponse<T> = {
