@@ -1,3 +1,5 @@
+import { useState } from "react"
+import { ChevronDown, ChevronUp } from "lucide-react"
 import { Notification, NotificationType } from "../types/types"
 
 type NotificationCardProps = {
@@ -9,6 +11,15 @@ type NotificationCardProps = {
 }
 
 export const NotificationCard = ({ notification, markAsRead, getNotificationBg, getNotificationIcon, getRelativeTime }: NotificationCardProps) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const handleClick = () => {
+        setIsExpanded(!isExpanded);
+        if (!notification.read) {
+            markAsRead(notification.id);
+        }
+    };
+
     return (
         <div
             key={notification.id}
@@ -17,7 +28,7 @@ export const NotificationCard = ({ notification, markAsRead, getNotificationBg, 
                     ? "bg-white hover:bg-slate-50" 
                     : "bg-gradient-to-r from-indigo-50/50 to-white hover:from-indigo-50"
             }`}
-            onClick={() => markAsRead(notification.id)}
+            onClick={handleClick}
         >
             {/* Unread indicator */}
             {!notification.read && (
@@ -35,8 +46,18 @@ export const NotificationCard = ({ notification, markAsRead, getNotificationBg, 
                     <span className={`text-sm leading-tight ${notification.read ? "font-medium text-slate-700" : "font-semibold text-slate-900"}`}>
                         {notification.title}
                     </span>
+                    {/* Expand/Collapse indicator */}
+                    <span className="flex-shrink-0 text-slate-400">
+                        {isExpanded ? (
+                            <ChevronUp className="w-4 h-4" />
+                        ) : (
+                            <ChevronDown className="w-4 h-4" />
+                        )}
+                    </span>
                 </div>
-                <p className="text-xs text-slate-500 leading-relaxed mt-0.5 line-clamp-2">
+                <p className={`text-xs text-slate-500 leading-relaxed mt-0.5 transition-all duration-200 ${
+                    isExpanded ? "" : "line-clamp-2"
+                }`}>
                     {notification.description}
                 </p>
                 <span className="text-[11px] text-slate-400 mt-1.5 block">

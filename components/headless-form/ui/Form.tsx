@@ -133,15 +133,41 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
 
         // Generic select/dropdown field
         if (child.type === "select" && child.options) {
-            const handleDropdownChange = (value: { id: string } | { id: string }[] | null) => {
+            const handleDropdownChange = (value: { id: string; name?: string; value?: string } | { id: string; name?: string; value?: string }[] | null) => {
+                const returnType = child.returnType || "value"; // Default to "value" (id)
+                
                 if (child.multiple) {
-                    // Multi-select: extract array of IDs
-                    const ids = Array.isArray(value) ? value.map(v => v.id) : [];
-                    handleChange(child.name, ids as unknown as string);
+                    // Multi-select: extract array based on returnType
+                    if (Array.isArray(value)) {
+                        let result: string[];
+                        if (returnType === "label") {
+                            result = value.map(v => v.name || v.id);
+                        } else if (returnType === "object") {
+                            result = value.map(v => JSON.stringify(v));
+                        } else {
+                            // "value" - return id by default, or value if available
+                            result = value.map(v => v.value || v.id);
+                        }
+                        handleChange(child.name, result as unknown as string);
+                    } else {
+                        handleChange(child.name, [] as unknown as string);
+                    }
                 } else {
-                    // Single select: extract single ID
-                    const id = value && !Array.isArray(value) ? value.id : "";
-                    handleChange(child.name, id);
+                    // Single select: extract value based on returnType
+                    if (value && !Array.isArray(value)) {
+                        let result: string;
+                        if (returnType === "label") {
+                            result = value.name || value.id;
+                        } else if (returnType === "object") {
+                            result = JSON.stringify(value);
+                        } else {
+                            // "value" - return id by default, or value if available
+                            result = value.value || value.id;
+                        }
+                        handleChange(child.name, result);
+                    } else {
+                        handleChange(child.name, "");
+                    }
                 }
             };
 

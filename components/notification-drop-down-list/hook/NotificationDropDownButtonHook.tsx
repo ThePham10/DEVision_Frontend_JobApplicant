@@ -16,7 +16,34 @@ const useNotificationDropDownButton = () => {
         wsStatus,
     } = useNotificationStore()
 
-    const getNotificationIcon = (type: NotificationType) => {
+    const [displayCount, setDisplayCount ] = useState(10)
+    const displayedNotifications = notifications.slice(0, displayCount)
+    const hasMore = displayCount < notifications.length
+    const [isOpen, setIsOpen] = useState(false)
+    const popupRef = useRef<HTMLDivElement>(null)
+    const buttonRef = useRef<HTMLButtonElement>(null)
+    const loaderRef = useRef<HTMLDivElement>(null)
+
+    function loadMore() {
+        setDisplayCount(prev => Math.min(prev + 10, notifications.length))
+    }
+    
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    loadMore();
+                }
+            },
+            { threshold: 0.1}
+        )
+        if (loaderRef.current) {
+            observer.observe(loaderRef.current)
+        }
+        return () => observer.disconnect()
+    }, [hasMore])
+
+    function getNotificationIcon(type: NotificationType) {
         const iconClass = "w-5 h-5";
         switch (type) {
             case "ApplicationAlert_Pass":
@@ -32,7 +59,7 @@ const useNotificationDropDownButton = () => {
         }
     };   
     
-    const getNotificationBg = (type: NotificationType) => {
+    function getNotificationBg(type: NotificationType) {
         switch (type) {
             case "ApplicationAlert_Pass":
                 return "bg-green-50";
@@ -62,14 +89,9 @@ const useNotificationDropDownButton = () => {
         return date.toLocaleDateString();
     }
 
-    const [isOpen, setIsOpen] = useState(false);
-    const popupRef = useRef<HTMLDivElement>(null);
-    const buttonRef = useRef<HTMLButtonElement>(null);
-
     // Fetch historical notifications from REST API
     const {
         data: NotificationData,
-        isLoading
     } = useQuery({
         queryKey: ["notifications"],
         queryFn: () => getNotificationDropDownList(),
@@ -130,18 +152,17 @@ const useNotificationDropDownButton = () => {
 
     return {
         isOpen, 
-        setIsOpen, 
-        popupRef, 
-        buttonRef, 
-        notifications,
+        popupRef, loaderRef, buttonRef,
+        wsStatus,
+        hasMore,
+        displayedNotifications,
         unreadCount,
+        setIsOpen, 
         handleMarkAllAsRead,
         handleMarkAsRead,
         getNotificationIcon,
         getNotificationBg,
         getRelativeTime,
-        wsStatus,
-        isLoading,
     }
 }
 

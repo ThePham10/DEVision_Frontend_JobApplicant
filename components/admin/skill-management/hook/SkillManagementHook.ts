@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Skill, SkillFilters} from "../types";
 import { loadSkills, createSkill, updateSkill, deleteSkill, deActiveSkill } from "../service/SkillService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useDataStore } from "@/store/dataStore";
+import { useDataStore } from "@/store";
 
 const PAGE_SIZE = 10; // Number of items to show per "page"
 
