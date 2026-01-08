@@ -1,9 +1,11 @@
 import { JobPost } from "../../types"
-import { allJobPosts } from "../../types"
+import { jmHttpHelper } from "@/utils/jmhttpHelper";
+import { JOB_POST_URL } from "@/config/URLConfig";
 
 const loadJobPostById = async (jobId: string): Promise<JobPost | null> => {
     try {
-        return allJobPosts.find(job => job.jobId === jobId) || null;
+        const response = await jmHttpHelper.get<JobPost>(JOB_POST_URL + "/" + jobId);
+        return response.data;
     } catch (error) {
         console.error('Error fetching job post by ID:', error);
         return null;
