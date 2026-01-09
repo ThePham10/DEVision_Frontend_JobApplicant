@@ -5,8 +5,8 @@ type AccountData = {
     phone?: string;
     address?: string;
     country?: string;
+    avatarUrl?: string;
     addressProvinceCode?: string;
-    addressProvinceName?: string;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useAuthStore } from "@/store/authStore";
 import { motion } from "motion/react";
+import { usePersonalSettingForm } from "../account-box/personal-box/hook/usePersonalSettingForm";
 
 type AvatarFrameProps = {
     size?: number;
@@ -18,12 +19,11 @@ export const AvatarFrame = ({
     onClick,
 }: AvatarFrameProps) => {
     const { user, isAuthenticated } = useAuthStore();
+    const { userAccount } = usePersonalSettingForm();
 
     if (!isAuthenticated || !user) return null;
 
-    const avatarUrl = url || user.avatarUrl || "/defaultPicture.jpg";
-    
-    // Calculate sizes
+    const avatarUrl = url || userAccount?.avatarUrl || "/defaultPicture.jpg";
     const ringSize = size + 6;
         
     return (
