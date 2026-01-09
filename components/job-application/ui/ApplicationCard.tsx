@@ -1,145 +1,184 @@
+"use client"
+
 import { JobApplication, JobApplicationStatus } from "../types"
-import { MapPinned, Calendar, Briefcase, Check, X, ClipboardClock, Folder} from "lucide-react"
+import { MapPinned, Calendar, FileText, Building2, Clock, Archive } from "lucide-react"
 import { motion } from "motion/react"
 
 type JobApplicationCardProps = {
     item: JobApplication
-    onClick?: (application: JobApplication) => void
 }
 
 /**
- * Get badge styling based on application status
+ * Status configuration with styling and metadata
  */
-function getStatusBadgeProps(status: JobApplicationStatus): { 
-    icon?: React.ReactNode
-    text: string
-    bgGradient: string
-    textColor: string
-    borderColor: string
-} {
-    switch (status) {
-        case JobApplicationStatus.ACCEPTED:
-            return {
-                icon: <Check className="w-6 h-6 text-emerald-600" />,
-                text: "Accepted",
-                bgGradient: "bg-gradient-to-r from-emerald-50 to-green-50",
-                textColor: "text-emerald-700",
-                borderColor: "border-emerald-200"
-            }
-        case JobApplicationStatus.REJECTED:
-            return {
-                icon: <X className="w-6 h-6 text-red-600" />,
-                text: "Rejected",
-                bgGradient: "bg-gradient-to-r from-red-50 to-rose-50",
-                textColor: "text-red-700",
-                borderColor: "border-red-200"
-            }
-        case JobApplicationStatus.PENDING:
-            return {
-                icon: <ClipboardClock className="w-6 h-6 text-amber-600" />,
-                text: "Pending",
-                bgGradient: "bg-gradient-to-r from-amber-50 to-yellow-50",
-                textColor: "text-amber-700",
-                borderColor: "border-amber-200"
-            }
-        case JobApplicationStatus.ARCHIVED:
-            return {
-                icon: <Folder className="w-6 h-6 text-slate-600" />,
-                text: "Archived",
-                bgGradient: "bg-gradient-to-r from-slate-50 to-gray-50",
-                textColor: "text-slate-700",
-                borderColor: "border-slate-200"
-            }
-        default:
-            return {
-                text: status,
-                bgGradient: "bg-gray-50",
-                textColor: "text-gray-700",
-                borderColor: "border-gray-200"
-            }
+const STATUS_CONFIG: Record<JobApplicationStatus, {
+    icon: React.ReactNode
+    label: string
+    colors: {
+        bg: string
+        text: string
+        border: string
+        iconBg: string
     }
+}> = {
+    [JobApplicationStatus.PENDING]: {
+        icon: <Clock className="w-4 h-4" />,
+        label: "Pending Review",
+        colors: {
+            bg: "bg-amber-50",
+            text: "text-amber-700",
+            border: "border-amber-200",
+            iconBg: "bg-amber-100"
+        }
+    },
+    [JobApplicationStatus.ARCHIVED]: {
+        icon: <Archive className="w-4 h-4" />,
+        label: "Archived",
+        colors: {
+            bg: "bg-slate-50",
+            text: "text-slate-600",
+            border: "border-slate-200",
+            iconBg: "bg-slate-100"
+        }
+    }
+}
+
+/**
+ * Format date to relative or absolute format
+ */
+function formatAppliedDate(date: Date): { relative: string; absolute: string } {
+    const now = new Date()
+    const applied = new Date(date)
+    const diffInDays = Math.floor((now.getTime() - applied.getTime()) / (1000 * 60 * 60 * 24))
+    
+    const absolute = applied.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+    })
+    
+    if (diffInDays === 0) return { relative: "Today", absolute }
+    if (diffInDays === 1) return { relative: "Yesterday", absolute }
+    if (diffInDays < 7) return { relative: `${diffInDays} days ago`, absolute }
+    if (diffInDays < 30) return { relative: `${Math.floor(diffInDays / 7)} weeks ago`, absolute }
+    
+    return { relative: absolute, absolute }
+}
+
+const getDocumentLabel = (url: string): string => {
+    if (url.includes("/cv/")) return "View Resume"
+    if (url.includes("/cover-letter/")) return "View Cover Letter"
+    return "View Document"
 }
 
 /**
  * Card component for displaying a single job application
  */
-const JobApplicationCard = ({ item, onClick }: JobApplicationCardProps) => {
-    const statusProps = getStatusBadgeProps(item.status)
-    const appliedDate = new Date(item.appliedAt).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-    })
+const JobApplicationCard = ({ item }: JobApplicationCardProps) => {
+    const status = STATUS_CONFIG[item.status] || STATUS_CONFIG[JobApplicationStatus.PENDING]
+    const { relative: relativeDate, absolute: absoluteDate } = formatAppliedDate(item.appliedAt)
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            whileHover={{ 
-                y: -8, 
-                transition: { duration: 0.2 } 
-            }}
-            className={`group relative flex flex-col gap-4 border border-gray-200/60 bg-white/80 backdrop-blur-sm p-5 sm:p-6 rounded-2xl shadow-sm hover:shadow-xl hover:border-blue-200/60 transition-all duration-300 ${
-                onClick ? "cursor-pointer" : ""
-            }`}
-            onClick={() => onClick?.(item)}
+            whileHover={{ y: -4, scale: 1.01 }}
+            className={`
+                group relative bg-white rounded-2xl border border-gray-200
+                shadow-sm hover:shadow-lg hover:border-gray-300
+                overflow-hidden`}
         >
-            {/* Gradient accent on hover */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-50/0 via-indigo-50/0 to-purple-50/0 group-hover:from-blue-50/50 group-hover:via-indigo-50/30 group-hover:to-purple-50/50 transition-all duration-500 -z-10" />
+            {/* Status Bar - Top accent */}
+            <div className={`h-1 ${status.colors.bg.replace('50', '400')}`} />
             
-            {/* Header: Status Badge */}
-            <div className="flex justify-end">
-                <div className={`flex items-center gap-1.5 px-4 py-2 rounded-xl border ${statusProps.borderColor} ${statusProps.bgGradient} backdrop-blur-sm`}>
-                    <span>
-                        {statusProps.icon}
-                    </span>
-                    <span className={`text-sm sm:text-base font-semibold ${statusProps.textColor}`}>
-                        {statusProps.text}
-                    </span>
-                </div>
-            </div>
-
-            {/* Job Title & Company */}
-            <div className="flex-1 min-w-0 -mt-2">
-                <h3 className="font-[Inter] text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-2 line-clamp-2 group-hover:from-blue-900 group-hover:via-indigo-900 group-hover:to-purple-900 transition-all duration-300">
-                    {item.jobTitle}
-                </h3>
-                <p className="font-[Inter] text-base sm:text-lg text-gray-600 font-medium">
-                    {item.company}
-                </p>
-            </div>
-
-            {/* Divider */}
-            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-
-            {/* Info rows with icons */}
-            <div className="flex flex-col gap-3 text-sm sm:text-base text-gray-600">
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex-shrink-0">
-                        <MapPinned className="w-4 h-4" />
-                    </div>
-                    <span className="truncate font-medium">{item.location}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex-shrink-0">
-                        <Calendar className="w-4 h-4" />
-                    </div>
-                    <span className="font-medium">Applied on {appliedDate}</span>
-                </div>
-                {item.cvFileName && (
-                    <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex-shrink-0">
-                            <Briefcase className="w-4 h-4" />
+            <div className="p-5 sm:p-6">
+                {/* Header: Title + Status */}
+                <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex-1 min-w-0">
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-2 mb-1 group-hover:text-blue-600 transition-colors">
+                            {item.jobTitle}
+                        </h3>
+                        <div className="flex items-center gap-2 text-gray-600">
+                            <Building2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            <span className="font-medium truncate">{item.company}</span>
                         </div>
-                        <span className="text-gray-500 text-xs sm:text-sm truncate">{item.cvFileName}</span>
                     </div>
-                )}
-            </div>
+                    
+                    {/* Status Badge */}
+                    <div className={`
+                        flex items-center gap-1.5 px-3 py-1.5 rounded-full
+                        ${status.colors.bg} ${status.colors.border} border
+                        flex-shrink-0
+                    `}>
+                        <span className={status.colors.text}>{status.icon}</span>
+                        <span className={`text-xs sm:text-sm font-semibold ${status.colors.text}`}>
+                            {status.label}
+                        </span>
+                    </div>
+                </div>
 
-            {/* Animated border on hover */}
-            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-purple-500/20 blur-xl" />
+                {/* Info Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    {/* Location */}
+                    <div className="flex items-center gap-2.5 text-gray-600">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex-shrink-0">
+                            <MapPinned className="w-4 h-4" />
+                        </div>
+                        <span className="truncate">{item.location}</span>
+                    </div>
+                    
+                    {/* Applied Date */}
+                    <div className="flex items-center gap-2.5 text-gray-600">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex-shrink-0">
+                            <Calendar className="w-4 h-4" />
+                        </div>
+                        <span title={absoluteDate}>{relativeDate}</span>
+                    </div>
+                </div>
+
+                {/* Documents Section - Only show if has attachments */}
+                {item.mediaUrls && item.mediaUrls.length > 0 && (
+                    <>
+                        <div className="my-4 h-px bg-gray-100" />
+                        <div className="flex items-start gap-2.5">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-500 flex-shrink-0">
+                                <FileText className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <span className="text-xs text-gray-400 block mb-2">Attached Documents</span>
+                                <div className="flex flex-wrap gap-2">
+                                    {item.mediaUrls.map((url, index) => (
+                                        <a 
+                                            href={url} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            key={index} 
+                                            className="
+                                                inline-flex items-center gap-2 px-3 py-1.5
+                                                bg-gradient-to-r from-blue-50 to-indigo-50
+                                                border border-blue-200 rounded-full
+                                                text-sm font-medium text-blue-700
+                                                hover:from-blue-100 hover:to-indigo-100
+                                                hover:border-blue-300 hover:text-blue-800
+                                                transition-all duration-200
+                                                group/doc
+                                            "
+                                        >
+                                            <FileText className="w-3.5 h-3.5 group-hover/doc:scale-110 transition-transform" />
+                                            <span>{getDocumentLabel(url)}</span>
+                                            <svg 
+                                                className="w-3.5 h-3.5 opacity-60 group-hover/doc:opacity-100 group-hover/doc:translate-x-0.5 transition-all" 
+                                                fill="none" 
+                                                stroke="currentColor" 
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                            </svg>
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </motion.div>
     )

@@ -1,14 +1,89 @@
-import { useState, useCallback } from "react"
-import { submitApplication, getMyApplications, hasApplied } from "../service/JobApplicationService"
-import { JobApplicationFilters, JobApplicationStatus, PaginatedJobApplicationResponse, JobApplication, ApplicationFormData } from "../types"
+import { useState } from "react"
+import { getJobApplication, submitApplication } from "../service/JobApplicationService"
+import { JobApplicationStatus, JobApplication, ApplicationFormData } from "../types"
+import { useQuery } from "@tanstack/react-query"
+import { useAuthStore } from "@/store"
+import { loadJobPost } from "@/components/job-post/job-post-table/service/JobPostTableService"
+import { Briefcase, Clock, Archive } from "lucide-react"
 
 /**
  * Custom hook for managing job applications
  */
-export function useJobApplication() {
-    const [filters, setFilters] = useState<JobApplicationFilters>({})
+export function useJobApplication() { 
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [checkingApplication, setCheckingApplication] = useState(false)
+
+    const { user } = useAuthStore()
+
+    const { data: allJobPosts } = useQuery({
+        queryKey: ["all-job-posts"],
+        queryFn: () => loadJobPost(),
+        staleTime: 5 * 60 * 1000
+    })
+
+    const {
+        data: jobApplications,
+        isLoading
+    } = useQuery({
+        queryKey: ["job-applications"],
+        queryFn: () => getJobApplication(user?.id || "")
+    })
+
+    const [activeFilter, setActiveFilter] = useState<JobApplicationStatus | undefined>(undefined)
+
+    const handleFilterClick = (status: JobApplicationStatus | undefined) => {
+        setActiveFilter(status)
+    }
+
+    // Calculate counts for each status
+    const getCountForStatus = (status: JobApplicationStatus | undefined) => {
+        const applications = jobApplications ?? []
+        if (status === undefined) return applications.length
+        return applications.filter(app => app.status === status).length
+    }
+
+    // Enrich applications with job post info
+    const enrichedApplications = (jobApplications ?? []).map(app => {
+        const jobPost = allJobPosts?.find(jp => jp.jobId === app.jobId)
+        return {
+            ...app,
+            jobTitle: jobPost?.title ?? "Unknown Job",
+            location: jobPost?.location ?? "Unknown Location",
+            company: jobPost?.companyName ?? "Unknown Company",
+        }
+    })
+
+    const hasAppliedToJob = (jobId: string): boolean => {
+        return (jobApplications ?? []).some(app => app.jobId === jobId)
+    }
+
+    // Filter applications based on selected status (using enriched data)
+    const filteredApplications = activeFilter
+        ? enrichedApplications.filter(app => app.status === activeFilter)
+        : enrichedApplications
+
+    const statCards = [
+        {
+            label: "Total Applications",
+            value: enrichedApplications.length,
+            icon: Briefcase,
+            gradient: "from-blue-500 to-indigo-600",
+            bgGradient: "from-blue-50 to-indigo-50"
+        },
+        {
+            label: "Pending",
+            value: getCountForStatus(JobApplicationStatus.PENDING),
+            icon: Clock,
+            gradient: "from-amber-500 to-yellow-600",
+            bgGradient: "from-amber-50 to-yellow-50"
+        },
+        {
+            label: "Archived",
+            value: getCountForStatus(JobApplicationStatus.ARCHIVED),
+            icon: Archive,
+            gradient: "from-gray-500 to-slate-600",
+            bgGradient: "from-gray-50 to-slate-50"
+        }
+    ]
 
     // Submit a new application
     const handleSubmit = async (formData: ApplicationFormData): Promise<JobApplication | null> => {
@@ -24,46 +99,16 @@ export function useJobApplication() {
         }
     }
 
-    // Check if already applied
-    const checkIfApplied = useCallback(async (jobId: string): Promise<boolean> => {
-        setCheckingApplication(true)
-        try {
-            const applied = await hasApplied(jobId)
-            return applied
-        } catch (error) {
-            console.error("Failed to check application:", error)
-            return false
-        } finally {
-            setCheckingApplication(false)
-        }
-    }, [])
-
-    // Load applications with current filters
-    const loadApplicationsWithFilters = useCallback(
-        (page: number, limit: number): Promise<PaginatedJobApplicationResponse> => {
-            return getMyApplications(page, limit, filters)
-        },
-        [filters]
-    )
-
-    // Filter by status
-    const filterByStatus = (status?: JobApplicationStatus) => {
-        setFilters(status ? { status } : {})
-    }
-
-    // Clear all filters
-    const clearFilters = () => {
-        setFilters({})
-    }
-
     return {
-        filters,
+        jobApplications: enrichedApplications,
+        isLoading,
         isSubmitting,
-        checkingApplication,
-        handleSubmit,
-        checkIfApplied,
-        loadApplicationsWithFilters,
-        filterByStatus,
-        clearFilters,
+        handleFilterClick,
+        filteredApplications,
+        statCards,
+        activeFilter,
+        getCountForStatus,
+        hasAppliedToJob,
+        handleSubmit
     }
 }

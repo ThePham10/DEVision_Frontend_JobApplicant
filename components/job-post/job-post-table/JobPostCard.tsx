@@ -2,7 +2,7 @@ import { JobPost } from "../types"
 import { Badge, Button, SecondaryButton } from "@/components/reusable-component"
 import { MapPinned, DollarSign, Calendar } from "lucide-react"
 
-const JobPostCard = ({ item, onViewDetail, onApply }: { item: JobPost, onViewDetail?: (job: JobPost) => void, onApply?: (job: JobPost) => void }) => {
+const JobPostCard = ({ item, onViewDetail, onApply, isApplied }: { item: JobPost, onViewDetail?: (job: JobPost) => void, onApply: (job: JobPost) => void, isApplied: boolean }) => {
     return (
         <div className="relative flex flex-col gap-3 sm:gap-4 border border-gray-200 bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Header: Title + Employment Type Badge */}
@@ -43,19 +43,19 @@ const JobPostCard = ({ item, onViewDetail, onApply }: { item: JobPost, onViewDet
             </div>
 
             {/* Skills badges */}
-            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+            {/* <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {item.skills.slice(0, 5).map((skill, index) => (
                     <Badge key={index} text={skill} />
                 ))}
                 {item.skills.length > 5 && (
                     <span className="text-xs text-gray-500 self-center">+{item.skills.length - 5} more</span>
                 )}
-            </div>
+            </div> */}
 
             {/* Action buttons - Stack on mobile */}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-2">
                 <Button style="w-full sm:flex-1" text="View Details" onClick={() => onViewDetail?.(item)}/>
-                <SecondaryButton style="w-full sm:flex-1" text="Apply Now" onClick={() => onApply?.(item)}/>
+                {!isApplied && <SecondaryButton style="w-full sm:flex-1" text="Apply Now" onClick={() => onApply(item)}/>}
             </div>
         </div>
     )

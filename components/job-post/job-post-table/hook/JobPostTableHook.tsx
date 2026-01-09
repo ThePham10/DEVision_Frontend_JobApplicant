@@ -6,6 +6,8 @@ import { JobPostFilters, JobPost } from "../../types"
 import type { FormConfig } from "@/components/headless-form"
 import { loadJobPost } from "../service/JobPostTableService"
 import { useQuery } from "@tanstack/react-query"
+import { getJobApplication } from "@/components/job-application/service/JobApplicationService"
+import { useAuthStore } from "@/store"
 
 const employmentType = [
     { id: "1", name: "All Types", value: "", icon: "briefcase-business" },
@@ -61,19 +63,31 @@ const useJobPostTable = () => {
     
     // State for filters and UI
     const [filters, setFilters] = useState<JobPostFilters>({})
-    const [isOpen, setIsOpen] = useState(false)
     const [isJobApplicationOpen, setIsJobApplicationOpen] = useState(false)
     const [selectedJob, setSelectedJob] = useState<JobPost | null>(null)
+
+    const { user, _hasHydrated } = useAuthStore()
     
-    // Use TanStack Query to fetch job posts - automatically refetches when filters change
     const { 
         data: jobPosts = [], 
         isLoading: loading, 
         error: queryError 
     } = useQuery({
-        queryKey: ["jobPosts", filters],  // Query key includes filters for automatic refetching
+        queryKey: ["job-posts", filters],
         queryFn: () => loadJobPost(filters),
     })
+
+    const {
+        data: JobApplication = []
+    } = useQuery({
+        queryKey: ["job-applications", user?.id],
+        queryFn: () => getJobApplication(user!.id),
+        enabled: _hasHydrated && !!user?.id,  // Wait for hydration AND user login
+    })
+
+    function hasApplied(jobId: string) {
+        return JobApplication.some((application) => application.jobId === jobId)
+    }
     
     // Convert error to string for backwards compatibility
     const error = queryError ? (queryError instanceof Error ? queryError.message : 'Failed to load job posts') : null
@@ -110,28 +124,25 @@ const useJobPostTable = () => {
         router.push(`/jobs/${post.jobId}`)
     }
 
-    const handleApply = (post: JobPost) => {
-        console.log(post)
-        setSelectedJob(post)
+    const handleApply = async (job: JobPost) => {
+        setSelectedJob(job)
         setIsJobApplicationOpen(true)
     }
 
     return {
-        employmentType,
         filterFormConfig,
         filters,
         jobPosts,
         loading,
         error,
-        isOpen,
         isJobApplicationOpen,
         selectedJob,
-        setIsOpen,
         setIsJobApplicationOpen,
         handleFilterSubmit,
         removeFilter,
         handleViewDetail,
         handleApply,
+        hasApplied
     }
 }
 

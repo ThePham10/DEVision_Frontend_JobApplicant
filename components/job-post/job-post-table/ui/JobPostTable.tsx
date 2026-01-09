@@ -1,11 +1,8 @@
 "use client";
 
-import { Activity } from "react"
 import JobPostCard from "../JobPostCard"
 import { HeadlessForm } from "@/components/headless-form"
 import { X } from "lucide-react"
-import { Modal } from "@/components/reusable-component"
-import JobPostDetail from "./JobPostDetail"
 import { useJobPostTable } from "../hook/JobPostTableHook";
 import { ApplicationModal } from "@/components/job-application";
 
@@ -17,15 +14,14 @@ export const JobPostTable = () => {
         jobPosts,
         loading,
         error,
-        isOpen,
         isJobApplicationOpen,
         selectedJob,
-        setIsOpen,
         setIsJobApplicationOpen,
         handleFilterSubmit,
         removeFilter,
         handleViewDetail,
         handleApply,
+        hasApplied
     } = useJobPostTable();
 
     return (
@@ -118,24 +114,10 @@ export const JobPostTable = () => {
                         item={job}
                         onViewDetail={handleViewDetail}
                         onApply={handleApply}
+                        isApplied={hasApplied(job.jobId)}
                     />
                 ))}
             </div>
-
-
-
-            <Modal
-                    isOpen={isOpen}
-                    onClose={() => setIsOpen(false)}
-                    title={selectedJob?.title}
-                    size="large"
-                >
-                    <Activity mode={selectedJob ? "visible" : "hidden"}>
-                        {selectedJob && (
-                            <JobPostDetail job={selectedJob} />
-                        )}
-                    </Activity>
-            </Modal>
 
             {/* Application Modal */}
             {selectedJob && (

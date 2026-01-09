@@ -8,14 +8,14 @@ import { useJobPostDetail } from "../hook/JobPostDetailHook"
 export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     const {
         router,
-        job,
-        loading,
+        jobPost,
+        isLoading,
         isModalOpen,
         setIsModalOpen,
-        hasAppliedToJob,
+        hasApplied,
     } = useJobPostDetail({ params });
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -29,7 +29,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
         )
     }
 
-    if (!job) {
+    if (!jobPost) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
@@ -51,15 +51,15 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                     <div className="flex justify-between items-start gap-4 mb-4">
                         <div className="flex-1">
                             <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-2">
-                                {job.title}
+                                {jobPost.title}
                             </h1>
                             <p className="text-xl text-gray-600 font-medium flex items-center gap-2">
                                 <Building className="w-5 h-5" />
-                                {job.companyName}
+                                {jobPost.companyName}
                             </p>
                         </div>
                         <span className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
-                            {job.employmentType}
+                            {jobPost.employmentType}
                         </span>
                     </div>
 
@@ -69,25 +69,25 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                             <div className="p-2 bg-blue-50 rounded-lg">
                                 <MapPinned className="w-5 h-5 text-blue-600" />
                             </div>
-                            <span className="text-gray-700">{job.location}</span>
+                            <span className="text-gray-700">{jobPost.location}</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-50 rounded-lg">
                                 <DollarSign className="w-5 h-5 text-green-600" />
                             </div>
-                            <span className="text-gray-700">${job.salaryDisplay}</span>
+                            <span className="text-gray-700">${jobPost.salaryDisplay}</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-purple-50 rounded-lg">
                                 <Calendar className="w-5 h-5 text-purple-600" />
                             </div>
-                            <span className="text-gray-700">Posted {job.postedDate}</span>
+                            <span className="text-gray-700">Posted {jobPost.postedDate}</span>
                         </div>
                     </div>
 
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3">
-                        {hasAppliedToJob ? (
+                        {hasApplied(jobPost.jobId) ? (
                             <button
                                 disabled
                                 className="flex-1 px-6 py-3 bg-green-100 text-green-700 rounded-lg font-semibold flex items-center justify-center gap-2"
@@ -121,7 +121,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Required Skills</h2>
                         <div className="flex flex-wrap gap-2">
-                            {job.skills.map((skill: string, index: number) => (
+                            {jobPost.skills.map((skill: string, index: number) => (
                                 <span
                                     key={index}
                                     className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium"
@@ -135,7 +135,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                     {/* Description */}
                     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Job Description</h2>
-                        <p className="text-gray-700 leading-relaxed">{job.description}</p>
+                        <p className="text-gray-700 leading-relaxed">{jobPost.description}</p>
                     </div>
 
                 </motion.div>
@@ -145,9 +145,9 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
             <ApplicationModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                jobId={job.jobId}
-                jobTitle={job.title}
-                company={job.companyName as string}
+                jobId={jobPost.jobId}
+                jobTitle={jobPost.title}
+                company={jobPost.companyName as string}
             />
         </div>
     )
