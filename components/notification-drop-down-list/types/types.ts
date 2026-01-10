@@ -1,4 +1,31 @@
-export type NotificationType = "ApplicationAlert_Pass" | "ApplicationAlert_Reject" | "JobMatchingAlert" | "connected" | "ProfileUpdateAlert";
+export type NotificationType =
+    | "ProfileUpdateAlert"
+    | "JobMatchingAlert"
+    | "connected";
+
+// Data for JA_NEW_MATCHING_JOB type
+export type MatchingJobData = {
+    jobId: string;
+    jobTitle: string;
+    companyId: string;
+    companyName: string;
+    location: string;
+    salaryType: string;
+    salaryCurrency: string;
+    salaryRange?: { min: number; max: number };
+    employmentType: string;
+    matchScore: number;
+    matchedCriteria?: object;
+};
+
+// Data for JA_PROFILE_UPDATED type
+export type ProfileUpdatedData = {
+    profileId: string;
+    changedFields: string[];
+    isPremium: boolean;
+};
+
+export type NotificationData = MatchingJobData | ProfileUpdatedData;
 
 export type Notification = {
     id: string;
@@ -7,6 +34,7 @@ export type Notification = {
     description: string;
     time: string;
     read: boolean;
+    data?: NotificationData;
 };
 
 export type GetResponse = {

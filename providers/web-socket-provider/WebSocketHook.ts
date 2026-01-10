@@ -43,14 +43,15 @@ export function useWebSocket() {
 
             wsRef.current.onmessage = (event) => {
                 try {
-                    const data = JSON.parse(event.data)
-                    const notification : Notification = {
-                        id: data.id,
-                        type: data.type,
-                        title: data.title,
-                        description: data.description,
-                        time: data.time,
-                        read: data.read,
+                    const rawData = JSON.parse(event.data);
+                    const notification: Notification = {
+                        id: rawData.notificationId || rawData.id || rawData._id,
+                        type: rawData.type,
+                        title: rawData.title,
+                        description: rawData.message || rawData.description,
+                        time: rawData.createdAt || rawData.time,
+                        read: rawData.isRead ?? rawData.read ?? false,
+                        data: rawData.data, // Pass through type-specific data
                     }
                     if (notification.type !== "connected") {
                         addNotification(notification)
@@ -109,6 +110,6 @@ export function useWebSocket() {
             disconnect()
         }
     }, [isAuthenticated, connect, disconnect])
-    
+
     return { connect, disconnect }
 }
