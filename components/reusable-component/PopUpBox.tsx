@@ -2,15 +2,17 @@ import React from 'react';
 import Popup from 'reactjs-popup';
 
 export type PopUpBoxProps = {
-    trigger: React.ReactNode;
+    trigger: React.ReactElement;
     content: React.ReactNode;
 };
 
 export const PopUpBox = ({ trigger, content }: PopUpBoxProps) => {
     return (
         <Popup
-            trigger={trigger}
+            trigger={<div>{trigger}</div>}
             position={['top left']}
+            closeOnDocumentClick={true}
+            closeOnEscape={true}
             contentStyle={{
                 borderRadius: '12px',
                 padding: '0',

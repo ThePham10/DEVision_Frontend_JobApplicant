@@ -1,22 +1,30 @@
 "use client";
-
+import { useState } from "react";
 import { motion } from "motion/react";
 import { Crown, Zap, Bell, Shield, Sparkles, Check, X } from "lucide-react";
 import { PricingCard, AuthGuard } from "@/components/reusable-component";
-import { useRouter } from "next/navigation";
+import PaymentCheckoutModal from "@/components/payment/ui/PaymentCheckoutModal";
+import { Modal } from "@/components/reusable-component/Modal";
+import { usePersonalSettingForm } from "@/components/account-box/personal-box/hook/usePersonalSettingForm";
+import { planType } from "@/components/payment/types";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { usePayment } from "@/components/payment/hook/usePayment";
+import CancelConfirmModal from "@/components/payment/ui/CancelConfirmModal";
 
-export default function PremiumPage() {
-    const router = useRouter();
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
-    const handleUpgrade = (plan: string) => {
-        // TODO: Implement payment/checkout flow
-        console.log(`Upgrade to ${plan}`);
-        // For now, just log - you'll integrate with your payment provider later
-    };
+export default function Page() {
+    const [selectedPlan, setSelectedPlan] = useState<planType>();
+    const { subscriptionInfo } = usePayment();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDowngradeModalOpen, setIsDowngradeModalOpen] = useState(false);
+
+    const { userAccount } = usePersonalSettingForm();
 
     const pricingPlans = [
         {
-            title: "Free",
+            title: "FREE",
             price: "$0",
             period: "/month",
             features: [
@@ -25,13 +33,13 @@ export default function PremiumPage() {
                 "Profile creation",
                 "Apply to unlimited jobs",
             ],
-            ctaText: "Current Plan",
-            onSelect: () => {},
+            ctaText: userAccount?.isPremium === false ? "Current Plan" : "Downgrade to Free",
+            onSelect: () => setSelectedPlan("FREE"),
             highlighted: false,
-            isCurrent: true,
+            isCurrent: userAccount?.isPremium === false ? true : false,
         },
         {
-            title: "Premium",
+            title: "PREMIUM",
             price: "$10",
             period: "/month",
             features: [
@@ -40,9 +48,10 @@ export default function PremiumPage() {
                 "Premium support",
                 "Early access to new features"
             ],
-            ctaText: "Upgrade Now",
-            onSelect: () => handleUpgrade("monthly"),
+            ctaText: userAccount?.isPremium === true ? "Current Plan" + (subscriptionInfo ? ` (Ends on ${subscriptionInfo.endDate})` : "") : "Upgrade Now",
+            onSelect: () => setSelectedPlan("PREMIUM"),
             highlighted: true,
+            isCurrent: userAccount?.isPremium === true ? true : false,
             isPopular: true,
         },
     ];
@@ -171,11 +180,39 @@ export default function PremiumPage() {
                                 <PricingCard
                                     key={index}
                                     {...plan}
+                                    onSelect={() => {
+                                        if (plan.title === "PREMIUM") {
+                                            setIsModalOpen(true);
+                                            setSelectedPlan("PREMIUM");
+                                        } else if (plan.title === "FREE") {
+                                            setIsDowngradeModalOpen(true);
+                                            setSelectedPlan("FREE");
+                                        }
+                                    }}
                                 />
                             ))}
                         </div>
                     </div>
                 </section>
+
+                {selectedPlan === "PREMIUM" && (
+                    <Elements stripe={stripePromise}>
+                        <PaymentCheckoutModal 
+                            planType="PREMIUM" 
+                            currency="USD" 
+                            setIsModalOpen={setIsModalOpen}
+                            isOpen={isModalOpen}
+                            onClose={() => setIsModalOpen(false)}
+                        /> 
+                    </Elements>  
+                )}
+
+                {selectedPlan === "FREE" && (
+                    <CancelConfirmModal
+                        isOpen={isDowngradeModalOpen}
+                        onClose={() => setIsDowngradeModalOpen(false)}
+                    />
+                )}
 
                 {/* Feature Comparison */}
                 <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
@@ -266,34 +303,58 @@ export default function PremiumPage() {
                         </div>
                     </div>
                 </section>
-
-                {/* Final CTA */}
-                <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 to-yellow-50">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <Crown className="inline-block text-amber-600 mb-6" size={48} strokeWidth={2} />
-                            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                                Ready to Level Up Your Career?
-                            </h2>
-                            <p className="text-xl text-gray-600 mb-8">
-                                Join thousands of professionals who&apos;ve accelerated their job search with DEVision Premium.
-                            </p>
-                            <motion.button
-                                onClick={() => handleUpgrade("monthly")}
-                                className="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-all duration-300"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.98 }}
+                
+                {userAccount?.isPremium === false && (
+                    // Final CTA
+                    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 to-yellow-50">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5 }}
                             >
-                                Upgrade Now
-                            </motion.button>
-                        </motion.div>
-                    </div>
-                </section>
+                                <Crown className="inline-block text-amber-600 mb-6" size={48} strokeWidth={2} />
+                                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                                    Ready to Level Up Your Career?
+                                </h2>
+                                <p className="text-xl text-gray-600 mb-8">
+                                    Join thousands of professionals who&apos;ve accelerated their job search with DEVision Premium.
+                                </p>
+                                <motion.button
+                                    onClick={() => setSelectedPlan("PREMIUM")}
+                                    className="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-all duration-300"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    Upgrade Now
+                                </motion.button>
+                            </motion.div>
+                        </div>
+                    </section>
+                )}
+
+                {userAccount?.isPremium === true && (
+                    // Final CTA
+                    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 to-yellow-50">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <Crown className="inline-block text-amber-600 mb-6" size={48} strokeWidth={2} />
+                                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                                    You are a Premium Member!
+                                </h2>
+                                <p className="text-xl text-gray-600 mb-8">
+                                    Thank you for being a valued DEVision Premium subscriber.
+                                </p>
+                            </motion.div>
+                        </div>
+                    </section>
+                )}
             </div>
         </AuthGuard>
     );

@@ -25,7 +25,6 @@ export const getUserInfo = async (
 ): Promise<ApiResponse<AccountData>> => {
     const endpoint = `${APPLICANT_URL}/${userId}`;
     const response = await httpHelper.get<AccountData>(endpoint);
-    console.log("getUserInfo response:", response);
 
     return response;
 }

@@ -1,22 +1,12 @@
 import { HeadlessForm } from "@/components/headless-form/ui/Form";
 import type { FormConfig } from "@/components/headless-form/types/types";
-
-const formConfig: FormConfig = {
-    children: [
-        { name: "current", title: "Current Password", type: "password", placeholder: "Current Password", colSpan: 1 },
-        { name: "new", title: "New Password", type: "password", placeholder: "New Password", colSpan: 1 },
-        { name: "confirm", title: "Confirm Password", type: "password", placeholder: "Confirm Password", colSpan: 1 },
-    ],
-    buttonText: "Save Changes",
-    layout: {
-        type: "grid",
-        columns: 4,
-        gap: "6",
-    },
-};
+import { commonValidations } from "@/components/headless-form/ui/Form";
+import { useChangePasswordForm } from "./hook/useChangePasswordForm";
 
 export const ChangePasswordForm = () => {
+    const { handleSubmit, formConfig } = useChangePasswordForm();
+
     return (
-        <HeadlessForm config={formConfig} onSubmit={(data) => console.log(data)} />
+        <HeadlessForm config={formConfig} onSubmit={handleSubmit} />
     );
 };

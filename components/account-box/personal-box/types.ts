@@ -5,11 +5,9 @@ type AccountData = {
     phone?: string;
     address?: string;
     country?: string;
-    addressProvinceCode?: string;
-    addressProvinceName?: string;
+    avatarUrl?: string;
     isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    isPremium?: boolean;
 }
 
 export type { AccountData };

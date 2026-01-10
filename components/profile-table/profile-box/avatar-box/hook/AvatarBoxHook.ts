@@ -2,12 +2,15 @@ import { uploadAvatar } from "../service/AvatarBoxService";
 import { useAuthStore } from "@/store/authStore";
 import { useState } from "react";
 import { FormConfig, FormValues } from "@/components/headless-form"
+import { updateUserInfo } from "@/components/account-box/personal-box/api/PersonalBoxService";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useAvatarBox = () => {
-    const { user, isAuthenticated } = useAuthStore();
+    const { user, isAuthenticated, setUser } = useAuthStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     if (!isAuthenticated || !user) return null;
+    const queryClient = useQueryClient();
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -34,27 +37,47 @@ const useAvatarBox = () => {
         buttonText: "Upload"
     }
 
+    
+
     const handleAvatarSubmit = async (values: FormValues) => {
-        const file = values.avatar;
-            
-        // Ensure we have a file
-        if (!(file instanceof File)) {
-            console.error("No file selected");
+    const file = values.avatar;
+        
+    if (!(file instanceof File)) {
+        console.error("No file selected");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "avatar");
+
+    try {
+        const uploadResponse = await uploadAvatar(formData);
+        
+        if (!uploadResponse?.data?.url) {
+            console.error("Upload failed - no URL returned");
             return;
         }
 
-        // Create FormData for file upload
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("folder", "avatar");
+        const dbResponse = await updateUserInfo({ 
+            avatarUrl: uploadResponse.data.url 
+        });
 
-        const response = await uploadAvatar(formData);
-        if (response?.status === 201) {
-            console.log("Upload successful:", response.data);
+        if (dbResponse?.status === 200) {
+            console.log("Avatar updated successfully");
+            if (user) {
+                setUser({
+                    ...user,
+                    avatarUrl: uploadResponse.data.url
+                })
+            }
+            queryClient.invalidateQueries({ queryKey: ['userInfo', user.id] });
             setIsModalOpen(false);
-            // TODO: Update user avatar in store if needed
         }
+    } catch (error) {
+        console.error("Avatar update failed:", error);
     }
+}
 
     return {
         user,

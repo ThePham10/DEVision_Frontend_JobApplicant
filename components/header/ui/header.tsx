@@ -11,7 +11,7 @@ export const Header = () => {
     const router = useRouter();
     const { isAuthenticated, isAdmin, clearUser } = useAuthStore();
     const pathname = usePathname();
-
+    
     const handleSignOut = async () => {
         try {
             const response = await logoutUser();
