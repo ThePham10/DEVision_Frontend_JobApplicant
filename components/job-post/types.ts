@@ -1,18 +1,26 @@
 // Job Post type - matches JM team's API response exactly
+export type JobPostCriteria = {
+    requiredSkillIds: string[];
+    location: string;
+    salaryType: string;
+    salaryCurrency: string;
+    salaryRange: {
+        min: number;
+        max: number;
+    };
+    employmentType: string;
+    isFresherFriendly: boolean;
+}
+
 export type JobPost = {
     jobId: string;
     companyId: string;
-    companyName: string | null;
+    companyName: string;
     title: string;
     description: string;
-    location: string;
-    employmentType: string;
-    additionalEmploymentTypes: string[];
-    salaryDisplay: string;
-    status: string;
-    postedDate: string | null;
-    expireDate: string;
-    skills: string[];
+    criteria: JobPostCriteria;
+    postedAt: string;
+    expiresAt: string;
 }
 
 // Filter parameters for client-side filtering
@@ -23,4 +31,3 @@ export type JobPostFilters = {
     minSalary?: number;
     maxSalary?: number;
 }
-

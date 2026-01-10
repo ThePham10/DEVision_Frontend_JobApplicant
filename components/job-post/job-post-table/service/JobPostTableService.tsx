@@ -26,30 +26,26 @@ async function loadJobPost(
                 );
             }
             
-            // Filter by location
+            // Filter by location (from criteria)
             if (filters.location) {
                 const searchLocation = filters.location.toLowerCase();
                 filteredItems = filteredItems.filter(job => 
-                    job.location.toLowerCase().includes(searchLocation)
+                    job.criteria.location.toLowerCase().includes(searchLocation)
                 );
             }
             
-            // Filter by employment type (use primaryEmploymentType)
+            // Filter by employment type (from criteria)
             if (filters.employmentType) {
                 filteredItems = filteredItems.filter(job => 
-                    job.employmentType.toLowerCase() === filters.employmentType?.toLowerCase()
+                    job.criteria.employmentType.toLowerCase() === filters.employmentType?.toLowerCase()
                 );
             }
             
-            // Filter by salary range (parse from salaryDisplay)
+            // Filter by salary range (from criteria.salaryRange)
             if (filters.minSalary !== undefined || filters.maxSalary !== undefined) {
                 filteredItems = filteredItems.filter(job => {
-                    // Parse salary from display string like "100,000 - 150,000 AUD"
-                    const salaryMatch = job.salaryDisplay.match(/(\d[\d,]*)\s*-\s*(\d[\d,]*)/);
-                    if (!salaryMatch) return true; // Keep if can't parse
-                    
-                    const minSal = parseInt(salaryMatch[1].replace(/,/g, ''));
-                    const maxSal = parseInt(salaryMatch[2].replace(/,/g, ''));
+                    const minSal = job.criteria.salaryRange.min;
+                    const maxSal = job.criteria.salaryRange.max;
                     
                     // Check if job salary range overlaps with filter range
                     if (filters.minSalary && maxSal < filters.minSalary) return false;

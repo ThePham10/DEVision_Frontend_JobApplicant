@@ -3,6 +3,9 @@ import { Badge, Button, SecondaryButton } from "@/components/reusable-component"
 import { MapPinned, DollarSign, Calendar } from "lucide-react"
 
 const JobPostCard = ({ item, onViewDetail, onApply, isApplied, isAuthenticated }: { item: JobPost, onViewDetail?: (job: JobPost) => void, onApply: (job: JobPost) => void, isApplied: boolean, isAuthenticated: boolean }) => {
+    // Format salary display from criteria
+    const salaryDisplay = `${item.criteria.salaryRange.min.toLocaleString()} - ${item.criteria.salaryRange.max.toLocaleString()} ${item.criteria.salaryCurrency}`;
+
     return (
         <div className="relative flex flex-col gap-3 sm:gap-4 border border-gray-200 bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Header: Title + Employment Type Badge */}
@@ -15,33 +18,33 @@ const JobPostCard = ({ item, onViewDetail, onApply, isApplied, isAuthenticated }
                         {item.companyName}
                     </p>
                 </div>
-                <Badge text={item.employmentType} />
+                <Badge text={item.criteria.employmentType} />
             </div>
 
             {/* Info rows with icons */}
             <div className="flex flex-col gap-2 text-xs sm:text-sm text-gray-600">
                 <div className="flex items-center gap-2">
                     <MapPinned className="flex-shrink-0" />
-                    <span className="truncate">{item.location}</span>
+                    <span className="truncate">{item.criteria.location}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <DollarSign className="flex-shrink-0" />
-                    <span>{item.salaryDisplay}</span>
+                    <span>{salaryDisplay}</span>
                 </div>
-                {item.postedDate && (
+                {item.postedAt && (
                     <div className="flex items-center gap-2">
                         <Calendar className="flex-shrink-0" />
-                        <span>Posted {new Date(item.postedDate).toLocaleDateString()}</span>
+                        <span>Posted {new Date(item.postedAt).toLocaleDateString()}</span>
                     </div>
                 )}
-                {item.expireDate && (
+                {item.expiresAt && (
                     <div className="flex items-center gap-2">
                         <Calendar className="flex-shrink-0" />
-                        <span>Expiry {new Date(item.expireDate).toLocaleDateString()}</span>
+                        <span>Expires {new Date(item.expiresAt).toLocaleDateString()}</span>
                     </div>
                 )}
             </div>
-
+            
             {/* Skills badges */}
             {/* <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {item.skills.slice(0, 5).map((skill, index) => (
@@ -51,7 +54,7 @@ const JobPostCard = ({ item, onViewDetail, onApply, isApplied, isAuthenticated }
                     <span className="text-xs text-gray-500 self-center">+{item.skills.length - 5} more</span>
                 )}
             </div> */}
-
+            
             {/* Action buttons - Stack on mobile */}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-2">
                 <Button style="w-full sm:flex-1" text="View Details" onClick={() => onViewDetail?.(item)}/>

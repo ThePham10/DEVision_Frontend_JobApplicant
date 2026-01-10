@@ -16,6 +16,11 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
         hasApplied,
     } = useJobPostDetail({ params });
 
+    // Format salary display from criteria
+    const salaryDisplay = jobPost 
+        ? `${jobPost.criteria.salaryRange.min.toLocaleString()} - ${jobPost.criteria.salaryRange.max.toLocaleString()} ${jobPost.criteria.salaryCurrency}`
+        : '';
+
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -60,7 +65,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                             </p>
                         </div>
                         <span className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
-                            {jobPost.employmentType}
+                            {jobPost.criteria.employmentType}
                         </span>
                     </div>
 
@@ -70,19 +75,19 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                             <div className="p-2 bg-blue-50 rounded-lg">
                                 <MapPinned className="w-5 h-5 text-blue-600" />
                             </div>
-                            <span className="text-gray-700">{jobPost.location}</span>
+                            <span className="text-gray-700">{jobPost.criteria.location}</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-50 rounded-lg">
                                 <DollarSign className="w-5 h-5 text-green-600" />
                             </div>
-                            <span className="text-gray-700">${jobPost.salaryDisplay}</span>
+                            <span className="text-gray-700">{salaryDisplay}</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-purple-50 rounded-lg">
                                 <Calendar className="w-5 h-5 text-purple-600" />
                             </div>
-                            <span className="text-gray-700">Posted {jobPost.postedDate}</span>
+                            <span className="text-gray-700">Posted {new Date(jobPost.postedAt).toLocaleDateString()}</span>
                         </div>
                     </div>
 
@@ -122,19 +127,21 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                     className="space-y-6"
                 >
                     {/* Skills */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Required Skills</h2>
-                        <div className="flex flex-wrap gap-2">
-                            {jobPost.skills.map((skill: string, index: number) => (
-                                <span
-                                    key={index}
-                                    className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium"
-                                >
-                                    {skill}
-                                </span>
-                            ))}
+                    {jobPost.criteria.requiredSkillIds.length > 0 && (
+                        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">Required Skills</h2>
+                            <div className="flex flex-wrap gap-2">
+                                {jobPost.criteria.requiredSkillIds.map((skillId: string, index: number) => (
+                                    <span
+                                        key={index}
+                                        className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium"
+                                    >
+                                        {skillId}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Description */}
                     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
@@ -151,7 +158,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                 onClose={() => setIsModalOpen(false)}
                 jobId={jobPost.jobId}
                 jobTitle={jobPost.title}
-                company={jobPost.companyName as string}
+                company={jobPost.companyName}
             />
         </div>
     )
