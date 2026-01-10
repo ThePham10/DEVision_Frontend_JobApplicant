@@ -11,6 +11,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
         jobPost,
         isLoading,
         isModalOpen,
+        isAuthenticated,
         setIsModalOpen,
         hasApplied,
     } = useJobPostDetail({ params });
@@ -86,28 +87,31 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                     </div>
 
                     {/* Action Buttons */}
+                    
                     <div className="flex flex-col sm:flex-row gap-3">
-                        {hasApplied(jobPost.jobId) ? (
-                            <button
-                                disabled
-                                className="flex-1 px-6 py-3 bg-green-100 text-green-700 rounded-lg font-semibold flex items-center justify-center gap-2"
-                            >
-                                <CheckCircle className="w-5 h-5" />
-                                Already Applied
-                            </button>
-                        ) : (
-                            <Button
-                                text="Apply for this Position"
-                                onClick={() => setIsModalOpen(true)}
-                                style="flex-1"
+                            {isAuthenticated && (
+                                hasApplied(jobPost.jobId) ? (
+                                    <button
+                                        disabled
+                                        className="flex-1 px-6 py-3 bg-green-100 text-green-700 rounded-lg font-semibold flex items-center justify-center gap-2"
+                                    >
+                                        <CheckCircle className="w-5 h-5" />
+                                        Already Applied
+                                    </button>
+                                ) : (
+                                    <Button
+                                        text="Apply for this Position"
+                                        onClick={() => setIsModalOpen(true)}
+                                        style="flex-1"
+                                    />
+                                )
+                            )}
+                            <SecondaryButton
+                                text="Back to Jobs"
+                                onClick={() => router.push("/jobs")}
+                                style={isAuthenticated ? "flex-1 sm:flex-none" : "w-full"}
                             />
-                        )}
-                        <SecondaryButton
-                            text="Back to Jobs"
-                            onClick={() => router.push("/jobs")}
-                            style="flex-1 sm:flex-none"
-                        />
-                    </div>
+                        </div>
                 </motion.div>
 
                 {/* Job Details */}

@@ -66,7 +66,7 @@ const useJobPostTable = () => {
     const [isJobApplicationOpen, setIsJobApplicationOpen] = useState(false)
     const [selectedJob, setSelectedJob] = useState<JobPost | null>(null)
 
-    const { user, _hasHydrated } = useAuthStore()
+    const { user, _hasHydrated, isAuthenticated } = useAuthStore()
     
     const { 
         data: jobPosts = [], 
@@ -137,6 +137,7 @@ const useJobPostTable = () => {
         error,
         isJobApplicationOpen,
         selectedJob,
+        isAuthenticated,
         setIsJobApplicationOpen,
         handleFilterSubmit,
         removeFilter,

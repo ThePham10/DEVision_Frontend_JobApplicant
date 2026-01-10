@@ -16,6 +16,7 @@ export const JobPostTable = () => {
         error,
         isJobApplicationOpen,
         selectedJob,
+        isAuthenticated,
         setIsJobApplicationOpen,
         handleFilterSubmit,
         removeFilter,
@@ -115,6 +116,7 @@ export const JobPostTable = () => {
                         onViewDetail={handleViewDetail}
                         onApply={handleApply}
                         isApplied={hasApplied(job.jobId)}
+                        isAuthenticated={isAuthenticated}
                     />
                 ))}
             </div>

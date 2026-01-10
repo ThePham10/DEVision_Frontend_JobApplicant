@@ -2,7 +2,7 @@ import { JobPost } from "../types"
 import { Badge, Button, SecondaryButton } from "@/components/reusable-component"
 import { MapPinned, DollarSign, Calendar } from "lucide-react"
 
-const JobPostCard = ({ item, onViewDetail, onApply, isApplied }: { item: JobPost, onViewDetail?: (job: JobPost) => void, onApply: (job: JobPost) => void, isApplied: boolean }) => {
+const JobPostCard = ({ item, onViewDetail, onApply, isApplied, isAuthenticated }: { item: JobPost, onViewDetail?: (job: JobPost) => void, onApply: (job: JobPost) => void, isApplied: boolean, isAuthenticated: boolean }) => {
     return (
         <div className="relative flex flex-col gap-3 sm:gap-4 border border-gray-200 bg-white p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
             {/* Header: Title + Employment Type Badge */}
@@ -55,7 +55,7 @@ const JobPostCard = ({ item, onViewDetail, onApply, isApplied }: { item: JobPost
             {/* Action buttons - Stack on mobile */}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-2">
                 <Button style="w-full sm:flex-1" text="View Details" onClick={() => onViewDetail?.(item)}/>
-                {!isApplied && <SecondaryButton style="w-full sm:flex-1" text="Apply Now" onClick={() => onApply(item)}/>}
+                {isAuthenticated && !isApplied && <SecondaryButton style="w-full sm:flex-1" text="Apply Now" onClick={() => onApply(item)}/>}
             </div>
         </div>
     )

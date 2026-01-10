@@ -55,64 +55,93 @@ export const JobApplicationList = () => {
     // Empty state
     if (jobApplications.length === 0) {
         return (
-            <div>
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="space-y-4"
-                >
-                    <div className="flex items-center gap-2 text-gray-600">
-                        <Filter className="w-5 h-5" />
-                        <span className="font-medium text-sm">Filter by status</span>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-3">
-                        {statusFilters.map((filter) => {
-                            const isActive = activeFilter === filter.value
-                            const count = getCountForStatus(filter.value)
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+                    {/* Animated Page Header - Same as populated state */}
+                    <motion.div
+                        className="mb-8 sm:mb-12"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-3">
+                            My Job Applications
+                        </h1>
+                        <p className="text-gray-600 text-base sm:text-lg">
+                            Track the status of your job applications and stay updated on your career journey
+                        </p>
+                    </motion.div>
+
+                    {/* Filter Pills Bar */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
+                        className="mb-8"
+                    >
+                        <ApplicationFilterPillsBar
+                            activeFilter={activeFilter}
+                            getCountForStatus={getCountForStatus}
+                            handleFilterClick={handleFilterClick}
+                        />
+                    </motion.div>
+
+                    {/* Empty State Card */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        className="relative overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl shadow-lg p-8 sm:p-12"
+                    >
+                        {/* Background decoration */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-100 to-indigo-100 opacity-50 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
+                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-purple-100 to-pink-100 opacity-40 blur-3xl rounded-full translate-y-1/2 -translate-x-1/2" />
+                        
+                        <div className="relative text-center py-8 sm:py-12">
+                            {/* Icon with animated ring */}
+                            <div className="relative inline-flex items-center justify-center mb-8">
+                                <div className="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 animate-pulse" />
+                                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                                    <Briefcase className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                                </div>
+                            </div>
                             
-                            return (
-                                <motion.button
-                                    key={filter.label}
-                                    onClick={() => handleFilterClick(filter.value)}
+                            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                                No applications found
+                            </h3>
+                            <p className="text-gray-500 text-base sm:text-lg max-w-lg mx-auto mb-8">
+                                {activeFilter 
+                                    ? "Try selecting a different filter to view other applications" 
+                                    : "You haven't applied to any jobs yet. Start exploring opportunities and take the first step in your career journey!"}
+                            </p>
+                            
+                            {/* Call to Action Button */}
+                            {!activeFilter && (
+                                <motion.a
+                                    href="/jobs"
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className={`group relative px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
-                                        isActive
-                                            ? `bg-gradient-to-r ${filter.gradient} text-white shadow-lg`
-                                            : "bg-white text-gray-700 border-2 border-gray-200 hover:border-gray-300 hover:shadow-md"
-                                    }`}
+                                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                                 >
-                                    <span className="flex items-center gap-2">
-                                        {filter.label}
-                                        <span className={`text-xs px-2 py-0.5 rounded-full ${
-                                            isActive 
-                                                ? "bg-white/25 text-white" 
-                                                : "bg-gray-100 text-gray-600"
-                                        }`}>
-                                            {count}
-                                        </span>
-                                    </span>
+                                    <Briefcase className="w-5 h-5" />
+                                    Browse Jobs
+                                </motion.a>
+                            )}
+                            
+                            {activeFilter && (
+                                <motion.button
+                                    onClick={() => handleFilterClick(undefined)}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-all duration-300"
+                                >
+                                    <Filter className="w-4 h-4" />
+                                    Clear Filter
                                 </motion.button>
-                            )
-                        })}
-                    </div>
-                </motion.div>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center py-20"
-                >
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-50 to-indigo-100 mb-6">
-                        <Briefcase className="w-10 h-10 text-blue-600" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">No applications found</h3>
-                    <p className="text-gray-500 text-lg max-w-md mx-auto">
-                        {activeFilter 
-                            ? "Try selecting a different filter to view other applications" 
-                            : "You haven't applied to any jobs yet. Start exploring opportunities!"}
-                    </p>
-                </motion.div>
+                            )}
+                        </div>
+                    </motion.div>
+                </div>
             </div>
         )
     }

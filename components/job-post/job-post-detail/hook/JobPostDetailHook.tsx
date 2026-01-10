@@ -5,11 +5,14 @@ import { useRouter } from "next/navigation"
 import { loadJobPostById } from "../service/JobPostDetailService"
 import { useJobPostTable } from "../../job-post-table/hook/JobPostTableHook"
 import { useQuery } from "@tanstack/react-query"
+import { useAuthStore } from "@/store/authStore"
 
 export const useJobPostDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     const resolvedParams = use(params)
     const router = useRouter()
     const { hasApplied } = useJobPostTable()
+
+    const { isAuthenticated } = useAuthStore()
     
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -26,6 +29,7 @@ export const useJobPostDetail = ({ params }: { params: Promise<{ id: string }> }
         jobPost,
         isLoading,
         isModalOpen,
+        isAuthenticated,
         setIsModalOpen,
         hasApplied,
     }

@@ -40,10 +40,6 @@ export const ProfileTable = () => {
             animate="visible"
         >
             <motion.div variants={itemVariants}>
-                <AvatarBox />
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
                 <SearchProfileBox />
             </motion.div>
             
