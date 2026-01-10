@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "motion/react";
-import { AvatarBox } from "./profile-box/avatar-box/ui/AvatarBox";
 import { ProfileSkillBox } from "./profile-box/skill-box/ui/ProfileSkillBox";
 import { ProfileEducationBox } from "./profile-box/education-box/ui/ProfileEducationBox";
 import { ProfileWorkExpBox } from "./profile-box/work-experience-box/ui/ProfileWorkExpBox";
