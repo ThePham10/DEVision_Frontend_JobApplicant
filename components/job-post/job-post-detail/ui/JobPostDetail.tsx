@@ -4,7 +4,6 @@ import {ApplicationModal} from "@/components/job-application/ui/ApplicationModal
 import { motion } from "motion/react"
 import { MapPinned, DollarSign, Calendar, Building, CheckCircle } from "lucide-react"
 import { useJobPostDetail } from "../hook/JobPostDetailHook"
-import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup"
 import { icons } from "@/components/reusable-component"
 
 export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -16,10 +15,9 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
         isAuthenticated,
         setIsModalOpen,
         hasApplied,
-        getSkillIcon
+        getSkillIcon,
+        getSkillName
     } = useJobPostDetail({ params });
-
-    const { getSkillName } = useSkillLookup();
 
     if (isLoading) {
         return (

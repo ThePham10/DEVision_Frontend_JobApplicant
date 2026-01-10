@@ -26,9 +26,11 @@ type UserProfile = {
   street: string;
   city: string;
   emailVerified: boolean;
+  objectiveSummary: string;
   isPremium: boolean;
   avatarUrl: string;
   isActive: boolean;
+  skillCategories: string[];
 }
 
 export type { LoginData, UserData, User, UserProfile };

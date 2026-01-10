@@ -12,7 +12,7 @@ export const useJobPostDetail = ({ params }: { params: Promise<{ id: string }> }
     const resolvedParams = use(params)
     const router = useRouter()
     const { hasApplied } = useJobPostTable()
-    const { getSkillIcon } = useSkillLookup()
+    const { getSkillIcon, getSkillName } = useSkillLookup()
 
     const { isAuthenticated } = useAuthStore()
     
@@ -34,6 +34,7 @@ export const useJobPostDetail = ({ params }: { params: Promise<{ id: string }> }
         isAuthenticated,
         setIsModalOpen,
         hasApplied,
-        getSkillIcon
+        getSkillIcon,
+        getSkillName
     }
 }
