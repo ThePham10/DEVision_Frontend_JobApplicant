@@ -11,10 +11,10 @@ import { useAuthStore } from "@/store"
 
 const employmentType = [
     { id: "1", name: "All Types", value: "", icon: "briefcase-business" },
-    { id: "2", name: "Full-time", value: "FULL_TIME", icon: "briefcase-business" },
-    { id: "3", name: "Part-time", value: "PART_TIME", icon: "briefcase-business" },
-    { id: "4", name: "Contract", value: "CONTRACT", icon: "briefcase-business" },
-    { id: "5", name: "Internship", value: "INTERNSHIP", icon: "briefcase-business" },
+    { id: "2", name: "Full-time", value: "Full-time", icon: "briefcase-business" },
+    { id: "3", name: "Part-time", value: "Part-time", icon: "briefcase-business" },
+    { id: "4", name: "Contract", value: "Contract", icon: "briefcase-business" },
+    { id: "5", name: "Internship", value: "Internship", icon: "briefcase-business" },
 ]
 
 // Filter form configuration - uses flex layout for better responsiveness
@@ -38,6 +38,16 @@ const filterFormConfig: FormConfig = {
             type: "select", 
             placeholder: "Select employment type",
             options: employmentType,
+        },
+        { 
+            name: "salaryRange", 
+            title: "Salary Range (USD)", 
+            type: "dual-range", 
+            placeholder: "",
+            min: 0,
+            max: 10000,
+            step: 100,
+            formatValue: (value: number) => `$${value.toLocaleString()}`,
         }
     ],
     buttonText: "Search Jobs",
@@ -108,8 +118,7 @@ const useJobPostTable = () => {
         const newFilters: JobPostFilters = {
             jobTitle: formData.jobTitle as string || undefined,
             location: formData.location as string || undefined,
-            employmentType: employmentType.find((type) => type.id === formData.employmentType)?.value || undefined,
-            // Dual-range slider creates {name}_min and {name}_max fields
+            employmentType: (formData.employmentType as string) || undefined,
             minSalary: formData.salaryRange_min ? Number(formData.salaryRange_min) : undefined,
             maxSalary: formData.salaryRange_max ? Number(formData.salaryRange_max) : undefined,
         }
