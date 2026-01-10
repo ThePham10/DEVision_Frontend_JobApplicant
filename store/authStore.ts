@@ -12,14 +12,29 @@ type AuthUser = {
     isPremium: boolean,  // Premium user flag
 }
 
+type UserProfile = {
+  name: string;
+  email: string;
+  phone: string;
+  country: string;
+  street: string;
+  city: string;
+  emailVerified: boolean;
+  isPremium: boolean;
+  avatarUrl: string;
+  isActive: boolean;
+}
+
 interface AuthStore {
     user: AuthUser | null;
+    userProfile: UserProfile | null;
     isAuthenticated: boolean;
     isAdmin: boolean;
     isPremium: boolean;  // Premium user flag
     _hasHydrated: boolean;
 
     setUser: (user : AuthUser) => void;
+    setUserProfile: (userProfile : UserProfile) => void;
     clearUser: () => void;
     setIsAuthenticated: (state: boolean) => void;
     setHasHydrated: (state: boolean) => void;
@@ -29,6 +44,7 @@ export const useAuthStore = create<AuthStore>()(
     persist(
         (set) => ({
             user: null,
+            userProfile: null,
             isAuthenticated: false,
             isAdmin: false,
             isPremium: false,  // Default to non-premium
@@ -54,7 +70,10 @@ export const useAuthStore = create<AuthStore>()(
                 set({ isAuthenticated: state }),
 
             setHasHydrated: (state: boolean) =>
-                set({ _hasHydrated: state })
+                set({ _hasHydrated: state }),
+
+            setUserProfile: (userProfile : UserProfile) =>
+                set({ userProfile })
         }),
         {
             name: "auth-storage",

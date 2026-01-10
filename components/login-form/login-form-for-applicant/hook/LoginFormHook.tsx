@@ -1,11 +1,11 @@
 import { FormValues, loginValidations } from "@/components/headless-form";
-import loginUser from "../service/LoginFormService";
+import { loginUser, getUserProfile } from "../service/LoginFormService";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const useLoginForm = () => {
-    const { setUser, setIsAuthenticated } = useAuthStore();
+    const { setUser, setIsAuthenticated, setUserProfile } = useAuthStore();
     const router = useRouter();
     const [ error, setError ] = useState<string | null>(null)
 
@@ -40,11 +40,18 @@ export const useLoginForm = () => {
 
             const response = await loginUser(loginData);
             if (response.status === 201) {
+                const userProfileResponse = await getUserProfile(response.data.user.id);
+                if (userProfileResponse) {
+                    setUserProfile(userProfileResponse);
+                }
                 setError(null);
-                console.log("Login successful!");
                 setUser(response.data.user);
                 setIsAuthenticated(true);
-                router.push("/jobs");
+                if (response.data.user.emailVerified) {
+                    router.push("/jobs");
+                } else {
+                    router.push("/verify-email");
+                }
             } else {
                 setError("Invalid email/password or account is not active. Please try again.")
             }

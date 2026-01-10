@@ -4,18 +4,31 @@ type LoginData = {
 }
 
 type User = {
-    id: string;
-    email: string;
-    name: string;
-    avatarUrl?: string;
-    role: string;
-    country?: string;
-    emailVerified: boolean;
-    isPremium: boolean;
+  id: string;
+  email: string;
+  name: string;
+  avatarUrl?: string;
+  role: string;
+  country?: string;
+  emailVerified: boolean;
+  isPremium: boolean;
 }
 
 type UserData = {
     user: User;
 }
 
-export type { LoginData, UserData, User };
+type UserProfile = {
+  name: string;
+  email: string;
+  phone: string;
+  country: string;
+  street: string;
+  city: string;
+  emailVerified: boolean;
+  isPremium: boolean;
+  avatarUrl: string;
+  isActive: boolean;
+}
+
+export type { LoginData, UserData, User, UserProfile };
