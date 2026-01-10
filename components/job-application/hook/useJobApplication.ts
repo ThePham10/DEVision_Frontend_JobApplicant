@@ -47,7 +47,7 @@ export function useJobApplication() {
         return {
             ...app,
             jobTitle: jobPost?.title ?? "Unknown Job",
-            location: jobPost?.location ?? "Unknown Location",
+            location: jobPost?.criteria.location ?? "Unknown Location",
             company: jobPost?.companyName ?? "Unknown Company",
         }
     })
