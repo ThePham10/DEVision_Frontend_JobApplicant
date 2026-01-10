@@ -1,9 +1,9 @@
 import { MapPin, Briefcase, Calendar, DollarSign, Building } from "lucide-react";
 import { JobPost } from "../types";
+import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup";
 
 export const JobPostDetailModal = ({ job }: {job: JobPost}) => {
-    // Format salary display from criteria
-    const salaryDisplay = `${job.criteria.salaryRange.min.toLocaleString()} - ${job.criteria.salaryRange.max.toLocaleString()} ${job.criteria.salaryCurrency}`;
+    const { getSkillName } = useSkillLookup();
 
     const formatDate = (dateString: string | null) => {
         if (!dateString) return "N/A";
@@ -41,28 +41,28 @@ export const JobPostDetailModal = ({ job }: {job: JobPost}) => {
                     <MapPin className="w-5 h-5 text-gray-400" />
                     <div>
                         <p className="text-xs text-gray-500">Location</p>
-                        <p className="font-medium">{job.criteria.location}</p>
+                        <p className="font-medium">{job.location}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                     <Briefcase className="w-5 h-5 text-gray-400" />
                     <div>
                         <p className="text-xs text-gray-500">Employment Type</p>
-                        <p className="font-medium">{job.criteria.employmentType}</p>
+                        <p className="font-medium">{job.employmentType}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                     <DollarSign className="w-5 h-5 text-gray-400" />
                     <div>
                         <p className="text-xs text-gray-500">Salary</p>
-                        <p className="font-medium">{salaryDisplay}</p>
+                        <p className="font-medium">{job.salaryDisplay}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                     <Calendar className="w-5 h-5 text-gray-400" />
                     <div>
                         <p className="text-xs text-gray-500">Expires On</p>
-                        <p className="font-medium">{formatDate(job.expiresAt)}</p>
+                        <p className="font-medium">{formatDate(job.expireDate)}</p>
                     </div>
                 </div>
             </div>
@@ -74,16 +74,16 @@ export const JobPostDetailModal = ({ job }: {job: JobPost}) => {
             </div>
 
             {/* Skills */}
-            {job.criteria.requiredSkillIds && job.criteria.requiredSkillIds.length > 0 && (
+            {job.skills && job.skills.length > 0 && (
                 <div>
                     <h3 className="text-sm font-semibold text-gray-700 mb-2">Required Skills</h3>
                     <div className="flex flex-wrap gap-2">
-                        {job.criteria.requiredSkillIds.map((skillId, index) => (
+                        {job.skills.map((skillId, index) => (
                             <span
                                 key={index}
                                 className="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium"
                             >
-                                {skillId}
+                                {getSkillName(skillId)}
                             </span>
                         ))}
                     </div>
@@ -91,7 +91,7 @@ export const JobPostDetailModal = ({ job }: {job: JobPost}) => {
             )}
 
             {/* Fresher Friendly Badge */}
-            {job.criteria.isFresherFriendly && (
+            {job.isFresherFriendly && (
                 <div className="flex items-center gap-2">
                     <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
                         Fresher Friendly
@@ -103,7 +103,7 @@ export const JobPostDetailModal = ({ job }: {job: JobPost}) => {
             <div className="text-xs text-gray-400 border-t pt-4">
                 <p>Job ID: {job.jobId}</p>
                 <p>Company ID: {job.companyId}</p>
-                {job.postedAt && <p>Posted: {formatDate(job.postedAt)}</p>}
+                {job.postedDate && <p>Posted: {formatDate(job.postedDate)}</p>}
             </div>
         </div>
     )

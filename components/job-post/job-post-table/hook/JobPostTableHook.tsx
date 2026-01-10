@@ -38,15 +38,6 @@ const filterFormConfig: FormConfig = {
             type: "select", 
             placeholder: "Select employment type",
             options: employmentType,
-        },
-        {
-            name: "salaryRange", 
-            title: "Salary Range", 
-            type: "dual-range", 
-            placeholder: "Select salary range",
-            min: 0,
-            max: 200000,
-            step: 1000,
         }
     ],
     buttonText: "Search Jobs",

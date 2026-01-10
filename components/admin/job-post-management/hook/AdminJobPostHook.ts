@@ -34,7 +34,7 @@ export default function useAdminJobPost() {
             return false;
         }
 
-        if (employmentTypeFilter && job.criteria.employmentType !== employmentTypeFilter) {
+        if (employmentTypeFilter && job.employmentType !== employmentTypeFilter) {
             return false;
         }
 

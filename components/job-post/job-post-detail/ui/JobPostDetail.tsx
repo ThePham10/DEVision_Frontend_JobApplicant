@@ -4,6 +4,8 @@ import {ApplicationModal} from "@/components/job-application/ui/ApplicationModal
 import { motion } from "motion/react"
 import { MapPinned, DollarSign, Calendar, Building, CheckCircle } from "lucide-react"
 import { useJobPostDetail } from "../hook/JobPostDetailHook"
+import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup"
+import { icons } from "@/components/reusable-component"
 
 export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     const {
@@ -14,12 +16,10 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
         isAuthenticated,
         setIsModalOpen,
         hasApplied,
+        getSkillIcon
     } = useJobPostDetail({ params });
 
-    // Format salary display from criteria
-    const salaryDisplay = jobPost 
-        ? `${jobPost.criteria.salaryRange.min.toLocaleString()} - ${jobPost.criteria.salaryRange.max.toLocaleString()} ${jobPost.criteria.salaryCurrency}`
-        : '';
+    const { getSkillName } = useSkillLookup();
 
     if (isLoading) {
         return (
@@ -65,7 +65,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                             </p>
                         </div>
                         <span className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
-                            {jobPost.criteria.employmentType}
+                            {jobPost.employmentType}
                         </span>
                     </div>
 
@@ -75,19 +75,19 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                             <div className="p-2 bg-blue-50 rounded-lg">
                                 <MapPinned className="w-5 h-5 text-blue-600" />
                             </div>
-                            <span className="text-gray-700">{jobPost.criteria.location}</span>
+                            <span className="text-gray-700">{jobPost.location}</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-50 rounded-lg">
                                 <DollarSign className="w-5 h-5 text-green-600" />
                             </div>
-                            <span className="text-gray-700">{salaryDisplay}</span>
+                            <span className="text-gray-700">{jobPost.salaryDisplay}</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-purple-50 rounded-lg">
                                 <Calendar className="w-5 h-5 text-purple-600" />
                             </div>
-                            <span className="text-gray-700">Posted {new Date(jobPost.postedAt).toLocaleDateString()}</span>
+                            <span className="text-gray-700">Posted {new Date(jobPost.postedDate).toLocaleDateString()}</span>
                         </div>
                     </div>
 
@@ -127,18 +127,23 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
                     className="space-y-6"
                 >
                     {/* Skills */}
-                    {jobPost.criteria.requiredSkillIds.length > 0 && (
+                    {jobPost.skills.length > 0 && (
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">Required Skills</h2>
                             <div className="flex flex-wrap gap-2">
-                                {jobPost.criteria.requiredSkillIds.map((skillId: string, index: number) => (
-                                    <span
-                                        key={index}
-                                        className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium"
-                                    >
-                                        {skillId}
-                                    </span>
-                                ))}
+                                {jobPost.skills.slice(0, 5).map((skillId, index) => {
+                                    const iconKey = getSkillIcon(skillId);
+                                    const IconComponent = iconKey ? icons[iconKey] : null;
+                                    return (
+                                        <span 
+                                            key={index} 
+                                            className="h-9 inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
+                                        >
+                                            {IconComponent && <IconComponent className="w-3 h-3" />}
+                                            {getSkillName(skillId)}
+                                        </span>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}

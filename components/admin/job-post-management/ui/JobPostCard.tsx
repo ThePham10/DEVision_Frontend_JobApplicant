@@ -2,7 +2,8 @@
 
 import { JobPost } from "../types";
 import { motion } from "motion/react";
-import { Trash2, MapPin, Briefcase, Calendar, DollarSign, Eye } from "lucide-react";
+import { Trash2, MapPin, Briefcase, Calendar, DollarSign, Eye, Globe, HatGlasses } from "lucide-react";
+import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup";
 
 type JobPostCardProps = {
     job: JobPost;
@@ -11,8 +12,30 @@ type JobPostCardProps = {
 };
 
 export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCardProps) {
-    // Format salary display from criteria
-    const salaryDisplay = `${job.criteria.salaryRange.min.toLocaleString()} - ${job.criteria.salaryRange.max.toLocaleString()} ${job.criteria.salaryCurrency}`;
+    const { getSkillName } = useSkillLookup();
+
+     const getStatusColor = (status: string) => {
+        switch (status) {
+            case "PUBLIC":
+                return "bg-green-100 text-green-700";
+            case "PRIVATE":
+                return "bg-yellow-100 text-yellow-700";
+            default:
+                return "bg-gray-100 text-gray-700";
+        }
+    };
+
+    const getStatusIcon = (status: string) => {
+        switch (status) {
+            case "PUBLIC":
+                return <Globe />;
+            case "PRIVATE":
+                return <HatGlasses />;
+            default:
+                return <Eye />;
+        }
+    }
+
 
     const formatDate = (dateString: string | null) => {
         if (!dateString) return "N/A";
@@ -43,6 +66,9 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
                         <h3 className="text-lg font-semibold text-gray-900 font-[Inter] truncate">
                             {job.title}
                         </h3>
+                        <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap shadow-sm ${getStatusColor(job.status)}`}>
+                            {getStatusIcon(job.status)}{job.status}
+                        </span>
                     </div>
 
                     {/* Company */}
@@ -56,36 +82,36 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
                     <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-500 mb-3">
                         <span className="flex items-center gap-1">
                             <MapPin className="w-4 h-4" />
-                            {job.criteria.location}
+                            {job.location}
                         </span>
                         <span className="flex items-center gap-1">
                             <Briefcase className="w-4 h-4" />
-                            {job.criteria.employmentType}
+                            {job.employmentType}
                         </span>
                         <span className="flex items-center gap-1">
                             <DollarSign className="w-4 h-4" />
-                            {salaryDisplay}
+                            {job.salaryDisplay}
                         </span>
                         <span className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            Expires: {formatDate(job.expiresAt)}
+                            Expires: {formatDate(job.expireDate)}
                         </span>
                     </div>
 
                     {/* Skills */}
-                    {job.criteria.requiredSkillIds && job.criteria.requiredSkillIds.length > 0 && (
+                    {job.skills && job.skills.length > 0 && (
                         <div className="flex flex-wrap gap-1.5">
-                            {job.criteria.requiredSkillIds.slice(0, 5).map((skillId, index) => (
+                            {job.skills.slice(0, 5).map((skillId, index) => (
                                 <span
                                     key={index}
                                     className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium"
                                 >
-                                    {skillId}
+                                    {getSkillName(skillId)}
                                 </span>
                             ))}
-                            {job.criteria.requiredSkillIds.length > 5 && (
+                            {job.skills.length > 5 && (
                                 <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">
-                                    +{job.criteria.requiredSkillIds.length - 5} more
+                                    +{job.skills.length - 5} more
                                 </span>
                             )}
                         </div>

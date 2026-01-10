@@ -6,11 +6,13 @@ import { loadJobPostById } from "../service/JobPostDetailService"
 import { useJobPostTable } from "../../job-post-table/hook/JobPostTableHook"
 import { useQuery } from "@tanstack/react-query"
 import { useAuthStore } from "@/store/authStore"
+import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup"
 
 export const useJobPostDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     const resolvedParams = use(params)
     const router = useRouter()
     const { hasApplied } = useJobPostTable()
+    const { getSkillIcon } = useSkillLookup()
 
     const { isAuthenticated } = useAuthStore()
     
@@ -32,5 +34,6 @@ export const useJobPostDetail = ({ params }: { params: Promise<{ id: string }> }
         isAuthenticated,
         setIsModalOpen,
         hasApplied,
+        getSkillIcon
     }
 }
