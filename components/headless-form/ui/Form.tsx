@@ -10,6 +10,7 @@ import PhoneNumberInputField from "./PhoneNumberInputField";
 import Dropdown from "../../headless-dropdown/ui/Dropdown";
 import MultiCheckbox from "./MultiCheckbox";
 import DualRangeSlider from "./DualRangeSlider";
+import { CardCvcElement, CardExpiryElement, CardNumberElement } from "@stripe/react-stripe-js";
 
 
 export const HeadlessForm: React.FC<HeadlessFormProps> = ({ 

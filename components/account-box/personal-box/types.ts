@@ -6,10 +6,8 @@ type AccountData = {
     address?: string;
     country?: string;
     avatarUrl?: string;
-    addressProvinceCode?: string;
     isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+    isPremium?: boolean;
 }
 
 export type { AccountData };
