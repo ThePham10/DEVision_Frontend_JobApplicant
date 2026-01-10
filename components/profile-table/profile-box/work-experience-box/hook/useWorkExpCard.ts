@@ -40,7 +40,9 @@ export default function useWorkExpCard(item: WorkExpData) {
         setOpen(false);
     };
 
-    const userWorkExpSkills = skills.filter(skill => item.skillCategories.includes(skill.id));
+    // const userWorkExpSkills = skills.filter(skill => item.skillCategories.includes(skill.id));
+    const userWorkExpSkills = (skills ?? []).filter(skill =>(item.skillCategories ?? []).includes(skill.id));
+
 
     return {
         open,
