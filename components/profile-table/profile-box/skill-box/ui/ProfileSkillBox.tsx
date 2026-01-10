@@ -1,20 +1,20 @@
 import { Button, Modal } from "@/components/reusable-component";
-import { mockProfile } from "../../../Data";
 import ProfileSkillCard from "../ui/ProfileSkillCard";
-import { useState } from "react";
-import AddSkillForm from "./AddSkillForm";
+import { useProfileSkillBox } from "../hook/ProfileSkillBoxHook";
+import { HeadlessForm } from "@/components/headless-form";
+import { SecondaryButton } from "@/components/reusable-component";
+
 
 export const ProfileSkillBox = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const openAddModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleDelete = (id: string) => {
-        // TODO: Add confirmation and actual delete logic
-        console.log("Deleting skill:", id);
-    };
+    const {
+        userProfile,
+        formConfig,
+        openAddModal,
+        isModalOpen,
+        setIsModalOpen,
+        handleDelete,
+        handleAdd
+    } = useProfileSkillBox();
 
     return (
         <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
@@ -36,7 +36,7 @@ export const ProfileSkillBox = () => {
                 </p>
             
                 <ProfileSkillCard 
-                    item={mockProfile[0]} 
+                    item={userProfile?.skillCategories || []} 
                     onDelete={handleDelete}
                 />
             </div>
@@ -51,11 +51,10 @@ export const ProfileSkillBox = () => {
                 size="medium"
             >
                 <h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6">New Skill Form</h2>
-                <AddSkillForm
-                    onCancel={() => {
-                        setIsModalOpen(false);
-                    }}
-                />
+                <div className="space-y-4">
+                    <HeadlessForm config={formConfig} onSubmit={handleAdd} />
+                    <SecondaryButton text="Cancel" onClick={() => setIsModalOpen(false)} style="w-full" />
+                </div>
             </Modal>
         </div>
     )

@@ -1,6 +1,16 @@
-import { SummaryForm } from "./SummaryForm"
+import { HeadlessForm } from "@/components/headless-form"
+import { useAuthStore } from "@/store/authStore";
+import { useSummaryBox } from "../hook/SummaryBoxHook";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export const SummaryBox = () => {
+    const { isAuthenticated, user, userProfile } = useAuthStore();
+    useUserProfile();
+    const { handleSubmit, formConfig } = useSummaryBox();
+
+    if (!isAuthenticated || !user) return null;
+
+
     return (
         <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
             {/* Subtle gradient overlay on hover */}
@@ -10,7 +20,7 @@ export const SummaryBox = () => {
                 <h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
                     Objective Summary
                 </h2>
-                <SummaryForm />
+                <HeadlessForm config={formConfig} initialValues={userProfile ? { objectiveSummary: userProfile.objectiveSummary } : undefined} onSubmit={(data) => handleSubmit(typeof data.objectiveSummary === 'string' ? data.objectiveSummary : undefined)}/>
             </div>
         </div>
     )

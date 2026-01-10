@@ -1,7 +1,7 @@
 import { Search, X } from "lucide-react";
 import Dropdown from "@/components/headless-dropdown";
 import { Button } from "@/components/reusable-component";
-import { employmentTypes, statusOptions } from "../types";
+import { employmentTypes } from "../types";
 
 interface JobPostFilterBarProps {
     searchTerm: string;
@@ -9,7 +9,6 @@ interface JobPostFilterBarProps {
     handleSearch: () => void;
     clearFilters: () => void;
     setEmploymentTypeFilter: (employmentType: string) => void;
-    setStatusFilter: (status: string) => void;
 }
 
 export const JobPostFilterBar = ({
@@ -18,7 +17,6 @@ export const JobPostFilterBar = ({
     handleSearch,
     clearFilters,
     setEmploymentTypeFilter,
-    setStatusFilter,
 } : JobPostFilterBarProps ) => {
     return (
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
@@ -44,16 +42,6 @@ export const JobPostFilterBar = ({
                         }
                     }}
                     placeholder="Employment Type"
-                />
-
-                <Dropdown
-                    items={statusOptions}
-                    onChange={(value) => {
-                        if (value && !Array.isArray(value)) {
-                            setStatusFilter(value.id);
-                        }
-                    }}
-                    placeholder="Status"
                 />
 
                 <Button text="Search" onClick={handleSearch} style="w-full sm:w-auto" />

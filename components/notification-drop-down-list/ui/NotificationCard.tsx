@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { ChevronDown, ChevronUp } from "lucide-react"
-import { Notification, NotificationType } from "../types/types"
+import { useRouter } from "next/navigation"
+import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react"
+import { Notification, NotificationType, MatchingJobData } from "../types/types"
 
 type NotificationCardProps = {
     notification: Notification,
@@ -12,11 +13,22 @@ type NotificationCardProps = {
 
 export const NotificationCard = ({ notification, markAsRead, getNotificationBg, getNotificationIcon, getRelativeTime }: NotificationCardProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const router = useRouter();
+
+    const isClickableJobNotification = notification.type === "JobMatchingAlert" && notification.data;
 
     const handleClick = () => {
         setIsExpanded(!isExpanded);
         if (!notification.read) {
             markAsRead(notification.id);
+        }
+    };
+
+    const handleNavigateToJob = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (notification.type === "JobMatchingAlert" && notification.data) {
+            const jobData = notification.data as MatchingJobData;
+            router.push(`/jobs/${jobData.jobId}`);
         }
     };
 
@@ -60,9 +72,20 @@ export const NotificationCard = ({ notification, markAsRead, getNotificationBg, 
                 }`}>
                     {notification.description}
                 </p>
-                <span className="text-[11px] text-slate-400 mt-1.5 block">
-                    {getRelativeTime(notification.time)}
-                </span>
+                <div className="flex items-center justify-between mt-1.5">
+                    <span className="text-[11px] text-slate-400">
+                        {getRelativeTime(notification.time)}
+                    </span>
+                    {isClickableJobNotification && (
+                        <button
+                            onClick={handleNavigateToJob}
+                            className="flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer"
+                        >
+                            View Job
+                            <ExternalLink className="w-3 h-3" />
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     )

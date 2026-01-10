@@ -2,7 +2,8 @@
 
 import { JobPost } from "../types";
 import { motion } from "motion/react";
-import { Trash2, MapPin, Briefcase, Calendar, DollarSign, Eye, HatGlasses, Globe } from "lucide-react";
+import { Trash2, MapPin, Briefcase, Calendar, DollarSign, Eye, Globe, HatGlasses } from "lucide-react";
+import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup";
 
 type JobPostCardProps = {
     job: JobPost;
@@ -11,7 +12,9 @@ type JobPostCardProps = {
 };
 
 export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCardProps) {
-    const getStatusColor = (status: string) => {
+    const { getSkillName } = useSkillLookup();
+
+     const getStatusColor = (status: string) => {
         switch (status) {
             case "PUBLIC":
                 return "bg-green-100 text-green-700";
@@ -32,6 +35,7 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
                 return <Eye />;
         }
     }
+
 
     const formatDate = (dateString: string | null) => {
         if (!dateString) return "N/A";
@@ -57,7 +61,7 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 {/* Main Content */}
                 <div className="flex-1 min-w-0">
-                    {/* Title and Status */}
+                    {/* Title */}
                     <div className="flex items-start gap-3 mb-3">
                         <h3 className="text-lg font-semibold text-gray-900 font-[Inter] truncate">
                             {job.title}
@@ -86,7 +90,7 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
                         </span>
                         <span className="flex items-center gap-1">
                             <DollarSign className="w-4 h-4" />
-                            {job.salaryDisplay || "Not specified"}
+                            {job.salaryDisplay}
                         </span>
                         <span className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
@@ -97,12 +101,12 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
                     {/* Skills */}
                     {job.skills && job.skills.length > 0 && (
                         <div className="flex flex-wrap gap-1.5">
-                            {job.skills.slice(0, 5).map((skill, index) => (
+                            {job.skills.slice(0, 5).map((skillId, index) => (
                                 <span
                                     key={index}
                                     className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium"
                                 >
-                                    {skill}
+                                    {getSkillName(skillId)}
                                 </span>
                             ))}
                             {job.skills.length > 5 && (
@@ -121,7 +125,7 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
-                        aria-label="Edit category"
+                        aria-label="View details"
                     >
                         <Eye size={20} />
                     </motion.button>
@@ -131,7 +135,7 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
-                        aria-label="Delete category"
+                        aria-label="Delete job post"
                     >
                         <Trash2 size={20} />
                     </motion.button>

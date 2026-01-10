@@ -1,13 +1,15 @@
 import { FormValues, loginValidations } from "@/components/headless-form";
-import loginUser from "../service/LoginFormService";
+import { loginUser, getUserProfile } from "../service/LoginFormService";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export const useLoginForm = () => {
-    const { setUser, setIsAuthenticated } = useAuthStore();
+    const { setUser, setIsAuthenticated, setUserProfile } = useAuthStore();
     const router = useRouter();
-    const [ error, setError ] = useState<string | null>(null)
+    const [error, setError] = useState<string | null>(null);
+    const { user } = useAuthStore();
 
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
@@ -31,6 +33,19 @@ export const useLoginForm = () => {
         buttonText: "Login ",
     };
 
+    const query = useQuery({
+        queryKey: ["userProfile", user?.id],
+        queryFn: () => getUserProfile(user?.id || ""),
+        enabled: !!user?.id,
+    });
+
+    // Sync React Query data with Zustand store when query succeeds
+    useEffect(() => {
+        if (query.data) {
+            setUserProfile(query.data);
+        }
+    }, [query.data, setUserProfile]);
+
     const handleSubmit = async (values: FormValues) => {
         try {
             const loginData = {
@@ -41,10 +56,13 @@ export const useLoginForm = () => {
             const response = await loginUser(loginData);
             if (response.status === 201) {
                 setError(null);
-                console.log("Login successful!");
                 setUser(response.data.user);
                 setIsAuthenticated(true);
-                router.push("/jobs");
+                if (response.data.user.emailVerified) {
+                    router.push("/jobs");
+                } else {
+                    router.push("/verify-email");
+                }
             } else {
                 setError("Invalid email/password or account is not active. Please try again.")
             }

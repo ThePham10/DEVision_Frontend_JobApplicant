@@ -24,7 +24,6 @@ export function JobPostManagement() {
         searchTerm,
         setSearchTerm,
         setEmploymentTypeFilter,
-        setStatusFilter,
         handleSearch,
         clearFilters,
         handleLoadMore,
@@ -51,7 +50,6 @@ export function JobPostManagement() {
                 handleSearch={handleSearch}
                 clearFilters={clearFilters}
                 setEmploymentTypeFilter={setEmploymentTypeFilter}
-                setStatusFilter={setStatusFilter}
             />
 
             {/* Results count */}

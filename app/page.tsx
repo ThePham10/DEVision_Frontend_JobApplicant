@@ -155,7 +155,6 @@ export default function Page() {
                         </div>
                         <Button text={"Create Your Account"} onClick={() => router.push("/register")} />
                     </div>
-                    <Footer />
                 </div>
             </DoodleIconsSection>
         </div>

@@ -2,10 +2,10 @@ import { JobPost, JobPostFilters } from "@/components/job-post/types";
 
 export const employmentTypes = [
     { id: "", name: "All Types", value: "" },
-    { id: "Full-time", name: "Full-time", value: "Full-time" },
-    { id: "Part-time", name: "Part-time", value: "Part-time" },
-    { id: "Contract", name: "Contract", value: "Contract" },
-    { id: "Internship", name: "Internship", value: "Internship" },
+    { id: "FULL_TIME", name: "Full-time", value: "FULL_TIME" },
+    { id: "PART_TIME", name: "Part-time", value: "PART_TIME" },
+    { id: "CONTRACT", name: "Contract", value: "CONTRACT" },
+    { id: "INTERNSHIP", name: "Internship", value: "INTERNSHIP" },
 ];
 
 export const statusOptions = [

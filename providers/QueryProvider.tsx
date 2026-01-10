@@ -20,7 +20,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
                         // Cache data for 10 minutes
                         gcTime: 10 * 60 * 1000,
                         // Retry failed requests once
-                        retry: 1,
+                        retry: 3,
                         // Don't refetch on window focus for admin panel
                         refetchOnWindowFocus: false,
                     },

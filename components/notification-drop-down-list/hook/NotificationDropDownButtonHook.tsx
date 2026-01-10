@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { Bell, SquareCheckBig, TriangleAlert, Siren, AlarmClockPlus } from "lucide-react";
+import { Bell, Siren, AlarmClockPlus } from "lucide-react";
 import { NotificationType } from "../types/types"
 import { useNotificationStore } from "@/store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -46,10 +46,6 @@ const useNotificationDropDownButton = () => {
     function getNotificationIcon(type: NotificationType) {
         const iconClass = "w-5 h-5";
         switch (type) {
-            case "ApplicationAlert_Pass":
-                return <SquareCheckBig className={`${iconClass} text-green-500`} />;
-            case "ApplicationAlert_Reject":
-                return <TriangleAlert className={`${iconClass} text-red-500`} />;
             case "JobMatchingAlert":
                 return <Siren className={`${iconClass} text-amber-500`} />;
             case "ProfileUpdateAlert":
@@ -61,10 +57,6 @@ const useNotificationDropDownButton = () => {
     
     function getNotificationBg(type: NotificationType) {
         switch (type) {
-            case "ApplicationAlert_Pass":
-                return "bg-green-50";
-            case "ApplicationAlert_Reject":
-                return "bg-red-50";
             case "JobMatchingAlert":
                 return "bg-yellow-50";
             case "ProfileUpdateAlert":

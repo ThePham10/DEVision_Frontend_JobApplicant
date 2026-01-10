@@ -1,48 +1,40 @@
 "use client"
 
-import { use, useState, useEffect } from "react"
+import { use, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useJobApplication } from "@/components/job-application"
 import { loadJobPostById } from "../service/JobPostDetailService"
-import { JobPost } from "../../types"
+import { useJobPostTable } from "../../job-post-table/hook/JobPostTableHook"
+import { useQuery } from "@tanstack/react-query"
+import { useAuthStore } from "@/store/authStore"
+import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup"
 
 export const useJobPostDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     const resolvedParams = use(params)
     const router = useRouter()
-    const { checkIfApplied } = useJobApplication()
+    const { hasApplied } = useJobPostTable()
+    const { getSkillIcon, getSkillName } = useSkillLookup()
+
+    const { isAuthenticated } = useAuthStore()
     
-    const [job, setJob] = useState<JobPost | null>(null)
-    const [loading, setLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [hasAppliedToJob, setHasAppliedToJob] = useState(false)
 
-    useEffect(() => {
-        const loadJobDetails = async () => {
-            setLoading(true)
-            try {
-                const jobData = await loadJobPostById(resolvedParams.id)
-                setJob(jobData)
-                
-                // Check if already applied
-                const applied = await checkIfApplied(resolvedParams.id)
-                setHasAppliedToJob(applied)
-            } catch (error) {
-                console.error("Failed to load job:", error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        loadJobDetails()
-    }, [resolvedParams.id, checkIfApplied])
+    const {
+        data: jobPost,
+        isLoading,
+    } = useQuery({
+        queryKey: ["jobPost", resolvedParams.id],
+        queryFn: () => loadJobPostById(resolvedParams.id),
+    })  
 
     return {
         router,
-        job,
-        loading,
+        jobPost,
+        isLoading,
         isModalOpen,
+        isAuthenticated,
         setIsModalOpen,
-        hasAppliedToJob,
-        setHasAppliedToJob
+        hasApplied,
+        getSkillIcon,
+        getSkillName
     }
 }
