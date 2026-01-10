@@ -17,7 +17,6 @@ export default function useAdminJobPost() {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [employmentTypeFilter, setEmploymentTypeFilter] = useState("");
-    const [statusFilter, setStatusFilter] = useState("");
 
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -35,13 +34,10 @@ export default function useAdminJobPost() {
             return false;
         }
 
-        if (employmentTypeFilter && job.employmentType !== employmentTypeFilter) {
+        if (employmentTypeFilter && job.criteria.employmentType !== employmentTypeFilter) {
             return false;
         }
 
-        if (statusFilter && job.status !== statusFilter) {
-            return false;
-        }
         return true;
     });
 
@@ -68,7 +64,6 @@ export default function useAdminJobPost() {
     const clearFilters = () => {
         setSearchTerm("");
         setEmploymentTypeFilter("");
-        setStatusFilter("");
         setVisibleCount(PAGE_SIZE);
     };
 
@@ -106,8 +101,6 @@ export default function useAdminJobPost() {
         setSearchTerm,
         employmentTypeFilter,
         setEmploymentTypeFilter,
-        statusFilter,
-        setStatusFilter,
         handleSearch,
         clearFilters,
         handleLoadMore,
