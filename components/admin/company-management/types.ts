@@ -1,15 +1,18 @@
 type Company = {
     id: string;
-    companyId: string;
+    userId: string;
     email: string;
+    phoneNumber?: string;
     companyName: string;
-    avatarUrl?: string;
+    streetAddress?: string;
+    city?: string;
+    country?: string;
+    aboutUs?: string;
     subscriptionType?: string;
     subscriptionActive?: boolean;
-    authProvider: string;
-    createdAt: Date;
-    updatedAt: Date;
-    isActive: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+    isActive?: boolean;
 }
 
 type CompanyFilters = {

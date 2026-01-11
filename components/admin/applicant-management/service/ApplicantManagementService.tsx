@@ -6,7 +6,9 @@ async function loadApplicants(
     page: number,
     limit: number,
 ): Promise<PaginatedResponse<ApplicantAccount>> {
-    const endpoint = `${APPLICANT_URL}?limit=${limit}&page=${page}`;
+
+    const filters = encodeURIComponent(JSON.stringify([{ id: "isActive", value: "true,false", operator: "in" }]));
+    const endpoint = `${APPLICANT_URL}?limit=${limit}&page=${page}&filters=${filters}`;
 
     const response = await httpHelper.get<PaginatedResponse<ApplicantAccount>>(endpoint);
 

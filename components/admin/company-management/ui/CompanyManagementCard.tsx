@@ -36,9 +36,11 @@ export default function CompanyManagementCard({ company, onDeactivate, onActivat
                         Email: {company.email}
                     </div>
 
-                    <div className="font-[Inter] text-sm text-gray-500 max-w-md truncate mb-2">
-                        Established on: {new Date(company.createdAt).toLocaleDateString()}
-                    </div>
+                    {company.createdAt && (
+                        <div className="font-[Inter] text-sm text-gray-500 max-w-md truncate mb-2">
+                            Established on: {new Date(company.createdAt).toLocaleDateString()}
+                        </div>
+                    )}
                     
                 </div>
                 
@@ -57,14 +59,14 @@ export default function CompanyManagementCard({ company, onDeactivate, onActivat
                 <Modal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    title={company.name}
+                    title={company.companyName}
                     size="large"
                 >
                     {company && (<CompanyDetails company={company} /> )}
                 </Modal>
 
                 {!company.isActive && <motion.button
-                    onClick={() => onActivate(company)}
+                    // onClick={() => onActivate(company)}
                     className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors font-[Inter]"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
@@ -74,7 +76,7 @@ export default function CompanyManagementCard({ company, onDeactivate, onActivat
                 </motion.button>}
 
                 {company.isActive && <motion.button
-                    onClick={() => onDeactivate(company)}
+                    // onClick={() => onDeactivate(company)}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-[Inter]"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}

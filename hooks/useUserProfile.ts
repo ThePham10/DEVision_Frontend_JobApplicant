@@ -12,10 +12,11 @@ import { getUserProfile } from "@/components/login-form/login-form-for-applicant
 export const useUserProfile = () => {
     const { user, setUserProfile } = useAuthStore();
 
+    const isAdmin = user?.role === "admin";
     const query = useQuery({
         queryKey: ["userProfile", user?.id],
         queryFn: () => getUserProfile(user?.id || ""),
-        enabled: !!user?.id,
+        enabled: !!user?.id && !isAdmin,
         staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
