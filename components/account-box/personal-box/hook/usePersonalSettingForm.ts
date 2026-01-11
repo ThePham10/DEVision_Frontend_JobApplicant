@@ -6,7 +6,7 @@ import type { AccountData } from "../types";
 import { fetchCountries, Country } from "@/components/headless-form/country-drop-down-menu/api/countryDropDownMenuService";
 
 export function usePersonalSettingForm() {
-    const { isAuthenticated, user } = useAuthStore();
+    const { isAuthenticated, user, isAdmin } = useAuthStore();
     const queryClient = useQueryClient();
 
     // Fetch user info
@@ -16,7 +16,7 @@ export function usePersonalSettingForm() {
             if (!user) throw new Error("User not found");
             return getUserInfo(user.id);
         },
-        enabled: isAuthenticated && !!user,
+        enabled: isAuthenticated && !!user && !isAdmin,
     });
 
     // Fetch countries to get full names

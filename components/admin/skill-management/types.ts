@@ -32,7 +32,7 @@ type PaginatedResponse<T> = {
     total: number;
     page: number;
     limit: number;
-    hasMore: boolean;
+    totalPages: number;
 }
 
 export type { Skill, SkillFilters, PaginatedResponse, JobCategory };

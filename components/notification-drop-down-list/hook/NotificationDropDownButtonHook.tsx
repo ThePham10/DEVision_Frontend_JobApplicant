@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Bell, Siren, AlarmClockPlus } from "lucide-react";
+import { Bell, Siren, AlarmClockPlus, Crown, TimerOff } from "lucide-react";
 import { NotificationType } from "../types/types"
 import { useNotificationStore } from "@/store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -48,6 +48,10 @@ const useNotificationDropDownButton = () => {
         switch (type) {
             case "JobMatchingAlert":
                 return <Siren className={`${iconClass} text-amber-500`} />;
+            case "ApplicationAlert_Pass":
+                return <Crown className={`${iconClass} text-yellow-500`} />;
+            case "PremiumExpiredAlert":
+                return <TimerOff className={`${iconClass} text-gray-500`} />;
             case "ProfileUpdateAlert":
                 return <AlarmClockPlus className={`${iconClass} text-blue-500`} />;
             default:
@@ -59,6 +63,10 @@ const useNotificationDropDownButton = () => {
         switch (type) {
             case "JobMatchingAlert":
                 return "bg-yellow-50";
+            case "ApplicationAlert_Pass":
+                return "bg-yellow-50";
+            case "PremiumExpiredAlert":
+                return "bg-gray-50";
             case "ProfileUpdateAlert":
                 return "bg-blue-50";
             default:

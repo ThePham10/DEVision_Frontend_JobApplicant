@@ -32,8 +32,8 @@ export default function useSkillManagement() {
         data: skillData,
         isLoading,
     } = useQuery({
-        queryKey: ["skills"],
-        queryFn: () => loadSkills(1, 1000), // Load all skills with high limit
+        queryKey: ["skillsAdmin"],
+        queryFn: () => loadSkills(), // Load all skills with high limit
     });
     
     // Get all skills from data

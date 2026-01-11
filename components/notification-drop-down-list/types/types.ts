@@ -1,5 +1,7 @@
 export type NotificationType =
     | "ProfileUpdateAlert"
+    | "PremiumExpiredAlert"
+    | "ApplicationAlert_Pass"
     | "JobMatchingAlert"
     | "connected";
 

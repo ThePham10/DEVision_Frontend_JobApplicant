@@ -6,24 +6,21 @@ import { SKILL_URL } from "@/config/URLConfig";
  * Load all skills with pagination
  */
 async function loadSkills(
-    page: number,
-    limit: number,
 ): Promise<PaginatedResponse<Skill>> {
-    const url = `${SKILL_URL}?limit=${limit}&page=${page}`;
+    const url = `${SKILL_URL}`;
     const response = await httpHelper.get<PaginatedResponse<Skill>>(url);
+    console.log("Running")
     
     if (response.status === 200) {
         const data = response.data;
-        // Calculate hasMore if API doesn't return it
-        const hasMore = data.hasMore ?? (data.page * data.limit < data.total);
-        return { ...data, hasMore };
+        return data;
     } else {
         return {
             data: [],
             total: 0,
-            page,
-            limit,
-            hasMore: false
+            page: 0,
+            limit: 0,
+            totalPages: 0
         };
     }
 }
@@ -49,7 +46,7 @@ async function loadSkillsByCategory(
                 total: responseData.length,
                 page: 1,
                 limit: responseData.length,
-                hasMore: false
+                totalPages: 1
             };
         }
         
@@ -61,7 +58,7 @@ async function loadSkillsByCategory(
             total: 0,
             page: 1,
             limit: 0,
-            hasMore: false
+            totalPages: 0
         };
     }
 }
