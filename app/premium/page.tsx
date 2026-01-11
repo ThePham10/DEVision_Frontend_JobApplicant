@@ -11,6 +11,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { usePayment } from "@/components/payment/hook/usePayment";
 import CancelConfirmModal from "@/components/payment/ui/CancelConfirmModal";
+import { useAuthStore } from "@/store";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
@@ -20,7 +21,7 @@ export default function Page() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDowngradeModalOpen, setIsDowngradeModalOpen] = useState(false);
 
-    const { userAccount } = usePersonalSettingForm();
+    const { userProfile } = useAuthStore();
 
     const pricingPlans = [
         {
@@ -33,10 +34,10 @@ export default function Page() {
                 "Profile creation",
                 "Apply to unlimited jobs",
             ],
-            ctaText: userAccount?.isPremium === false ? "Current Plan" : "Downgrade to Free",
+            ctaText: userProfile?.isPremium === false ? "Current Plan" : "Downgrade to Free",
             onSelect: () => setSelectedPlan("FREE"),
             highlighted: false,
-            isCurrent: userAccount?.isPremium === false ? true : false,
+            isCurrent: userProfile?.isPremium === false ? true : false,
         },
         {
             title: "PREMIUM",
@@ -48,10 +49,10 @@ export default function Page() {
                 "Premium support",
                 "Early access to new features"
             ],
-            ctaText: userAccount?.isPremium === true ? "Current Plan" + (subscriptionInfo ? ` (Ends on ${subscriptionInfo.endDate})` : "") : "Upgrade Now",
+            ctaText: userProfile?.isPremium === true ? "Current Plan" + (subscriptionInfo ? ` (Ends on ${subscriptionInfo.endDate})` : "") : "Upgrade Now",
             onSelect: () => setSelectedPlan("PREMIUM"),
             highlighted: true,
-            isCurrent: userAccount?.isPremium === true ? true : false,
+            isCurrent: userProfile?.isPremium === true ? true : false,
             isPopular: true,
         },
     ];
@@ -304,7 +305,7 @@ export default function Page() {
                     </div>
                 </section>
                 
-                {userAccount?.isPremium === false && (
+                {userProfile?.isPremium === false && (
                     // Final CTA
                     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 to-yellow-50">
                         <div className="max-w-4xl mx-auto text-center">
@@ -334,7 +335,7 @@ export default function Page() {
                     </section>
                 )}
 
-                {userAccount?.isPremium === true && (
+                {userProfile?.isPremium === true && (
                     // Final CTA
                     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 to-yellow-50">
                         <div className="max-w-4xl mx-auto text-center">

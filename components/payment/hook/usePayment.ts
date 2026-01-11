@@ -4,9 +4,9 @@ import { planData, paymentIntentResponse } from "../types";
 import { createPaymentIntent } from "../service/PaymentService";
 import { usePersonalSettingForm } from "@/components/account-box/personal-box/hook/usePersonalSettingForm";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { updateUserInfo, getUserInfo } from "@/components/account-box/personal-box/api/PersonalBoxService";
-import type { AccountData } from "@/components/account-box/personal-box/types";
+import { getUserInfo } from "@/components/account-box/personal-box/api/PersonalBoxService";
 import { getSubscriptionStatus, cancelSubscription } from "../service/PaymentService";
+import { useAuthStore } from "@/store/authStore";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export const usePayment = () => {
@@ -14,50 +14,36 @@ export const usePayment = () => {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
     const queryClient = useQueryClient();
-    const { userAccount } = usePersonalSettingForm();
-
-    const updateMutation = useMutation({
-        mutationFn: (data: Partial<AccountData>) => updateUserInfo(data),
-        onSuccess: async () => {
-            if (!userAccount) return;
-            await getUserInfo(userAccount.id);
-            queryClient.invalidateQueries({ queryKey: ['userInfo', userAccount.id] });
-        }
-    });
+    const { user } = useAuthStore();
 
     // Fetch subscription info
     const { data: fetchedData } = useQuery({
-        queryKey: ['subscriptionInfo', userAccount?.id],
+        queryKey: ['subscriptionInfo', user?.id],
         queryFn: async () => {
-            if (!userAccount) throw new Error("User not found");
-            // await new Promise(resolve => setTimeout(resolve, 5000));
-            return getSubscriptionStatus(userAccount.id);
+            if (!user) throw new Error("User not found");
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            return getSubscriptionStatus(user.id);
         },
     });
 
     const subscriptionInfo = fetchedData;
-    console.log("Fetched subscription info:", subscriptionInfo);
 
     const updateUserSubscriptionStatus = async () => {
-        if (!userAccount) return;
+        if (!user) return;
         await new Promise(resolve => setTimeout(resolve, 5000));
-        const response = (await getSubscriptionStatus(userAccount.id));
-        console.log("Subscription status:", response);
-        if(response.premium === true) {
-            updateMutation.mutate({ isPremium: true });
-            // queryClient.invalidateQueries({ queryKey: ['subscriptionInfo', userAccount.id] });
-        }
+        await getSubscriptionStatus(user.id);
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        queryClient.invalidateQueries({ queryKey: ['subscriptionInfo', user.id] });
+        queryClient.invalidateQueries({ queryKey: ['userProfile', user.id] });
     }
 
     const downgradeUserSubscriptionStatus = async () => {
-        if (!userAccount) return;
+        if (!user) return;
         await new Promise(resolve => setTimeout(resolve, 5000));
-        const response = (await cancelSubscription(userAccount.id));
-        console.log("Subscription status:", response);
-        if(response.status === "CANCELLED") {
-            updateMutation.mutate({ isPremium: false });
-            // queryClient.invalidateQueries({ queryKey: ['subscriptionInfo', userAccount.id] });
-        }
+        await cancelSubscription(user.id);
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        queryClient.invalidateQueries({ queryKey: ['subscriptionInfo', user.id] });
+        queryClient.invalidateQueries({ queryKey: ['userProfile', user.id] });
     }
 
     const paymentProcess = async (
