@@ -10,16 +10,6 @@ import useCompanyManagement from "../hook/CompanyManagementHook";
 const CompanyManagement = () => {
         const {
             allCompanies,
-            totalCompaniesCount,
-            hasNextPage,
-            isLoading,
-            handleLoadMore,
-            deactivateConfirm,
-            setDeactivateConfirm,
-            activateConfirm,
-            setActivateConfirm,
-            handleDeActivate,
-            handleActivate
         } = useCompanyManagement();
 
     return (
@@ -79,12 +69,27 @@ const CompanyManagement = () => {
 
             <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-500 font-[Inter]">
-                    Showing {allCompanies.length} of {totalCompaniesCount} companies
-                    {isLoading && <span className="ml-2 text-blue-500">(Updating...)</span>}
+                    Showing {allCompanies.length} of {allCompanies.length} companies
+                    {/* {isLoading && <span className="ml-2 text-blue-500">(Updating...)</span>} */}
                 </div>
             </div>
-            
+
             <div className="flex flex-col gap-3">
+                <AnimatePresence>
+                    {allCompanies.map((company) => (
+                        <CompanyManagementCard
+                            key={company.id}
+                            company={company}
+                            // onDeactivate={setDeactivateConfirm}
+                            // onActivate={setActivateConfirm}
+                        />
+                        
+                    ))}
+                </AnimatePresence>
+                
+            </div>
+            
+            {/* <div className="flex flex-col gap-3">
                 {isLoading && allCompanies.length === 0 ? (
                     <div className="text-center py-10 text-gray-500 font-[Inter]">
                         Loading companies...
@@ -171,7 +176,7 @@ const CompanyManagement = () => {
                         </button>
                     </div>
                 </div>
-            </Modal>
+            </Modal> */}
         </div>
     )
 }

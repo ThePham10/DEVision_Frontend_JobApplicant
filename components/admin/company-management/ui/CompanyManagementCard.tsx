@@ -10,8 +10,8 @@ import { Building2 } from "lucide-react";
 
 interface CompanyManagementCardProps {
     company: Company;
-    onDeactivate: (company: Company) => void;
-    onActivate: (company: Company) => void;
+    onDeactivate?: (company: Company) => void;
+    onActivate?: (company: Company) => void;
 }
 
 export default function CompanyManagementCard({ company, onDeactivate, onActivate }: CompanyManagementCardProps) {
@@ -30,29 +30,14 @@ export default function CompanyManagementCard({ company, onDeactivate, onActivat
                 <div>
                     <div className="font-[Inter] font-semibold text-gray-900 mb-2 flex items-center gap-2">
                         <Building2 className="flex-shrink-0" />
-                        <span>{company.name}</span>
+                        <span>{company.companyName}</span>
                     </div>
                     <div className="font-[Inter] text-sm text-gray-500 max-w-md truncate mb-2">
                         Email: {company.email}
                     </div>
 
-                    {company.address && ( <div className="font-[Inter] text-sm text-gray-500 max-w-md truncate mb-2">
-                        Address: {company.address}
-                    </div>)}
-
                     <div className="font-[Inter] text-sm text-gray-500 max-w-md truncate mb-2">
                         Established on: {new Date(company.createdAt).toLocaleDateString()}
-                    </div>
-
-                    <div className="font-[Inter] text-sm text-gray-500 mb-1 flex items-center gap-2">
-                        <span>Company Status: </span>
-                        <div className={`inline-block px-2 py-1 rounded text-xs font-medium 
-                            ${company.isActive 
-                                ? "bg-green-100 text-green-700"
-                                : "bg-gray-200 text-gray-600"
-                            }`}>
-                            {company.isActive ? "Active" : "Inactive"}
-                        </div>
                     </div>
                     
                 </div>
