@@ -10,7 +10,6 @@ import PhoneNumberInputField from "./PhoneNumberInputField";
 import Dropdown from "../../headless-dropdown/ui/Dropdown";
 import MultiCheckbox from "./MultiCheckbox";
 import DualRangeSlider from "./DualRangeSlider";
-import { CardCvcElement, CardExpiryElement, CardNumberElement } from "@stripe/react-stripe-js";
 
 
 export const HeadlessForm: React.FC<HeadlessFormProps> = ({ 
@@ -79,7 +78,9 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
     const formatPhoneWithDialCode = (dialCode: string, localNumber: string): string => {
         if (!dialCode) return localNumber;
         if (!localNumber) return dialCode;
-        return `${dialCode} ${localNumber}`;
+        const returnedPhoneNum = localNumber.replace(/\s/g, '').replace(/^0/, '');
+
+        return `${dialCode} ${returnedPhoneNum}`;
     };
 
     // Handle phone input change - preserve dial code

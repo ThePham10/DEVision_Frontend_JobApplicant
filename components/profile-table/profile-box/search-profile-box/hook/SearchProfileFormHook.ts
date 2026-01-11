@@ -10,7 +10,7 @@ const useSearchProfileForm = () => {
     const [initialSearchProfile, setInitialSearchProfile] = useState<SearchProfile | null>(null)
     const [isProfileLoaded, setIsProfileLoaded] = useState(false)
     const { skills } = useDataStore();
-    const { isPremium } = useAuthStore();
+    const { userProfile } = useAuthStore();
     const router = useRouter()
 
     // Fetch existing search profile on mount
@@ -23,7 +23,7 @@ const useSearchProfileForm = () => {
                 }
             } catch (error) {
                 // No existing profile, that's fine
-                console.log("No existing search profile found");
+                console.log("No existing search profile found" + error);
             } finally {
                 setIsProfileLoaded(true);
             }
@@ -156,7 +156,7 @@ const useSearchProfileForm = () => {
     };
 
     const handleSubmit = (data: Record<string, unknown>) => {
-        if (!isPremium) return; // Prevent submission for non-premium users
+        if (!userProfile?.isPremium) return; // Prevent submission for non-premium users
 
         const transformedData: SearchProfile = transformFormData(data);
 
@@ -166,7 +166,7 @@ const useSearchProfileForm = () => {
     }
 
     return {
-        isPremium,
+        userProfile,
         router,
         formConfig,
         handleSubmit,

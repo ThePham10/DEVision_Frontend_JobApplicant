@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export const useRegisterForm = () => {
     const router = useRouter();
 
-    const formConfig : FormConfig = {
+    const formConfig: FormConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
         children: [
             {
@@ -61,7 +61,7 @@ export const useRegisterForm = () => {
                 title: "Phone Number",
                 name: "phone",
                 type: "tel",
-                placeholder: "+84 912345678",
+                placeholder: "+84912345678",
                 validation: commonValidations.phone,
                 colSpan: 1
             },
@@ -91,13 +91,14 @@ export const useRegisterForm = () => {
 
     const handleSubmit = async (values: FormValues) => {
         try {
-            // Prepare data for registration (exclude confirmPassword)
+            const submitPhoneNum = (values.phone as string).replace(/\s/g, '');
+
             const registerData = {
                 name: values.name as string,
                 email: values.email as string,
                 password: values.password as string,
                 country: values.country as string,
-                phone: values.phone as string,
+                phone: submitPhoneNum,
                 street: values.street as string,
                 city: values.city as string,
             };

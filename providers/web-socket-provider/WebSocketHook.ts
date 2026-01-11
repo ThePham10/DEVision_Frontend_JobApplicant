@@ -2,7 +2,15 @@
 
 import { useRef, useCallback, useEffect } from "react";
 import { useAuthStore, useNotificationStore } from "@/store";
-import { Notification } from "@/components/notification-drop-down-list/types/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { Notification, NotificationType } from "@/components/notification-drop-down-list/types/types";
+import { useUserProfile } from "@/hooks/useUserProfile";
+
+// Notification types related to subscription changes
+const SUBSCRIPTION_NOTIFICATION_TYPES: NotificationType[] = [
+    "PremiumExpiredAlert",
+    "ApplicationAlert_Pass"
+];
 
 
 const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3000/ws/notifications";
@@ -14,9 +22,23 @@ export function useWebSocket() {
     const reconnectAttempts = useRef(0)
     const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const connectRef = useRef<(() => void) | null>(null);
+    useUserProfile()
 
     const { user, isAuthenticated } = useAuthStore();
     const { addNotification, setWsStatus } = useNotificationStore();
+    const queryClient = useQueryClient();
+
+    // Helper function to check if notification is subscription-related
+    const isSubscriptionNotification = (notification: Notification): boolean => {
+        return SUBSCRIPTION_NOTIFICATION_TYPES.includes(notification.type);
+    };
+
+    // Refetch user data when subscription status changes
+    const handleSubscriptionNotification = useCallback(() => {
+        if (user?.id) {
+            queryClient.invalidateQueries({ queryKey: ['userProfile', user.id] });
+        }
+    }, [queryClient, user]);
 
     const connect = useCallback(() => {
         if (!isAuthenticated || !user?.id) {
@@ -55,6 +77,11 @@ export function useWebSocket() {
                     }
                     if (notification.type !== "connected") {
                         addNotification(notification)
+
+                        // Check if this is a subscription-related notification and refetch user data
+                        if (isSubscriptionNotification(notification)) {
+                            handleSubscriptionNotification();
+                        }
                     } else {
                         console.log("Connected successfully!")
                     }
@@ -81,7 +108,7 @@ export function useWebSocket() {
             console.log("Failed to create WebSocket connection", error)
             setWsStatus('error');
         }
-    }, [isAuthenticated, user, addNotification, setWsStatus])
+    }, [isAuthenticated, user, addNotification, setWsStatus, handleSubscriptionNotification])
 
     // Keep connectRef updated with the latest connect function
     useEffect(() => {

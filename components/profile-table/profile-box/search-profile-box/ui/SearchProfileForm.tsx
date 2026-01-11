@@ -6,7 +6,7 @@ import useSearchProfileForm from "../hook/SearchProfileFormHook"
 
 const SearchProfileForm = () => {
     const {
-        isPremium,
+        userProfile,
         router,
         formConfig,
         handleSubmit,
@@ -17,7 +17,7 @@ const SearchProfileForm = () => {
 	return (
         <div className="space-y-4">
             {/* Premium banner for non-premium users */}
-            {!isPremium && (
+            {!userProfile?.isPremium && (
                 <div className="flex items-center justify-between gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl">
                     <div className="flex items-center gap-3">
                         <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-sm">
@@ -39,9 +39,9 @@ const SearchProfileForm = () => {
             )}
             
             {/* Form container */}
-            <div className={`relative ${!isPremium ? "rounded-xl overflow-hidden" : ""}`}>
+            <div className={`relative ${!userProfile?.isPremium ? "rounded-xl overflow-hidden" : ""}`}>
                 {/* Disabled overlay for non-premium */}
-                {!isPremium && (
+                {!userProfile?.isPremium && (
                     <div className="absolute top-2 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 border border-gray-200 rounded-full">
                         <LockKeyhole className="w-4 h-4 text-gray-500" />
                         <span className="text-xs font-medium text-gray-500">Locked</span>
@@ -49,7 +49,7 @@ const SearchProfileForm = () => {
                 )}
                 
                 {/* Form - grayscale and reduced opacity when locked */}
-                <div className={!isPremium ? "pointer-events-none select-none opacity-60 grayscale-[30%]" : ""}>
+                <div className={!userProfile?.isPremium ? "pointer-events-none select-none opacity-60 grayscale-[30%]" : ""}>
                     <HeadlessForm 
                         key={isProfileLoaded ? "loaded" : "loading"}
                         config={formConfig} 
