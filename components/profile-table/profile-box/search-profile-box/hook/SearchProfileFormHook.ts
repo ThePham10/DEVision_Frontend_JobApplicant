@@ -6,11 +6,24 @@ import { createSearchProfile, getSearchProfile } from "../service/SearchProfileF
 import { SearchProfile } from "../type";
 import { useEffect, useState } from "react";
 
+/**
+ * Custom hook for search profile form
+ * @returns form configuration, initial values, and loading status
+ */
 const useSearchProfileForm = () => {
+    // State for initial search profile 
     const [initialSearchProfile, setInitialSearchProfile] = useState<SearchProfile | null>(null)
+
+    // State for loading status
     const [isProfileLoaded, setIsProfileLoaded] = useState(false)
+
+    // Get skills from stores
     const { skills } = useDataStore();
+
+    // Get user profile from store
     const { userProfile } = useAuthStore();
+
+    // Get router
     const router = useRouter()
 
     // Fetch existing search profile on mount
@@ -53,8 +66,10 @@ const useSearchProfileForm = () => {
         };
     };
 
+    // Get initial values for form
     const initialValues = getInitialValues();
 
+    // Form configuration
     const formConfig: FormConfig = {
         children: [
             // 5.2.2 - Technical background as tags
@@ -107,7 +122,10 @@ const useSearchProfileForm = () => {
                 step: 1000,
             }
         ],
+        // Form button text
         buttonText: "Save Search Profile",
+
+        // Form layout
         layout: {
             type: "grid",
             columns: 4,
@@ -124,12 +142,11 @@ const useSearchProfileForm = () => {
 
         // Extract skill IDs and names from selected skills
         const selectedSkills = (data.skills ?? []) as string[];
-        const skillIds = selectedSkills;
-        const skillNames = skills
-            .filter((skill: { id: string }) => selectedSkills.includes(skill.id))
-            .map((skill: { name: string }) => skill.name);
 
-        // Handle employment types - convert to uppercase format
+        // Transform selected skills to IDs
+        const skillIds = selectedSkills;
+
+        // Transform employment types to uppercase format
         const employmentTypes = Array.isArray(data.employmentTypes)
             ? data.employmentTypes.map((type: string) => type.toUpperCase().replace('-', '_'))
             : [];
@@ -147,22 +164,21 @@ const useSearchProfileForm = () => {
         return {
             desiredRoles,
             skillIds,
-            skillNames,
             desiredLocations,
             expectedSalary,
             employmentTypes,
-            isActive: true
         };
     };
 
+    // Handle form submission
     const handleSubmit = (data: Record<string, unknown>) => {
         if (!userProfile?.isPremium) return; // Prevent submission for non-premium users
 
+        // Transform form data to match the server's expected format
         const transformedData: SearchProfile = transformFormData(data);
 
+        // Create search profile
         createSearchProfile(transformedData);
-
-        // TODO: Send transformedData to backend API
     }
 
     return {

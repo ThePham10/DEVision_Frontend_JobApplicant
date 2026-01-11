@@ -75,6 +75,7 @@ export default function JobCategoryForm({ category, onSubmit, onCancel, isLoadin
     const initialValues: FormValues = {
         name: category?.name || "",
         description: category?.description || "",
+        icon: category?.icon || "",
     };
     
     return (

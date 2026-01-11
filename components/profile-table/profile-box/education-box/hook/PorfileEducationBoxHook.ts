@@ -57,7 +57,7 @@ export const useProfileEducationBox = () => {
     })
 
     const updateHighestEducationMutation = useMutation({
-        mutationFn: ({eduId, applicantId} : {eduId: string, applicantId: string}) => updateHighestEducation(eduId, applicantId),
+        mutationFn: ({eduName, applicantId} : {eduName: string, applicantId: string}) => updateHighestEducation(eduName, applicantId),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["userProfile"],
@@ -65,8 +65,8 @@ export const useProfileEducationBox = () => {
         }
     })
 
-    function handleUpdateHighestEducation({eduId, applicantId}: {eduId: string, applicantId: string}) {
-        updateHighestEducationMutation.mutate({eduId, applicantId})
+    function handleUpdateHighestEducation({eduName, applicantId}: {eduName: string, applicantId: string}) {
+        updateHighestEducationMutation.mutate({eduName, applicantId})
     }
 
     function handleFormSubmit(data: FormValues) {
@@ -91,6 +91,13 @@ export const useProfileEducationBox = () => {
         }
     }
 
+    const highestEducationSelection = [
+        {id: "HighSchool", name: "HighSchool"},
+        {id: "Bachelor", name: "Bachelor"},
+        {id: "Master", name: "Master"},
+        {id: "PhD", name: "PhD"},
+        {id: "NoGiven", name: "NoGiven"},
+    ]
 
     const formConfig: FormConfig = {
         children: [
@@ -185,6 +192,7 @@ export const useProfileEducationBox = () => {
 
     return {
         user,
+        highestEducationSelection,
         userProfile,
         isModalOpen,
         formConfig,

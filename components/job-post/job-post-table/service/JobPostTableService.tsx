@@ -5,6 +5,9 @@ import { JOB_POST_URL } from "@/config/URLConfig"
 /**
  * Parses salary display string to extract min/max numeric values
  * Handles formats like "3000 - 4000 USD", "5000 USD", "Negotiable"
+ * 
+ * @param salaryDisplay - The salary string to parse (e.g., "3000 - 4000 USD")
+ * @returns Object with min, max, and isNegotiable properties
  */
 function parseSalaryRange(salaryDisplay: string): { min: number | null; max: number | null; isNegotiable: boolean } {
     const lowerSalary = salaryDisplay.toLowerCase().trim();
@@ -38,67 +41,56 @@ function parseSalaryRange(salaryDisplay: string): { min: number | null; max: num
 }
 
 /**
- * Fetches job posts from JM team backend
- * Uses jmHttpHelper which automatically includes URL and API key
+ * Fetches job posts from JM team backend with server-side filtering
+ * Uses the /search endpoint when filters are provided
  */
 async function loadJobPost( 
     filters?: JobPostFilters
 ): Promise<JobPost[]> {
     try {
-        // Fetch ALL job posts from JM team backend
-        const response = await jmHttpHelper.get<JobPost[]>(JOB_POST_URL);
-        const allJobPosts = response.data;
-        
-        // Apply CLIENT-SIDE filtering
-        let filteredItems = [...allJobPosts];
-        
-        if (filters) {
-            // Filter by job title (case-insensitive search)
-            if (filters.jobTitle) {
-                const searchTerm = filters.jobTitle.toLowerCase();
-                filteredItems = filteredItems.filter(job => 
-                    job.title.toLowerCase().includes(searchTerm)
-                );
+        // Check if any filters are provided
+        const hasFilters = filters && Object.keys(filters).some(key => {
+            const value = filters[key as keyof JobPostFilters];
+            return value !== undefined && value !== "";
+        });
+
+        if (hasFilters) {
+            // Build query params for search endpoint
+            const queryParams = new URLSearchParams();
+            
+            // Map jobTitle to keyword
+            if (filters?.jobTitle) {
+                queryParams.append('keyword', filters.jobTitle);
             }
             
-            // Filter by location (from criteria)
-            if (filters.location) {
-                const searchLocation = filters.location.toLowerCase();
-                filteredItems = filteredItems.filter(job => 
-                    job.location.toLowerCase().includes(searchLocation)
-                );
+            // Location filter
+            if (filters?.location) {
+                queryParams.append('location', filters.location);
             }
             
-            // Filter by employment type (from criteria)
-            if (filters.employmentType) {
-                filteredItems = filteredItems.filter(job => 
-                    job.employmentType.toLowerCase() === filters.employmentType?.toLowerCase()
-                );
+            // Employment type filter (API expects array)
+            if (filters?.employmentType) {
+                queryParams.append('employmentTypes', filters.employmentType);
             }
             
-            // Filter by salary range - ALWAYS include negotiable jobs
-            if (filters.minSalary !== undefined || filters.maxSalary !== undefined) {
-                filteredItems = filteredItems.filter(job => {
-                    const parsed = parseSalaryRange(job.salaryDisplay);
-                    
-                    // Always include negotiable jobs regardless of salary filter
-                    if (parsed.isNegotiable) {
-                        return true;
-                    }
-                    
-                    // Check if job salary overlaps with filter range
-                    const jobMin = parsed.min ?? 0;
-                    const jobMax = parsed.max ?? Infinity;
-                    const filterMin = filters.minSalary ?? 0;
-                    const filterMax = filters.maxSalary ?? Infinity;
-                    
-                    // Job salary range overlaps with filter range
-                    return jobMax >= filterMin && jobMin <= filterMax;
-                });
+            // Salary range filters
+            if (filters?.minSalary !== undefined) {
+                queryParams.append('minSalary', filters.minSalary.toString());
             }
+            
+            if (filters?.maxSalary !== undefined) {
+                queryParams.append('maxSalary', filters.maxSalary.toString());
+            }
+            
+            // Call search endpoint with filters
+            const url = `${JOB_POST_URL}/search?${queryParams.toString()}`;
+            const response = await jmHttpHelper.get<JobPost[]>(url);
+            return response.data ?? [];
+        } else {
+            // No filters - fetch all job posts
+            const response = await jmHttpHelper.get<JobPost[]>(JOB_POST_URL);
+            return response.data ?? [];
         }
-        
-        return filteredItems
         
     } catch (error) {
         console.error('Error fetching job posts from JM team:', error);
@@ -106,4 +98,4 @@ async function loadJobPost(
     }
 }
 
-export { loadJobPost }
+export { loadJobPost, parseSalaryRange }

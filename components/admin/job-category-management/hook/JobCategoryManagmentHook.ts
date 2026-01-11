@@ -20,12 +20,12 @@ export default function useJobCategoryManagment() {
     // Query for fetching categories - data is cached and automatically managed
     const { data, isLoading, isFetching } = useQuery({
         queryKey: ["jobCategories", page, filters],
-        queryFn: () => loadJobCategories(page, 10000, filters),
+        queryFn: () => loadJobCategories(page, 50, filters),
     });
     
     const categories = data?.data ?? [];
     const total = data?.total ?? 0;
-    const hasMore = page * 10000 < total;
+    const hasMore = page * 50 < total;
     
     // Mutation for creating category
     const createMutation = useMutation({

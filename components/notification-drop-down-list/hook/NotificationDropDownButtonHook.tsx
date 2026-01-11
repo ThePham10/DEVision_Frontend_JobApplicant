@@ -41,7 +41,7 @@ const useNotificationDropDownButton = () => {
             observer.observe(loaderRef.current)
         }
         return () => observer.disconnect()
-    }, [hasMore, loadMore])
+    }, [hasMore, loadMore, isOpen])
 
     function getNotificationIcon(type: NotificationType) {
         const iconClass = "w-5 h-5";

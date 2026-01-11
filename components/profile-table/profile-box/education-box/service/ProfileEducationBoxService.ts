@@ -50,9 +50,9 @@ export async function deleteEducation(id : string) {
     }
 }
 
-export async function updateHighestEducation(eduId: string, applicantId: string) {
+export async function updateHighestEducation(eduName: string, applicantId: string) {
     try {
-        const response = await httpHelper.put(APPLICANT_URL + "/" + applicantId, { highestEducation: eduId})
+        const response = await httpHelper.put(APPLICANT_URL + "/" + applicantId, { highestEducation: eduName})
 
         if (response.status === 200) {
             return response.data

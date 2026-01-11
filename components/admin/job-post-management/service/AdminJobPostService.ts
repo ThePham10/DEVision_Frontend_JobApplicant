@@ -1,13 +1,29 @@
 import { jmHttpHelper } from "@/utils/jmhttpHelper";
 import { JOB_POST_URL } from "@/config/URLConfig";
-import { JobPost } from "../types";
+import { JobPost, JobSearchParams } from "../types";
 
 /**
  * Load all job posts from JM team API
  */
-export async function loadJobPosts(): Promise<JobPost[]> {
+export async function loadJobPosts(params?: JobSearchParams): Promise<JobPost[]> {
     try {
-        const response = await jmHttpHelper.get<JobPost[]>(JOB_POST_URL);
+        const queryParams = new URLSearchParams();
+        
+        if (params?.keyword) {
+            queryParams.append('keyword', params.keyword);
+        }
+        
+        if (params?.employmentTypes && params.employmentTypes.length > 0) {
+            params.employmentTypes.forEach(type => {
+                queryParams.append('employmentTypes', type);
+            });
+        }
+
+        const url = queryParams.toString() 
+            ? `${JOB_POST_URL}/search?${queryParams.toString()}` 
+            : JOB_POST_URL;
+
+        const response = await jmHttpHelper.get<JobPost[]>(url);
         return response.data ?? [];
     } catch (error) {
         console.error("Error loading job posts:", error);

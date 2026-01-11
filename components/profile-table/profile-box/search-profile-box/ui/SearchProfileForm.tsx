@@ -4,6 +4,9 @@ import { HeadlessForm } from "@/components/headless-form"
 import { LockKeyhole } from "lucide-react"
 import useSearchProfileForm from "../hook/SearchProfileFormHook"
 
+/**
+ * Search Profile Form Component
+ */
 const SearchProfileForm = () => {
     const {
         userProfile,

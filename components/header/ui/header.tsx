@@ -6,11 +6,13 @@ import { useAuthStore } from "@/store/authStore";
 import logoutUser from "../service/HeaderService";
 import { usePathname, useRouter } from "next/navigation";
 import { Settings, Settings2, LogOut } from "lucide-react";
+import { useNotificationStore } from "@/store";
 
 export const Header = () => {
     const router = useRouter();
     const { isAuthenticated, isAdmin, clearUser } = useAuthStore();
     const pathname = usePathname();
+    const { clearAll } = useNotificationStore()
     
     const handleSignOut = async () => {
         try {
@@ -21,6 +23,7 @@ export const Header = () => {
         } catch (error) {
             console.error("Logout failed:", error);
         } finally {
+            clearAll();
             clearUser();
             router.push("/");
         }

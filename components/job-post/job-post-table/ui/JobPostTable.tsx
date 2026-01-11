@@ -11,6 +11,8 @@ export const JobPostTable = () => {
     const {
         filterFormConfig,
         filters,
+        formValues,
+        formKey,
         jobPosts,
         totalCount,
         loading,
@@ -35,7 +37,9 @@ export const JobPostTable = () => {
             <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="font-[Inter] text-base sm:text-lg font-semibold mb-3 sm:mb-4">Filter Jobs</h2>
                 <HeadlessForm 
+                    key={formKey}
                     config={filterFormConfig} 
+                    initialValues={formValues}
                     onSubmit={handleFilterSubmit}
                 />
             </div>
