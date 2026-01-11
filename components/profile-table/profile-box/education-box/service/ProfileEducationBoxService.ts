@@ -1,5 +1,5 @@
 import { Education, EducationCreateData } from "../types";
-import { EDUCATION_URL } from "@/config/URLConfig";
+import { APPLICANT_URL, EDUCATION_URL } from "@/config/URLConfig";
 import { httpHelper } from "@/utils/httpHelper";
 
 export async function createEducation(data : EducationCreateData) {
@@ -41,6 +41,18 @@ export async function updateEducation(id : string, data: Partial<Omit<Education,
 export async function deleteEducation(id : string) {
     try {
         const response = await httpHelper.delete(EDUCATION_URL + "/" + id)
+
+        if (response.status === 200) {
+            return response.data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function updateHighestEducation(eduId: string, applicantId: string) {
+    try {
+        const response = await httpHelper.put(APPLICANT_URL + "/" + applicantId, { highestEducation: eduId})
 
         if (response.status === 200) {
             return response.data

@@ -5,9 +5,12 @@ import ProfileEducationCard from "../ui/ProfileEducationCard";
 import { HeadlessForm } from "@/components/headless-form";
 import { SecondaryButton } from "@/components/reusable-component";
 import { useProfileEducationBox } from "../hook/PorfileEducationBoxHook";
+import Dropdown from "@/components/headless-dropdown";
 
 export const ProfileEducationBox = () => {
     const {
+        user,
+        userProfile,
         isModalOpen,
         formConfig,
         setIsModalOpen,
@@ -21,16 +24,23 @@ export const ProfileEducationBox = () => {
         openEditModal,
         deleteConfirm,
         setDeleteConfirm,
-        handleDelete
+        handleDelete,
+        handleUpdateHighestEducation
     } = useProfileEducationBox()
     
     return (
-        <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+        <div className="group relative z-10 bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 overflow-visible">
             <div>
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                         Education
                     </h2>
+
+                    <Dropdown 
+                        items={education.map((item) => {return({id: item.id, name: item.levelStudy + " of " + item.major})})} 
+                        onChange={(value) => value && !Array.isArray(value) && handleUpdateHighestEducation({eduId: value.id, applicantId: user?.id || ""})}
+                        placeholder="Select an education"
+                        defaultValue={userProfile?.highestEducation} />
 
                     <Button 
                         text="Add Education" 

@@ -1,17 +1,19 @@
-import { getEducation, createEducation, updateEducation, deleteEducation } from "../service/ProfileEducationBoxService";
+import { getEducation, createEducation, updateEducation, deleteEducation, updateHighestEducation } from "../service/ProfileEducationBoxService";
 import { useAuthStore } from "@/store";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { EducationCreateData, Education } from "../types";
 import { FormConfig, FormValues } from "@/components/headless-form";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export const useProfileEducationBox = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEducation, setEditingEducation] = useState<Education | undefined>(undefined)
     const [deleteConfirm, setDeleteConfirm] = useState<Education | null>(null)
     const [isCurrentlyStudying, setIsCurrentlyStudying] = useState(false);
-    const { user } = useAuthStore()
+    const { user, userProfile } = useAuthStore()
     const queryClient = useQueryClient()
+    useUserProfile()
 
     const openAddModal = () => {
         setIsModalOpen(true);
@@ -53,6 +55,19 @@ export const useProfileEducationBox = () => {
             setDeleteConfirm(null)
         }
     })
+
+    const updateHighestEducationMutation = useMutation({
+        mutationFn: ({eduId, applicantId} : {eduId: string, applicantId: string}) => updateHighestEducation(eduId, applicantId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["userProfile"],
+            })
+        }
+    })
+
+    function handleUpdateHighestEducation({eduId, applicantId}: {eduId: string, applicantId: string}) {
+        updateHighestEducationMutation.mutate({eduId, applicantId})
+    }
 
     function handleFormSubmit(data: FormValues) {
         const submitData: EducationCreateData = {
@@ -169,6 +184,8 @@ export const useProfileEducationBox = () => {
     };
 
     return {
+        user,
+        userProfile,
         isModalOpen,
         formConfig,
         setIsModalOpen,
@@ -182,6 +199,7 @@ export const useProfileEducationBox = () => {
         openEditModal,
         deleteConfirm,
         setDeleteConfirm,
-        handleDelete
+        handleDelete,
+        handleUpdateHighestEducation
     }
 }

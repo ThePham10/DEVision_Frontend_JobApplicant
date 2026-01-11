@@ -31,6 +31,7 @@ type UserProfile = {
   avatarUrl: string;
   isActive: boolean;
   skillCategories: string[];
+  highestEducation: string;
 }
 
 export type { LoginData, UserData, User, UserProfile };

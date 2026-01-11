@@ -25,6 +25,7 @@ type UserProfile = {
   avatarUrl: string;
   isActive: boolean;
   skillCategories: string[];
+  highestEducation: string;
 }
 
 interface AuthStore {

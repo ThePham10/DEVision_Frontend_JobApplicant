@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Bell, Siren, AlarmClockPlus } from "lucide-react";
 import { NotificationType } from "../types/types"
 import { useNotificationStore } from "@/store";
@@ -24,9 +24,9 @@ const useNotificationDropDownButton = () => {
     const buttonRef = useRef<HTMLButtonElement>(null)
     const loaderRef = useRef<HTMLDivElement>(null)
 
-    function loadMore() {
+    const loadMore = useCallback(() => {
         setDisplayCount(prev => Math.min(prev + 10, notifications.length))
-    }
+    }, [notifications.length])
     
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -41,7 +41,7 @@ const useNotificationDropDownButton = () => {
             observer.observe(loaderRef.current)
         }
         return () => observer.disconnect()
-    }, [hasMore])
+    }, [hasMore, loadMore])
 
     function getNotificationIcon(type: NotificationType) {
         const iconClass = "w-5 h-5";
