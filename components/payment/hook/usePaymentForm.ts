@@ -1,6 +1,7 @@
 import { useStripe, useElements, CardNumberElement } from "@stripe/react-stripe-js";
 import { usePayment } from "./usePayment";
 import { usePersonalSettingForm } from "@/components/account-box/personal-box/hook/usePersonalSettingForm";
+import { useAuthStore } from "@/store";
 
 export function usePaymentForm(
     planType: string = "PREMIUM", 
@@ -10,7 +11,7 @@ export function usePaymentForm(
     const stripe = useStripe();
     const elements = useElements();
     const { loading, paymentProcess, updateUserSubscriptionStatus } = usePayment();
-    const { userAccount } = usePersonalSettingForm();
+    const { user } = useAuthStore();
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -18,8 +19,8 @@ export function usePaymentForm(
         const cardNumberElement = elements.getElement(CardNumberElement);
         if (!cardNumberElement) return;
         const planData = {
-            applicantId: userAccount?.id,
-            payerEmail: userAccount?.email,
+            applicantId: user?.id,
+            payerEmail: user?.email,
             planType,
             currency,
         };
@@ -35,6 +36,5 @@ export function usePaymentForm(
         elements,
         loading,
         handleSubmit,
-        userAccount,
     };
 }
