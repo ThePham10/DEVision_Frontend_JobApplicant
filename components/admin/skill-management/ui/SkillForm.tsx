@@ -18,10 +18,19 @@ interface SkillFormProps {
     isLoading?: boolean;
 }
 
+/**
+ * Skill form component
+ * @param skill - The skill to edit
+ * @param jobCategories - The job categories to display
+ * @param onSubmit - The function to call when the form is submitted
+ * @returns The skill form component
+ */
 export default function SkillForm({ skill, jobCategories, onSubmit}: SkillFormProps) {
     
+    // Check if editing
     const isEditing = !!skill;
 
+    // Form config - conditionally include jobCategoryId only when creating
     const formConfig : FormConfig = {
     children: [
         {
@@ -33,7 +42,8 @@ export default function SkillForm({ skill, jobCategories, onSubmit}: SkillFormPr
                 required: true,
             }
         },
-        {
+        // Only show job category field when creating new skill
+        !isEditing && {
             name: "jobCategoryId",
             title: "Job Category",
             type: "select",
@@ -53,40 +63,42 @@ export default function SkillForm({ skill, jobCategories, onSubmit}: SkillFormPr
                 required: true,
             }
         },
-        {
-            name: "description",
-            title: "Description",
-            type: "textarea",
-            placeholder: "Brief description of the skill...",
-            validation: {
-                required: true,
-            }
-        },
-    ],
-    buttonText: "Create new skill",
+    ].filter(Boolean) as FormConfig["children"], // Filter out false values
+    buttonText: isEditing ? "Update Skill" : "Create New Skill",
 }
+
+    // Initial values for editing
+    const initialValues: FormValues = {
+        name: skill?.name || "",
+        icon: skill?.icon || "",
+    };
     
+    // Handle submit
     const handleSubmit = (values: FormValues) => {
+        // Get form values
         const formName = String(values.name || "");
         const formJobCategoryId = String(values.jobCategoryId || "");
-        const formDescription = String(values.description || "");
         const formIcon = String(values.icon || "");
         
+        // Submit data
         const submitData = isEditing
-            ? { name: formName.trim(), description: formDescription.trim() || undefined, icon: formIcon.trim() || undefined }
-            : { name: formName.trim(), jobCategoryId: formJobCategoryId, description: formDescription.trim() || undefined, icon: formIcon.trim() || undefined };
+            ? { name: formName.trim(), icon: formIcon.trim() || undefined }
+            : { name: formName.trim(), jobCategoryId: formJobCategoryId, icon: formIcon.trim() || undefined };
         
+        // Send the request
         onSubmit(submitData);
     };
     
     return (
         <>
             <div className="text-2xl font-semibold mb-6">
-                Create new skill
+                {isEditing ? "Edit Skill" : "Create New Skill"}
             </div>
             <HeadlessForm
             config={formConfig}
+            initialValues={initialValues}
             onSubmit={handleSubmit}/>
         </>
     );
 }
+

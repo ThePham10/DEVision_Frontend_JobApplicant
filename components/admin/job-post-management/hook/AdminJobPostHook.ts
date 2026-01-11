@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { JobPost } from "../types";
+import { JobPost, JobSearchParams } from "../types";
 import { loadJobPosts, deleteJobPost } from "../service/AdminJobPostService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -20,29 +20,21 @@ export default function useAdminJobPost() {
 
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
+    const [filters, setFilters] = useState<JobSearchParams>({});
+
+
     const {
         data: allJobPosts = [],
         isLoading,
         error,
     } = useQuery({
-        queryKey: ["admin-job-posts"],
-        queryFn: loadJobPosts,
-    });
+        queryKey: ["admin-job-posts", filters],
+        queryFn: () => loadJobPosts(filters), // Use filters directly (set on button click)
+    })
 
-    const filteredJobPosts = allJobPosts.filter(job => {
-        if (searchTerm && !job.title.toLowerCase().includes(searchTerm.toLowerCase())) {
-            return false;
-        }
 
-        if (employmentTypeFilter && job.employmentType !== employmentTypeFilter) {
-            return false;
-        }
-
-        return true;
-    });
-
-    const jobPosts = filteredJobPosts.slice(0, visibleCount);
-    const hasNextPage = visibleCount < filteredJobPosts.length;
+    const jobPosts = allJobPosts.slice(0, visibleCount);
+    const hasNextPage = visibleCount < allJobPosts.length;
 
 
     const deleteMutation = useMutation({
@@ -58,12 +50,17 @@ export default function useAdminJobPost() {
     };
 
     const handleSearch = () => {
+        setFilters({
+            keyword: searchTerm || undefined,
+            employmentTypes: employmentTypeFilter ? [employmentTypeFilter] : undefined,
+        });
         setVisibleCount(PAGE_SIZE);
     };
 
     const clearFilters = () => {
         setSearchTerm("");
         setEmploymentTypeFilter("");
+        setFilters({}); // Clear committed filters to refetch all job posts
         setVisibleCount(PAGE_SIZE);
     };
 
@@ -88,7 +85,7 @@ export default function useAdminJobPost() {
         isLoading,
         error,
         hasNextPage,
-        filteredCount: filteredJobPosts.length,
+        filteredCount: allJobPosts.length,
         selectedJob,
         isDetailModalOpen,
         openDetailModal,
@@ -104,5 +101,6 @@ export default function useAdminJobPost() {
         handleSearch,
         clearFilters,
         handleLoadMore,
+        filters, // Committed filters for showing active filters UI
     };
 }

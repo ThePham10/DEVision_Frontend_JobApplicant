@@ -27,6 +27,7 @@ export function JobPostManagement() {
         handleSearch,
         clearFilters,
         handleLoadMore,
+        filters,
     } = useAdminJobPost();
 
     return (
@@ -50,6 +51,7 @@ export function JobPostManagement() {
                 handleSearch={handleSearch}
                 clearFilters={clearFilters}
                 setEmploymentTypeFilter={setEmploymentTypeFilter}
+                filters={filters}
             />
 
             {/* Results count */}

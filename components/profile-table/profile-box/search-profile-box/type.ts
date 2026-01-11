@@ -1,7 +1,6 @@
 export type SearchProfile = {
     desiredRoles: string[];
     skillIds: string[];
-    skillNames: string[];
     desiredLocations: string[];
     expectedSalary: {
         min: number;
@@ -9,5 +8,4 @@ export type SearchProfile = {
         currency: string;
     };
     employmentTypes: string[];
-    isActive: boolean;
 }

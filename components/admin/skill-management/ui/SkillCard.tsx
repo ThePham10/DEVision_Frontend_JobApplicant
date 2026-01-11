@@ -13,6 +13,15 @@ interface SkillCardProps {
     onChangeStatus: (skill: Skill) => void;
 }
 
+/**
+ * Skill card component
+ * @param skill skill information data
+ * @param jobCategories job categories data
+ * @param onEdit function to handle edit action
+ * @param onDelete function to handle delete action
+ * @param onChangeStatus function to handle change status action
+ * @returns skill card component
+ */
 export default function SkillCard({ skill, jobCategories, onEdit, onDelete, onChangeStatus }: SkillCardProps) {
     // Look up category name from ID
     const category = jobCategories.find(cat => cat.id === skill.jobCategoryId);

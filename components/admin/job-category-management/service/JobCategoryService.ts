@@ -2,48 +2,56 @@ import { httpHelper } from "@/utils/httpHelper";
 import { JobCategory, JobCategoryFilters, PaginatedResponse } from "../types";
 import { JOB_CATEGORY_URL } from "@/config/URLConfig";
 
+// API filter format
+interface ApiFilter {
+    id: string;
+    value: string;
+    operator: string;
+}
+
 /**
- * Load job categories with pagination and filtering
+ * Load job categories with pagination and server-side filtering
  */
 async function loadJobCategories(
     page: number,
     limit: number,
     filters?: JobCategoryFilters
 ): Promise<PaginatedResponse<JobCategory>> {
-    const response = await httpHelper.get<PaginatedResponse<JobCategory>>(`${JOB_CATEGORY_URL}?limit=${limit}`);
-    
-    if (response.status === 200) {
-        let filteredItems = response.data.data;
-    
-        if (filters) {
-            if (filters.name) {
-                const searchTerm = filters.name.toLowerCase();
-                filteredItems = filteredItems.filter(cat =>
-                    cat.name.toLowerCase().includes(searchTerm) ||
-                    cat.description?.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            if (filters.isActive !== undefined) {
-                filteredItems = filteredItems.filter(cat =>
-                    cat.isActive === filters.isActive
-                );
-            }
+    // Build query params
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+
+    // Build API filters array
+    if (filters) {
+        const apiFilters: ApiFilter[] = [];
+
+        if (filters.name) {
+            apiFilters.push({
+                id: 'name',
+                value: filters.name,
+                operator: 'contains'
+            });
         }
-        
-        // Sort by createdAt descending (newest first)
-        filteredItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        
-        const startIndex = (page - 1) * limit;
-        const paginatedItems = filteredItems.slice(startIndex, startIndex + limit);
-        
-        return {
-            data: paginatedItems,
-            total: filteredItems.length,
-            page,
-            limit,
-            hasMore: startIndex + limit < filteredItems.length
-        };
+
+        if (filters.isActive !== undefined) {
+            apiFilters.push({
+                id: 'isActive',
+                value: filters.isActive.toString(),
+                operator: 'equals'
+            });
+        }
+
+        if (apiFilters.length > 0) {
+            params.append('filters', JSON.stringify(apiFilters));
+        }
+    }
+
+    const url = `${JOB_CATEGORY_URL}?${params.toString()}`;
+    const response = await httpHelper.get<PaginatedResponse<JobCategory>>(url);
+
+    if (response.status === 200) {
+        return response.data;
     } else {
         return {
             data: [],
@@ -80,7 +88,7 @@ async function createJobCategory(category: Omit<JobCategory, "id" | "createdAt" 
  */
 async function updateJobCategory(id: string, updates: Partial<Omit<JobCategory, "id" | "createdAt">>): Promise<JobCategory | null> {
     const response = await httpHelper.patch<JobCategory>(JOB_CATEGORY_URL + "/" + `${id}`, updates);
-    
+
     console.log(response.status)
 
     if (response.status === 200) {
@@ -95,7 +103,7 @@ async function updateJobCategory(id: string, updates: Partial<Omit<JobCategory, 
  */
 async function deActiveJobCategory(id: string): Promise<boolean> {
     const response = await httpHelper.delete(JOB_CATEGORY_URL + "/" + `${id}`);
-    
+
     if (response.status === 200) {
         return true;
     } else {
@@ -105,7 +113,7 @@ async function deActiveJobCategory(id: string): Promise<boolean> {
 
 async function deleteJobCategory(id: string): Promise<boolean> {
     const response = await httpHelper.delete(JOB_CATEGORY_URL + "/" + `${id}` + "/hard");
-    
+
     if (response.status === 200) {
         return true;
     } else {
@@ -115,7 +123,7 @@ async function deleteJobCategory(id: string): Promise<boolean> {
 
 async function activateJobCategory(id: string): Promise<boolean> {
     const response = await httpHelper.patch(JOB_CATEGORY_URL + "/" + `${id}`, { isActive: true });
-    
+
     if (response.status === 200) {
         return true;
     } else {
@@ -123,11 +131,11 @@ async function activateJobCategory(id: string): Promise<boolean> {
     }
 }
 
-export { 
-    loadJobCategories, 
-    createJobCategory, 
-    updateJobCategory, 
+export {
+    loadJobCategories,
+    createJobCategory,
+    updateJobCategory,
     deActiveJobCategory,
     activateJobCategory,
-    deleteJobCategory 
+    deleteJobCategory
 };

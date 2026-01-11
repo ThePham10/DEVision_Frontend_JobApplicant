@@ -10,6 +10,7 @@ export const SearchProfileBox = () => {
 				<h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
 					Search Profile
 				</h2>
+				{/* Search Profile Form */}
 				<SearchProfileForm />
 			</div>
 		</div>

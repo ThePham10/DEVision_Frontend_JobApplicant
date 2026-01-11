@@ -2,14 +2,32 @@ import { httpHelper } from "@/utils/httpHelper";
 import { Skill, PaginatedResponse} from "../types";
 import { SKILL_URL } from "@/config/URLConfig";
 
+interface ApiFilter {
+    id: string;
+    value: string;
+    operator: string;
+}
+
 /**
  * Load all skills with pagination
  */
 async function loadSkills(
+    filters?: ApiFilter[]
 ): Promise<PaginatedResponse<Skill>> {
-    const url = `${SKILL_URL}?limit=100`;
+    // Build query params
+    const params = new URLSearchParams();
+    
+    if (filters && filters.length > 0) {
+        params.append('filters', JSON.stringify(filters));
+    }
+
+    // Build URL
+    const url = `${SKILL_URL}?limit=100&${params.toString()}`;
+
+    // Send request
     const response = await httpHelper.get<PaginatedResponse<Skill>>(url);
     
+    // Handle response
     if (response.status === 200) {
         const data = response.data;
         return data;
