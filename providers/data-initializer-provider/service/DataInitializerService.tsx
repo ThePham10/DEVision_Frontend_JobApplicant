@@ -15,7 +15,7 @@ async function loadJobCategoriesData(): Promise<JobCategory[]> {
  * Load skills
  */
 async function loadSkillsData(): Promise<Skill[]> {
-    const response = await httpHelper.get<{ data: Skill[] }>(SKILL_URL + "?limit=" + 100);
+    const response = await httpHelper.get<{ data: Skill[] }>(SKILL_URL);
     return response.data?.data ?? [];
 }
 

@@ -9,7 +9,6 @@ async function loadSkills(
 ): Promise<PaginatedResponse<Skill>> {
     const url = `${SKILL_URL}`;
     const response = await httpHelper.get<PaginatedResponse<Skill>>(url);
-    console.log("Running")
     
     if (response.status === 200) {
         const data = response.data;

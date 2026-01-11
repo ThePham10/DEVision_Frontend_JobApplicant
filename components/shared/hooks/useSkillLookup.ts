@@ -10,7 +10,7 @@ export function useSkillLookup() {
     // Fetch all skills (with a high limit to get all)
     const { data: skillsData, isLoading } = useQuery({
         queryKey: ["all-skills"],
-        queryFn: () => loadSkills(1, 1000), // Fetch up to 1000 skills
+        queryFn: () => loadSkills(), // Fetch up to 1000 skills
         staleTime: 10 * 60 * 1000, // Cache for 10 minutes
     });
 
