@@ -7,7 +7,7 @@ import { SKILL_URL } from "@/config/URLConfig";
  */
 async function loadSkills(
 ): Promise<PaginatedResponse<Skill>> {
-    const url = `${SKILL_URL}`;
+    const url = `${SKILL_URL}?limit=100`;
     const response = await httpHelper.get<PaginatedResponse<Skill>>(url);
     
     if (response.status === 200) {
