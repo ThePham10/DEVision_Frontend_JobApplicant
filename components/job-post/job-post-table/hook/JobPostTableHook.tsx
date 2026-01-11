@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { JobPostFilters, JobPost } from "../../types"
-import type { FormConfig } from "@/components/headless-form"
+import type { FormConfig, FormValues } from "@/components/headless-form"
 import { loadJobPost } from "../service/JobPostTableService"
 import { useQuery } from "@tanstack/react-query"
 import { getJobApplication } from "@/components/job-application/service/JobApplicationService"
@@ -61,11 +61,22 @@ const filterFormConfig: FormConfig = {
 
 const PAGE_SIZE = 6;
 
+// Default form values - typed to match FormValues (string | string[] | File | null)
+const defaultFormValues: FormValues = {
+    jobTitle: "",
+    location: "",
+    employmentType: "",
+    salaryRange_min: null,
+    salaryRange_max: null,
+};
+
 const useJobPostTable = () => {
     const router = useRouter()
     
     // State for filters and UI
     const [filters, setFilters] = useState<JobPostFilters>({})
+    const [formValues, setFormValues] = useState<FormValues>(defaultFormValues)
+    const [formKey, setFormKey] = useState(0) // Key to force form re-render
     const [isJobApplicationOpen, setIsJobApplicationOpen] = useState(false)
     const [selectedJob, setSelectedJob] = useState<JobPost | null>(null)
     
@@ -134,11 +145,32 @@ const useJobPostTable = () => {
     const removeFilter = (key: keyof JobPostFilters) => {
         setDisplayCount(PAGE_SIZE)
         
+        // Remove from filters state
         setFilters(prev => {
             const newFilters = { ...prev }
             delete newFilters[key]
             return newFilters
         })
+        
+        // Also clear corresponding form field values
+        setFormValues(prev => {
+            const newValues = { ...prev }
+            if (key === 'jobTitle') newValues.jobTitle = ""
+            if (key === 'location') newValues.location = ""
+            if (key === 'employmentType') newValues.employmentType = ""
+            if (key === 'minSalary') {
+                newValues.salaryRange_min = null
+                newValues.salaryRange_max = null
+            }
+            if (key === 'maxSalary') {
+                newValues.salaryRange_min = null
+                newValues.salaryRange_max = null
+            }
+            return newValues
+        })
+        
+        // Force form to re-render with new values
+        setFormKey(prev => prev + 1)
     }
 
     const handleViewDetail = (post: JobPost) => {
@@ -164,6 +196,8 @@ const useJobPostTable = () => {
     return {
         filterFormConfig,
         filters,
+        formValues,
+        formKey,
         jobPosts,
         totalCount,
         loading,
