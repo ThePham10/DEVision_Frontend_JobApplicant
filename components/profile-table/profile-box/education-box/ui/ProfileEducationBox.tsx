@@ -10,6 +10,7 @@ import Dropdown from "@/components/headless-dropdown";
 export const ProfileEducationBox = () => {
     const {
         user,
+        highestEducationSelection,
         userProfile,
         isModalOpen,
         formConfig,
@@ -31,16 +32,11 @@ export const ProfileEducationBox = () => {
     return (
         <div className="group relative z-10 bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 overflow-visible">
             <div>
-                <div className="flex items-center justify-between mb-6">
+                {/* Header Row: Title + Add Button */}
+                <div className="flex items-center justify-between mb-4">
                     <h2 className="font-[Inter] text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                         Education
                     </h2>
-
-                    <Dropdown 
-                        items={education.map((item) => {return({id: item.id, name: item.levelStudy + " of " + item.major})})} 
-                        onChange={(value) => value && !Array.isArray(value) && handleUpdateHighestEducation({eduId: value.id, applicantId: user?.id || ""})}
-                        placeholder="Select an education"
-                        defaultValue={userProfile?.highestEducation} />
 
                     <Button 
                         text="Add Education" 
@@ -49,6 +45,27 @@ export const ProfileEducationBox = () => {
                     />
                 </div>
                 
+                {/* Highest Education Selection Row */}
+                <div className="flex items-center gap-4 mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                    <div className="flex items-center gap-2 text-sm font-medium text-gray-700 whitespace-nowrap">
+                        <svg className="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <span>Highest Education Level:</span>
+                    </div>
+                    <Dropdown 
+                        items={highestEducationSelection} 
+                        onChange={(value) => value && !Array.isArray(value) && handleUpdateHighestEducation({eduName: value.name, applicantId: user?.id || ""})}
+                        placeholder="Select your highest education"
+                        defaultValue={userProfile?.highestEducation}
+                        showSearch={false}
+                        showCount={false}
+                        showIcons={false}
+                        width="w-full sm:w-[200px]"
+                    />
+                </div>
+                
+                {/* Education List */}
                 <ProfileEducationCard 
                     educationList={education}
                     openEditModal={openEditModal}
