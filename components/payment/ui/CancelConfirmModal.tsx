@@ -1,7 +1,6 @@
 "use client"
 
 import { Modal } from "@/components/reusable-component/Modal";
-import { use } from "react";
 import { usePayment } from "../hook/usePayment";
 
 interface CancelConfirmModalProps {

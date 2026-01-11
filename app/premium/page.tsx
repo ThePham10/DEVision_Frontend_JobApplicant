@@ -4,8 +4,6 @@ import { motion } from "motion/react";
 import { Crown, Zap, Bell, Shield, Sparkles, Check, X } from "lucide-react";
 import { PricingCard, AuthGuard } from "@/components/reusable-component";
 import PaymentCheckoutModal from "@/components/payment/ui/PaymentCheckoutModal";
-import { Modal } from "@/components/reusable-component/Modal";
-import { usePersonalSettingForm } from "@/components/account-box/personal-box/hook/usePersonalSettingForm";
 import { planType } from "@/components/payment/types";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";

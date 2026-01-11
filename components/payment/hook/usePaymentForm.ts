@@ -1,6 +1,5 @@
 import { useStripe, useElements, CardNumberElement } from "@stripe/react-stripe-js";
 import { usePayment } from "./usePayment";
-import { usePersonalSettingForm } from "@/components/account-box/personal-box/hook/usePersonalSettingForm";
 import { useAuthStore } from "@/store";
 
 export function usePaymentForm(
