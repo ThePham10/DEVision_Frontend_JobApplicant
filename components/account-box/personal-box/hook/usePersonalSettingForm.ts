@@ -4,6 +4,7 @@ import { getUserInfo, updateUserInfo } from "../api/PersonalBoxService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AccountData } from "../types";
 import { fetchCountries, Country } from "@/components/headless-form/country-drop-down-menu/api/countryDropDownMenuService";
+import toast from "react-hot-toast";
 
 export function usePersonalSettingForm() {
     // States
@@ -48,6 +49,10 @@ export function usePersonalSettingForm() {
             if (!user) return;
             await getUserInfo(user.id);
             queryClient.invalidateQueries({ queryKey: ['userInfo', user.id] });
+            toast.success("User info updated successfully");
+        },
+        onError: () => {
+            toast.error("User info update failed");
         }
     });
 

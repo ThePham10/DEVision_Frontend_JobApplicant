@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { JobCategory, JobCategoryFilters } from "../types";
 import { loadJobCategories, createJobCategory, updateJobCategory, deleteJobCategory, deActiveJobCategory, activateJobCategory } from "@/components/admin/job-category-management/service/JobCategoryService"
+import toast from "react-hot-toast";
 
 export default function useJobCategoryManagment() {
     //Query client
@@ -35,7 +36,11 @@ export default function useJobCategoryManagment() {
             queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
             setIsModalOpen(false);
             setEditingCategory(null);
+            toast.success("Job category created successfully")
         },
+        onError: () => {
+            toast.error("Job category creation failed")
+        }
     });
     
     // Mutation for updating category
@@ -46,7 +51,11 @@ export default function useJobCategoryManagment() {
             queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
             setIsModalOpen(false);
             setEditingCategory(null);
+            toast.success("Job category updated successfully")
         },
+        onError: () => {
+            toast.error("Job category update failed")
+        }
     });
     
     // Mutation for deleting category
@@ -55,7 +64,11 @@ export default function useJobCategoryManagment() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
             setDeleteConfirm(null);
+            toast.success("Job category deleted successfully")
         },
+        onError: () => {
+            toast.error("Job category deletion failed")
+        }
     });
     
     // Mutation for deactivating category
@@ -63,7 +76,11 @@ export default function useJobCategoryManagment() {
         mutationFn: deActiveJobCategory,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
+            toast.success("Job category deactivated successfully")
         },
+        onError: () => {
+            toast.error("Job category deactivation failed")
+        }
     });
 
     // Mutation for activate category
@@ -71,7 +88,11 @@ export default function useJobCategoryManagment() {
         mutationFn: activateJobCategory,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["jobCategories"] });
+            toast.success("Job category activated successfully")
         },
+        onError: () => {
+            toast.error("Job category activation failed")
+        }
     });
     
     // Handle search

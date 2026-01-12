@@ -5,6 +5,7 @@ import { createPaymentIntent } from "../service/PaymentService";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { getSubscriptionStatus, cancelSubscription } from "../service/PaymentService";
 import { useAuthStore } from "@/store/authStore";
+import toast from "react-hot-toast";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export const usePayment = () => {
@@ -36,6 +37,7 @@ export const usePayment = () => {
         await new Promise(resolve => setTimeout(resolve, 3000));
         queryClient.invalidateQueries({ queryKey: ['subscriptionInfo', user.id] });
         queryClient.invalidateQueries({ queryKey: ['userProfile', user.id] });
+        toast.success("Subscription upgraded successfully");
     }
 
     // Downgrade user subscription status
@@ -47,6 +49,7 @@ export const usePayment = () => {
         await new Promise(resolve => setTimeout(resolve, 3000));
         queryClient.invalidateQueries({ queryKey: ['subscriptionInfo', user.id] });
         queryClient.invalidateQueries({ queryKey: ['userProfile', user.id] });
+        toast.success("Subscription downgraded successfully");
     }
     
     // Process payment with Stripe
@@ -98,7 +101,7 @@ export const usePayment = () => {
             return { success: false, paymentIntent };
         } catch (err: any) {
             console.error("Payment failed", err);
-            setError(err.message || "Payment failed"); 
+            setError(err.message || "Payment failed");
             return { success: false, error: err.message };
         } finally {
             setLoading(false);

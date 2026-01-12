@@ -5,6 +5,7 @@ import React from "react";
 import { QueryProvider, DataInitializer, WebSocketProvider } from "@/providers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { Toaster } from "react-hot-toast";
 
 // Load Inter font with all weights you need
 const inter = Inter({ 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: Readonly<{
                             <Header />
                             <main className="flex-1">
                                 {children}
+                                <Toaster position="bottom-right" reverseOrder={false} />
                             </main>
                             <Footer />
                         </DataInitializer>

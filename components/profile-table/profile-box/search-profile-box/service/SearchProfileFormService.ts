@@ -11,9 +11,10 @@ export async function createSearchProfile(data: SearchProfile) {
     try {
         const response = await httpHelper.post<string>(SEARCH_PROFILE_URL, data)
 
-        if (response.status === 200) {
-            return;
+        if (response.status === 201 || response.status === 200) {
+            return response;
         }
+        return response;
     } catch (error) {
         throw new Error("Failed to create search profile! " + error);
     }

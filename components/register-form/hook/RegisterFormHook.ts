@@ -1,6 +1,7 @@
 import { commonValidations, FormValues, FormConfig } from "@/components/headless-form";
 import registerUser from "../service/RegisterFormService";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 /**
  * The register form hook
@@ -121,9 +122,11 @@ export const useRegisterForm = () => {
 
             // Check whether the request is successfull or not and redirect to the verify email page
             if (response.success) {
+                toast.success("Registration successful");
                 router.push("/verify-email");
+            } else {
+                toast.error(response.error || "Registration failed. Please try again.");
             }
-
         } catch (err) {
             console.error("Registration error:", err);
         }

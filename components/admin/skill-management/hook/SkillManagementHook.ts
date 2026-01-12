@@ -3,6 +3,7 @@ import { Skill, SkillFilters } from "../types";
 import { loadSkills, createSkill, updateSkill, deleteSkill, deActiveSkill } from "../service/SkillService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDataStore } from "@/store";
+import toast from "react-hot-toast";
 
 const PAGE_SIZE = 10; // Number of items to show per "page"
 
@@ -79,6 +80,10 @@ export default function useSkillManagement() {
             queryClient.invalidateQueries({ queryKey: ["skillsAdmin"] });
             setIsModalOpen(false);
             setEditingSkill(null);
+            toast.success("Skill created successfully")
+        },
+        onError: () => {
+            toast.error("Skill creation failed")
         }
     })
 
@@ -90,6 +95,10 @@ export default function useSkillManagement() {
             queryClient.invalidateQueries({ queryKey: ["skillsAdmin"] });
             setIsModalOpen(false);
             setEditingSkill(null);
+            toast.success("Skill updated successfully")
+        },
+        onError: () => {
+            toast.error("Skill update failed")
         }
     })
 
@@ -100,6 +109,10 @@ export default function useSkillManagement() {
             queryClient.invalidateQueries({ queryKey: ["skillsAdmin"] });
             setIsModalOpen(false);
             setDeleteConfirm(null);
+            toast.success("Skill deleted successfully")
+        },
+        onError: () => {
+            toast.error("Skill deletion failed")
         }
     })
 
@@ -110,6 +123,10 @@ export default function useSkillManagement() {
             queryClient.invalidateQueries({ queryKey: ["skillsAdmin"] });
             setIsModalOpen(false);
             setDeleteConfirm(null);
+            toast.success("Skill deactivated successfully")
+        },
+        onError: () => {
+            toast.error("Skill deactivation failed")
         }
     })
 

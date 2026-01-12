@@ -3,6 +3,7 @@ import { FormValues, loginValidations } from "@/components/headless-form";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export const useLoginFormAdmin = () => {
     // Initialize auth store and router
@@ -46,6 +47,7 @@ export const useLoginFormAdmin = () => {
             // Check if login is successful 
             if (response.status === 201) {
                 setUser(response.data.user);
+                toast.success("Login successful");
                 router.push("/admin/applicant");
             } else {
                 setError("Invalid email/password or account is not an ADMIN. Please try again.")

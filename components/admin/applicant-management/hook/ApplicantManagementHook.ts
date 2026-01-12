@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ApplicantFilters, ApplicantAccount } from "../types";
 import { loadApplicants, deactivateApplicant, activateApplicant } from "../service/ApplicantManagementService";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export default function useApplicantManagement() { 
     // States
@@ -64,7 +65,6 @@ export default function useApplicantManagement() {
 
     // All applicants from the server
     const allApplicants = applicantsData?.data ?? [];
-    console.log("All Applicants:", allApplicants);
     const totalApplicantsCount = applicantsData?.total ?? 0;
 
     // Apply client-side lazy loading (pagination)
@@ -81,6 +81,10 @@ export default function useApplicantManagement() {
             queryClient.invalidateQueries({ queryKey: ["applicantsAdmin"] });
             setIsModalOpen(false);
             setDeactivateConfirm(null);
+            toast.success("Applicant deactivated successfully")
+        },
+        onError: () => {
+            toast.error("Applicant deactivation failed")
         }
     });
 
@@ -92,6 +96,10 @@ export default function useApplicantManagement() {
             queryClient.invalidateQueries({ queryKey: ["applicantsAdmin"] });
             setIsModalOpen(false);
             setActivateConfirm(null);
+            toast.success("Applicant activated successfully")
+        },
+        onError: () => {
+            toast.error("Applicant activation failed")
         }
     });
 

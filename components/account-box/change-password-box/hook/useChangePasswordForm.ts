@@ -4,6 +4,7 @@ import changePassword from "../api/ChangePasswordService";
 import type { FormValues } from "@/components/headless-form/types/types";
 import type { FormConfig } from "@/components/headless-form/types/types";
 import { commonValidations } from "@/components/headless-form/ui/Form";
+import toast from "react-hot-toast";
 
 
 export const useChangePasswordForm = () => {
@@ -70,14 +71,13 @@ export const useChangePasswordForm = () => {
             // If successful, log out user and redirect to login page
             if (result.success) {
                 clearUser();
-                alert("Password changed successfully. Please log in again.");
+                toast.success("Password changed successfully. Please log in again.");
                 router.replace("/login");
             } else {
-                alert(result.error || "Failed to change password");
+                toast.error(result.error || "Failed to change password");
             }
         } catch (error) {
-            console.error("Change password error:", error);
-            alert("An error occurred while changing password");
+            toast.error("An error occurred while changing password");
         }
     };
 

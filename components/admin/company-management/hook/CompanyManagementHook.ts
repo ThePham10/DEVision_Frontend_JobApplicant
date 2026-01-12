@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { Company } from "../types";
 import { deleteCompanyById, loadCompanies } from "../service/CompanyManagementService";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 // Number of items to load per "page"
 const PAGE_SIZE = 5;
@@ -55,7 +56,11 @@ export default function useCompanyManagement() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-companies"] });
             setDeleteConfirm(null);
+            toast.success("Company deleted successfully")
         },
+        onError: () => {
+            toast.error("Company deletion failed")
+        }
     })
     
     // Wrapper delete trigger

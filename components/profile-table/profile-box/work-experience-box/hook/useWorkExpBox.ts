@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/authStore";
 import { getWorkExperiences, deleteWorkExperience, createWorkExperience } from "../api/WorkExpService";
 import { WorkExpData } from "../types";
+import toast from "react-hot-toast";
 
 export default function useWorkExpBox() {
     // States
@@ -31,6 +32,10 @@ export default function useWorkExpBox() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["userWorkExp", user?.id] });
             setIsModalOpen(false);
+            toast.success("Work experience added successfully");
+        },
+        onError: () => {
+            toast.error("Work experience adding failed");
         }
     });
 
@@ -39,6 +44,10 @@ export default function useWorkExpBox() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["userWorkExp", user?.id] });
             setDeleteConfirm(null);
+            toast.success("Work experience deleted successfully");
+        },
+        onError: () => {
+            toast.error("Work experience deleting failed");
         }
     });
 
