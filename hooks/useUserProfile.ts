@@ -3,13 +3,8 @@ import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
 import { getUserProfile } from "@/components/login-form/login-form-for-applicant/service/LoginFormService";
 
-/**
- * Hook to fetch and sync user profile data.
- * Use this hook in any component that needs access to the user profile.
- * When you invalidate the "userProfile" query, this hook will refetch
- * and sync the updated data to the Zustand store.
- */
 export const useUserProfile = () => {
+    // Auth store
     const { user, setUserProfile } = useAuthStore();
 
     const isAdmin = user?.role === "admin";

@@ -1,7 +1,7 @@
 "use client";
-
 import { useCallback, useEffect, useRef } from "react";
 
+// Define the props of the dual range slider
 interface DualRangeSliderProps {
     title: string;
     name: string;
@@ -14,6 +14,19 @@ interface DualRangeSliderProps {
     onChange: (minValue: number, maxValue: number) => void;
 }
 
+/**
+ * The DualRangeSlider component is a custom range slider that allows users to select a range of values
+ * @param title The title of the range slider
+ * @param name The name of the range slider
+ * @param min The minimum value of the range slider
+ * @param max The maximum value of the range slider
+ * @param step The step value of the range slider
+ * @param minValue The minimum value of the range slider
+ * @param maxValue The maximum value of the range slider
+ * @param formatValue The format function for converting the value to a string
+ * @param onChange The function when the range slider value changes
+ * @returns The DualRangeSlider component
+ */
 const DualRangeSlider = ({
     title,
     name,
@@ -25,32 +38,46 @@ const DualRangeSlider = ({
     formatValue,
     onChange,
 }: DualRangeSliderProps) => {
+    // Initialize the refs
+    // minValueRef and maxValueRef are used to get the value of the range slider
     const minValueRef = useRef<HTMLInputElement>(null);
     const maxValueRef = useRef<HTMLInputElement>(null);
+    // rangeRef is used to get the range of the range slider
     const rangeRef = useRef<HTMLDivElement>(null);
 
+    // Format the value to a string
     const formattedValue = formatValue || ((val: number) => `$${val.toLocaleString()}`);
 
-    // Update the range highlight
+    // Calculate the position of the the point on the slider
     const getPercent = useCallback(
         (value: number) => Math.round(((value - min) / (max - min)) * 100),
         [min, max]
     );
 
+    // Update the range highlight
     useEffect(() => {
+        // Check whether the slider is appear in the UI
         if (rangeRef.current) {
             const minPct = getPercent(minValue);
             const maxPct = getPercent(maxValue);
+
+            // Update the range and re-draw the slider
             rangeRef.current.style.left = `${minPct}%`;
+
+            // Update the range highlight
             rangeRef.current.style.width = `${maxPct - minPct}%`;
         }
     }, [minValue, maxValue, getPercent]);
 
+    // Handle the min value change
+    // Calculate the min value based on the new position of the slider button
     const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Math.min(Number(e.target.value), maxValue - step);
         onChange(value, maxValue);
     };
 
+    // Handle the max value change
+    // Calculate the max value based on the new position of the slider button
     const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Math.max(Number(e.target.value), minValue + step);
         onChange(minValue, value);

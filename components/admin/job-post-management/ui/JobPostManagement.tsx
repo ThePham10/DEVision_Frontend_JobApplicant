@@ -7,6 +7,9 @@ import useAdminJobPost from "../hook/AdminJobPostHook";
 import { JobPostDetailModal } from "./JobPostDetailModal";
 import { JobPostFilterBar } from "./JobPostFilterBar"
 
+/**
+ * Job Post management component
+ */
 export function JobPostManagement() {
     const {
         jobPosts,

@@ -5,6 +5,7 @@ import { Edit, Trash } from "lucide-react";
 import { motion } from "framer-motion";
 import { icons } from "@/components/reusable-component";
 
+// Define skill card props
 interface SkillCardProps {
     skill: Skill;
     jobCategories: JobCategory[];

@@ -4,23 +4,29 @@ import { ApplicationFormData } from "../types"
 import { useRouter } from "next/navigation"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-export const useApplicationModal = ({
-        jobId,
-        onClose,
-    }: {
-        jobId: string
-        onClose: () => void
-    }) => {
+// Define the application modal props
+interface applicationModalProps {
+    jobId: string
+    onClose: () => void
+}
+
+export const useApplicationModal = ({ jobId, onClose }: applicationModalProps) => {
+    // State
     const router = useRouter()
     const { handleSubmit, isSubmitting } = useJobApplication()
     const [coverLetterFile, setCoverLetterFile] = useState<File | null>(null)
     const [cvFile, setCvFile] = useState<File | null>(null)
     const [error, setError] = useState("")
     const [success, setSuccess] = useState(false)
+
+    // Query client
     const queryClient = useQueryClient()
 
+    // Handle the cover letter updload change
     const handleCoverLetterFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
+        
+        // Check whether the file is exist
         if (!file) return
 
         // Validate file type
@@ -39,8 +45,11 @@ export const useApplicationModal = ({
         setError("")
     }
 
+    // Handle the cv upload change
     const handleCvFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
+
+        // Check whether the file is exist
         if (!file) return
 
         // Validate file type
@@ -59,24 +68,29 @@ export const useApplicationModal = ({
         setError("")
     }
 
+    // Handle the job application form submission
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setError("")
 
+        // Check whether the CV file is uploaded
         if (!cvFile) {
             setError("Please upload your CV/Resume")
             return
         }
 
+        // Create the form data
         const formData: ApplicationFormData = {
             jobId,
             coverLetterFile,
             cvFile
         }
 
+        // Submit the form data
         createMutation.mutate(formData)
     }
 
+    // Create application mutation
     const createMutation = useMutation({
         mutationFn: handleSubmit,
         onSuccess: (result) => {
@@ -85,6 +99,7 @@ export const useApplicationModal = ({
                 return
             }
             
+            // Invalidate the query for refetch the job application and job post
             queryClient.invalidateQueries({ queryKey: ["job-applications"] })
             queryClient.invalidateQueries({ queryKey: ["job-posts"] })
             
@@ -99,6 +114,7 @@ export const useApplicationModal = ({
         }
     })
 
+    // Handling the close model action
     const handleClose = () => {
         if (!isSubmitting) {
             setCoverLetterFile(null)

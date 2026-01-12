@@ -27,6 +27,7 @@ export default function VerifyEmailPage() {
         return () => clearInterval(timer);
     }, [countdown]);
 
+    // Handle navigation to login page
     const handleGoToLogin = () => {
         router.push("/login");
     };

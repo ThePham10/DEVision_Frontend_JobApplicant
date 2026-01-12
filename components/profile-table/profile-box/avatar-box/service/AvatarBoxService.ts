@@ -4,6 +4,11 @@ interface UploadResponse {
     url: string;
 }
 
+/**
+ * Upload avatar
+ * @param data - FormData containing the avatar file
+ * @returns UploadResponse object containing the uploaded avatar URL
+ */
 async function uploadAvatar(data: FormData) {
     try {
         const response = await httpHelper.post<UploadResponse>("/storage/upload", data);

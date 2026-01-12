@@ -2,6 +2,7 @@ import { httpHelper } from "@/utils/httpHelper";
 import { Skill, PaginatedResponse} from "../types";
 import { SKILL_URL } from "@/config/URLConfig";
 
+// Define API filter interface
 interface ApiFilter {
     id: string;
     value: string;
@@ -9,7 +10,9 @@ interface ApiFilter {
 }
 
 /**
- * Load all skills with pagination
+ * Load all skills
+ * @param filters - Filters
+ * @returns Paginated response of skills (data, total, page, limit, totalPages)
  */
 async function loadSkills(
     filters?: ApiFilter[]
@@ -44,6 +47,8 @@ async function loadSkills(
 
 /**
  * Load skills by category ID
+ * @param jobCategoryId - Job category ID
+ * @returns Paginated response of skills (data, total, page, limit, totalPages)
  */
 async function loadSkillsByCategory(
     jobCategoryId: string,
@@ -82,6 +87,8 @@ async function loadSkillsByCategory(
 
 /**
  * Create a new skill
+ * @param skill - Skill to create
+ * @returns Created skill
  */
 async function createSkill(skill: Omit<Skill, "id" | "createdAt" | "updatedAt" | "isActive">): Promise<Skill> {
     const response = await httpHelper.post<Skill>(SKILL_URL, skill);
@@ -105,6 +112,9 @@ async function createSkill(skill: Omit<Skill, "id" | "createdAt" | "updatedAt" |
 
 /**
  * Update an existing skill
+ * @param id - Skill ID
+ * @param updates - Updates to apply
+ * @returns Updated skill
  */
 async function updateSkill(id: string, updates: Partial<Omit<Skill, "id" | "createdAt">>): Promise<Skill | null> {
     console.log(JSON.stringify(updates))
@@ -119,6 +129,8 @@ async function updateSkill(id: string, updates: Partial<Omit<Skill, "id" | "crea
 
 /**
  * Deactive an existing skill
+ * @param id - Skill ID
+ * @returns True if deactive successfully, false otherwise
  */
 async function deActiveSkill(id: string): Promise<boolean> {
     const response = await httpHelper.delete<Skill>(SKILL_URL + "/" + id);
@@ -132,6 +144,8 @@ async function deActiveSkill(id: string): Promise<boolean> {
 
 /**
  * Delete a skill
+ * @param id - Skill ID
+ * @returns True if delete successfully, false otherwise
  */
 async function deleteSkill(id: string): Promise<boolean> { 
     const response = await httpHelper.delete<Skill>(SKILL_URL + "/" + id + "/hard")

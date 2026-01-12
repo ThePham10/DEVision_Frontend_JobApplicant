@@ -16,36 +16,31 @@ const MAX_RECONNECT_ATTEMPTS = 10;
 
 /**
  * Custom hook for managing WebSocket connection for real-time notifications.
- * 
- * Features:
- * - Automatic connection when user is authenticated
- * - Automatic disconnection when user logs out
- * - Auto-reconnection with exponential backoff on connection failure
- * - Parses incoming notification messages and adds them to the notification store
  */
 export function useWebSocket() {
 
-    /** Reference to the WebSocket instance */
+    // Reference to the WebSocket instance
     const wsRef = useRef<WebSocket | null>(null)
 
-    /** Counter for tracking reconnection attempts */
+    // Counter for tracking reconnection attempts
     const reconnectAttempts = useRef(0)
 
-    /** Reference to the reconnection timeout for cleanup */
+    // Reference to the reconnection timeout for cleanup
     const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-    /** Reference to the connect function for use in callbacks */
+    // Reference to the connect function for use in callbacks
     const connectRef = useRef<(() => void) | null>(null)
 
-    /** Initialize user profile data */
+    // Initialize user profile data
     useUserProfile()
 
-    /** Get authentication state from auth store */
+    // Get authentication state from auth store
     const { user, isAuthenticated } = useAuthStore()
 
-    /** Get notification actions from notification store */
+    // Get notification actions from notification store
     const { addNotification, setWsStatus } = useNotificationStore()
 
+    // Connect function
     const connect = useCallback(() => {
         // Guard: Don't connect if user is not authenticated
         if (!isAuthenticated || !user?.id) {
@@ -92,7 +87,7 @@ export function useWebSocket() {
 
                     // Handle notification based on type
                     if (notification.type !== "connected") {
-                        // Add notification to store (will trigger UI update)
+                        // Add notification to store 
                         addNotification(notification);
                     } else {
                         console.log("WebSocket: Connected successfully!")
@@ -130,23 +125,12 @@ export function useWebSocket() {
     }, [isAuthenticated, user, addNotification, setWsStatus])
 
 
-    /**
-     * Update connectRef whenever connect function changes.
-     * This ensures the reconnection callback uses the latest connect function.
-     */
+    // Update connectRef whenever connect function changes.
     useEffect(() => {
         connectRef.current = connect
     }, [connect]);
 
-    /**
-     * Gracefully closes the WebSocket connection.
-     * 
-     * This function:
-     * 1. Clears any pending reconnection timeouts
-     * 2. Closes the WebSocket with a normal closure code (1000)
-     * 3. Cleans up the WebSocket reference
-     * 4. Updates the connection status
-     */
+    // Closes the WebSocket connection.
     const disconnect = useCallback(() => {
         // Clear any pending reconnection timeout
         if (reconnectTimeoutRef.current) {
@@ -163,12 +147,7 @@ export function useWebSocket() {
         setWsStatus('disconnected')
     }, [setWsStatus]);
 
-    /**
-     * Effect to automatically manage WebSocket connection based on authentication.
-     * - Connects when user becomes authenticated
-     * - Disconnects when user logs out
-     * - Cleans up connection on component unmount
-     */
+    // Effect to automatically manage WebSocket connection based on authentication.
     useEffect(() => {
         if (isAuthenticated) {
             connect()

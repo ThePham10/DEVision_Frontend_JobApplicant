@@ -4,12 +4,19 @@ import { motion } from "motion/react";
 import { Camera } from "lucide-react";
 import { useState } from "react";
 
+// Define the edit button props
 type EditButtonProps = {
     className?: string;
     onClick: () => void;
 };
 
+/**
+ * Edit button component
+ * @param className styling the edit button
+ * @param onClick function for handle the on click behavior
+ */
 export const EditButton = ({ className = "", onClick}: EditButtonProps) => {
+    // State for hover
     const [isHovered, setIsHovered] = useState(false);
 
     return (

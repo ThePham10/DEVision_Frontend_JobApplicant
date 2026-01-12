@@ -5,6 +5,7 @@ import { Edit, Trash } from "lucide-react";
 import { motion } from "framer-motion";
 import { icons } from "@/components/reusable-component";
 
+// Define the job category card props
 interface JobCategoryCardProps {
     category: JobCategory;
     onDeactivate: (category: JobCategory) => void;
@@ -13,6 +14,14 @@ interface JobCategoryCardProps {
     onDelete: (category: JobCategory) => void;
 }
 
+/**
+ * Job category card component
+ * @param category - The job category to display
+ * @param onDeactivate - Callback function to handle deactivation
+ * @param onActivate - Callback function to handle activation
+ * @param onEdit - Callback function to handle editing
+ * @param onDelete - Callback function to handle deletion
+ */
 export default function JobCategoryCard({ category, onDeactivate, onActivate, onEdit, onDelete }: JobCategoryCardProps) {
     return (
         <motion.div

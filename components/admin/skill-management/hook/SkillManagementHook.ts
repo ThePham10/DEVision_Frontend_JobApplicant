@@ -7,10 +7,10 @@ import { useDataStore } from "@/store";
 const PAGE_SIZE = 10; // Number of items to show per "page"
 
 /**
- * 
- * @return 
+ * Skill management hook
  */
 export default function useSkillManagement() {
+    //Query client
     const queryClient = useQueryClient();
 
     // Modal state
@@ -29,6 +29,7 @@ export default function useSkillManagement() {
     // Client-side pagination state
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
+    // Job category list
     const { jobCategories } = useDataStore();
 
     // Convert filters to api filters
@@ -54,12 +55,12 @@ export default function useSkillManagement() {
         return apiFilters;
     };
 
-    // Load ALL skills at once (use a high limit)
+    // Load ALL skills
     const {
         data: skillData,
         isLoading,
     } = useQuery({
-        queryKey: ["skillsAdmin", filters], // Include filters so query refetches when filters change
+        queryKey: ["skillsAdmin", filters], 
         queryFn: () => loadSkills(buildApiFilters()),
     });
 
@@ -67,7 +68,7 @@ export default function useSkillManagement() {
     const allSkills = skillData?.data ?? [];
     const totalSkills = skillData?.total ?? 0;
 
-    // Apply client-side lazy loading (pagination) on top of server-filtered data
+    // Lazy loading
     const skills = allSkills.slice(0, visibleCount);
     const hasNextPage = visibleCount < allSkills.length;
 

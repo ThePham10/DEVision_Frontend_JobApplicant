@@ -6,7 +6,9 @@ import { X } from "lucide-react"
 import { useJobPostTable } from "../hook/JobPostTableHook";
 import { ApplicationModal } from "@/components/job-application";
 
-
+/**
+ * Job post table component
+ */
 export const JobPostTable = () => {
     const {
         filterFormConfig,

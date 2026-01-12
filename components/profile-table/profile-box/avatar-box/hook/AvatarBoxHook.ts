@@ -5,21 +5,28 @@ import { FormConfig, FormValues } from "@/components/headless-form"
 import { updateUserInfo } from "@/components/account-box/personal-box/api/PersonalBoxService";
 import { useQueryClient } from "@tanstack/react-query";
 
+/**
+ * Avatar box hook
+ */
 const useAvatarBox = () => {
+    // Auth store
     const { user, isAuthenticated, setUser } = useAuthStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    if (!isAuthenticated || !user) return null;
     const queryClient = useQueryClient();
 
+    if (!isAuthenticated || !user) return null;
+
+    // Handle open modal
     const handleOpenModal = () => {
         setIsModalOpen(true);
     }
 
+    // Handle close modal
     const handleCloseModal = () => {
         setIsModalOpen(false);
     }
 
+    // Form config
     const formAvaConfig : FormConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
         children: [
@@ -38,46 +45,52 @@ const useAvatarBox = () => {
     }
 
     
-
+    // Handle avatar submit
     const handleAvatarSubmit = async (values: FormValues) => {
-    const file = values.avatar;
+        const file = values.avatar;
         
-    if (!(file instanceof File)) {
-        console.error("No file selected");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("folder", "avatar");
-
-    try {
-        const uploadResponse = await uploadAvatar(formData);
-        
-        if (!uploadResponse?.data?.url) {
-            console.error("Upload failed - no URL returned");
+        // Check if file is selected
+        if (!(file instanceof File)) {
+            console.error("No file selected");
             return;
         }
 
-        const dbResponse = await updateUserInfo({ 
-            avatarUrl: uploadResponse.data.url 
-        });
+        // Create form data
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "avatar");
 
-        if (dbResponse?.status === 200) {
-            console.log("Avatar updated successfully");
-            if (user) {
-                setUser({
-                    ...user,
-                    avatarUrl: uploadResponse.data.url
-                })
+        try {
+            // Upload avatar
+            const uploadResponse = await uploadAvatar(formData);
+            
+            // Check if upload was successful
+            if (!uploadResponse?.data?.url) {
+                console.error("Upload failed - no URL returned");
+                return;
             }
-            queryClient.invalidateQueries({ queryKey: ['userInfo', user.id] });
-            setIsModalOpen(false);
+
+            // Update user info
+            const dbResponse = await updateUserInfo({ 
+                avatarUrl: uploadResponse.data.url 
+            });
+
+            // Check if update was successful
+            if (dbResponse?.status === 200) {
+                console.log("Avatar updated successfully");
+                if (user) {
+                    setUser({
+                        ...user,
+                        avatarUrl: uploadResponse.data.url
+                    })
+                }
+                queryClient.invalidateQueries({ queryKey: ['userInfo', user.id] });
+                setIsModalOpen(false);
+            }
+        } catch (error) {
+            console.error("Avatar update failed:", error);
         }
-    } catch (error) {
-        console.error("Avatar update failed:", error);
     }
-}
 
     return {
         user,

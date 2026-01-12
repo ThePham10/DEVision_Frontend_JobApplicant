@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {Button, Input} from "@/components/reusable-component";
 import CountryDropdown from "@/components/headless-form/country-drop-down-menu/CountryDropdown";
@@ -11,7 +10,15 @@ import Dropdown from "../../headless-dropdown/ui/Dropdown";
 import MultiCheckbox from "./MultiCheckbox";
 import DualRangeSlider from "./DualRangeSlider";
 
-
+/**
+ * HeadlessForm component
+ * HeadlessForm <- Headless form hook
+ * @param config - The configuration including the fields for the form
+ * @param onSubmit - The function to be called when the form is submitted
+ * @param initialValues - The initial values for the form fields
+ * @param validateOnChange - Whether to validate the form on field change
+ * @param validateOnBlur - Whether to validate the form on field blur
+ */
 export const HeadlessForm: React.FC<HeadlessFormProps> = ({ 
     config, 
     onSubmit,
@@ -19,7 +26,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
     validateOnChange = false,
     validateOnBlur = true,
 }) => {
-    // Track the selected dial code
+    // Selected dial code state
     const [selectedDialCode, setSelectedDialCode] = useState<string>("");
 
     // Build validations object from config
@@ -33,6 +40,7 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
     // Find phone field name (defaults to 'phone')
     const phoneFieldName = config.phoneFieldName || 'phone';
 
+    // Form hook
     const {
         values,
         touched,
@@ -96,12 +104,20 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
         }
     };
 
+    /**
+     * Render a form field based on its type 
+     * (country, select, file, multi-checkbox, dual-range, tel, textarea, input(default))
+     * @param child - The form field configuration
+     * @param index - The index of the field in the form
+     * @returns The rendered form field component
+     */
     const renderField = (child: FormChild, index: number) => {
         const fieldError = getFieldError(child.name);
 
         // Get colSpan class for grid layout
         const colSpanClass = child.colSpan ? `col-span-${child.colSpan}` : "";
 
+        // Render the country drop down if type is country
         if (child.type === "country") {
             // Handle country selection based on returnType config
             const handleCountrySelect = (country: Country) => {
@@ -133,11 +149,13 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
             );
         }
 
-        // Generic select/dropdown field
+        // Render the generic drop down if type is select
         if (child.type === "select" && child.options) {
+            // Function for handling dropdown change (multiple selection / single selection)
             const handleDropdownChange = (value: { id: string; name?: string; value?: string } | { id: string; name?: string; value?: string }[] | null) => {
                 const returnType = child.returnType || "value"; // Default to "value" (id)
                 
+                // Check whether the field allows multiple selection
                 if (child.multiple) {
                     // Multi-select: extract array based on returnType
                     if (Array.isArray(value)) {
@@ -175,18 +193,24 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
 
             // Get initial values for dropdown from form state
             const currentValue = values[child.name];
+            // If multiple selection is enabled, extract array of values
             const defaultValues = child.multiple && Array.isArray(currentValue) 
                 ? currentValue as string[] 
                 : [];
+            
+            // If single selection is enabled, extract single value
             const defaultValue = !child.multiple && typeof currentValue === 'string' 
                 ? currentValue 
                 : undefined;
 
             return (
                 <div key={index} className={colSpanClass}>
+                    {/*Title*/}
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
                         {child.title}
                     </label>
+
+                    {/*Dropdown*/}
                     <Dropdown
                         items={child.options}
                         onChange={handleDropdownChange}
@@ -196,6 +220,8 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                         defaultValue={defaultValue}
                         defaultValues={defaultValues}
                     />
+
+                    {/*Error*/}
                     {fieldError && (
                         <p className="mt-1 text-sm text-red-500">{fieldError}</p>
                     )}
@@ -203,15 +229,20 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
             );
         }
 
-        // File input field
+        // Render the file upload field if type is file
         if (child.type === "file") {
+            // Get the file value from form state
             const fileValue = values[child.name];
             const fileName = fileValue instanceof File ? fileValue.name : "";
+
             return (
                 <div key={index} className={colSpanClass}>
+                    {/*Title*/}
                     <label>
                         {child.title}
                     </label>
+                    
+                    {/*File Upload*/}
                     <div className="relative">
                         <input
                             key={index}
@@ -231,10 +262,14 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                                 hover:file:bg-blue-100
                                 cursor-pointer"
                         />
+
+                        {/*Selected file name*/}
                         {fileName && (
                             <p className="mt-1 text-sm text-gray-500">Selected: {fileName}</p>
                         )}
                     </div>
+
+                    {/*Error*/}
                     {fieldError && (
                         <p className="mt-1 text-sm text-red-500">{fieldError}</p>
                     )}
@@ -242,8 +277,9 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
             );
         }
 
-        // Multi-checkbox field (for employment status)
+        // Render the multi-checkbox field if type is multi-checkbox
         if (child.type === "multi-checkbox" && child.options) {
+            // Get the value from the form state
             const selectedValues = Array.isArray(values[child.name])
                 ? values[child.name] as string[]
                 : [];
@@ -261,12 +297,14 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
             );
         }
 
-        // Dual range slider (for salary min/max)
+        // Render the dual range slider if type is dual-range
         if (child.type === "dual-range") {
+            // Get the value from the form state
             const minKey = `${child.name}_min`;
             const maxKey = `${child.name}_max`;
             const minVal = Number(values[minKey]) || (child.min ?? 0);
             const maxVal = Number(values[maxKey]) || (child.max ?? 200000);
+
             return (
                 <div key={index} className={colSpanClass}>
                     <DualRangeSlider
@@ -286,9 +324,11 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
             );
         }
 
-        // Special handling for phone/tel field
+        // Render the phone number input field if type is tel
         if (child.type === "tel" && child.name === phoneFieldName) {
+            // Get phone number value from the form state
             const phoneValue = String(values[child.name] || "");
+
             return (
                 <div key={index} className={colSpanClass}>
                     <PhoneNumberInputField 
@@ -306,12 +346,16 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
             );
         }
 
+        // Render the textarea field if type is textarea
         if (child.type === "textarea") {
             return (
                 <div key={index} className={colSpanClass}>
+                    {/*Tilte*/}
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
                         {child.title}
                     </label>
+
+                    {/*Text area*/}
                     <textarea
                         name={child.name}
                         placeholder={child.placeholder}
@@ -321,6 +365,8 @@ export const HeadlessForm: React.FC<HeadlessFormProps> = ({
                         rows={4}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                     />
+
+                    {/*Error*/}
                     {fieldError && (
                         <p className="mt-1 text-sm text-red-500">{fieldError}</p>
                     )}

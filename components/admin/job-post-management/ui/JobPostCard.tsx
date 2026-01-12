@@ -5,16 +5,25 @@ import { motion } from "motion/react";
 import { Trash2, MapPin, Briefcase, Calendar, DollarSign, Eye, Globe, HatGlasses } from "lucide-react";
 import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup";
 
+// Define the job post card props
 type JobPostCardProps = {
     job: JobPost;
     onViewDetail: (job: JobPost) => void;
     onDelete: (job: JobPost) => void;
 };
 
+/**
+ * Job post card
+ * @param job - Job post 
+ * @param onViewDetail - View detail callback 
+ * @param onDelete - Delete callback 
+ */
 export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCardProps) {
+    // Skill lookup hook
     const { getSkillName } = useSkillLookup();
-
-     const getStatusColor = (status: string) => {
+    
+    // Get status color
+    const getStatusColor = (status: string) => {
         switch (status) {
             case "PUBLIC":
                 return "bg-green-100 text-green-700";
@@ -25,6 +34,7 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
         }
     };
 
+    // Get status icon
     const getStatusIcon = (status: string) => {
         switch (status) {
             case "PUBLIC":
@@ -36,7 +46,7 @@ export default function JobPostCard({ job, onViewDetail, onDelete }: JobPostCard
         }
     }
 
-
+    // Format date
     const formatDate = (dateString: string | null) => {
         if (!dateString) return "N/A";
         try {

@@ -4,12 +4,17 @@ import { useSummaryBox } from "../hook/SummaryBoxHook";
 import { useUserProfile } from "@/hooks/useUserProfile";
 
 export const SummaryBox = () => {
+    // Auth store
     const { isAuthenticated, user, userProfile } = useAuthStore();
+
+    // Use user profile hook
     useUserProfile();
+
+    // Use summary box hook
     const { handleSubmit, formConfig } = useSummaryBox();
 
+    // Check authentication
     if (!isAuthenticated || !user) return null;
-
 
     return (
         <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm border border-white/50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">

@@ -2,13 +2,21 @@ import { Education } from "../types"
 import { motion } from "motion/react";
 import { Pencil, University, Trash2, AtSign } from "lucide-react";
 
+// Define the profile education card props
 type ProfileEducationCardProps = {
     educationList: Education[];
     openEditModal: (education: Education) => void;
     onDelete: (education: Education) => void;
 };
 
+/**
+ * Profile education card component
+ * @param education list
+ * @param openEditModal function to open edit modal
+ * @param onDelete function to delete education
+ */
 const ProfileEducationCard = ({ educationList, openEditModal, onDelete }: ProfileEducationCardProps) => {
+    // Function to convert timestamp to month-year format
     function convertTime(timestamp: string): string {
         const date = new Date(timestamp);
         const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is 0-indexed

@@ -6,26 +6,40 @@ import { EducationCreateData, Education } from "../types";
 import { FormConfig, FormValues } from "@/components/headless-form";
 import { useUserProfile } from "@/hooks/useUserProfile";
 
+/**
+ * Profile education box hook
+ */
 export const useProfileEducationBox = () => {
+    // State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEducation, setEditingEducation] = useState<Education | undefined>(undefined)
     const [deleteConfirm, setDeleteConfirm] = useState<Education | null>(null)
     const [isCurrentlyStudying, setIsCurrentlyStudying] = useState(false);
+
+    // Auth store
     const { user, userProfile } = useAuthStore()
+    
+    // Query client
     const queryClient = useQueryClient()
+    
+    // User profile
     useUserProfile()
 
+    // Modal handlers
     const openAddModal = () => {
         setIsModalOpen(true);
     }
 
+    // Query for fetching education data 
     const { data: EducationData } = useQuery({
         queryKey: ["education"],
         queryFn: () => getEducation(user?.id ?? ""),
     })
 
+    // Education data
     const education = EducationData ?? [];
 
+    // Mutation for creating education
     const createMutation = useMutation({
         mutationFn: createEducation,
         onSuccess: () => {
@@ -36,6 +50,7 @@ export const useProfileEducationBox = () => {
         }
     })
 
+    // Mutation for updating education
     const updateMutation = useMutation({
         mutationFn: ({ id, data }: { id: string, data: EducationCreateData }) => updateEducation(id, data),
         onSuccess: () => {
@@ -46,6 +61,7 @@ export const useProfileEducationBox = () => {
         }
     })
 
+    // Mutation for deleting education
     const deleteMutation = useMutation({
         mutationFn: deleteEducation,
         onSuccess: () => {
@@ -56,6 +72,7 @@ export const useProfileEducationBox = () => {
         }
     })
 
+    // Mutation for updating highest education
     const updateHighestEducationMutation = useMutation({
         mutationFn: ({eduName, applicantId} : {eduName: string, applicantId: string}) => updateHighestEducation(eduName, applicantId),
         onSuccess: () => {
@@ -65,10 +82,12 @@ export const useProfileEducationBox = () => {
         }
     })
 
+    // Function for updating highest education
     function handleUpdateHighestEducation({eduName, applicantId}: {eduName: string, applicantId: string}) {
         updateHighestEducationMutation.mutate({eduName, applicantId})
     }
 
+    // Function for handling form submit
     function handleFormSubmit(data: FormValues) {
         const submitData: EducationCreateData = {
             levelStudy: data.levelStudy as string,
@@ -85,12 +104,14 @@ export const useProfileEducationBox = () => {
         }
     }
 
+    // Function for handling delete
     const handleDelete = async () => {
         if (deleteConfirm) {
             deleteMutation.mutate(deleteConfirm.id)
         }
     }
 
+    // Highest education selection
     const highestEducationSelection = [
         {id: "HighSchool", name: "HighSchool"},
         {id: "Bachelor", name: "Bachelor"},
@@ -99,6 +120,7 @@ export const useProfileEducationBox = () => {
         {id: "NoGiven", name: "NoGiven"},
     ]
 
+    // Form config
     const formConfig: FormConfig = {
         children: [
             {

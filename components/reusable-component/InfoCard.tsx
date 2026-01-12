@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import type { IconType } from "react-icons";
 import { ChevronRight } from "lucide-react";
 
+// Define information card props
 type InfoCardProps = {
     title: string;
     description?: string;
@@ -11,6 +12,15 @@ type InfoCardProps = {
     Icon?: IconType;
 }
 
+/**
+ * Information card component
+ * @param title - Title of the card
+ * @param description - Description of the card
+ * @param className - Additional className
+ * @param onClick - Click handler
+ * @param variant - Variant of the card
+ * @param Icon - Icon component
+ */
 export const InfoCard = ({ 
     title, 
     description, 

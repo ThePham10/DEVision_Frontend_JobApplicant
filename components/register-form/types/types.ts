@@ -1,3 +1,4 @@
+// The data type for send to the server
 type RegisterData = {
   name: string;
   email: string;
@@ -8,10 +9,12 @@ type RegisterData = {
   city?: string;
 }
 
+// The returned data from the server
 type UserData = {
     user: User;
 }
 
+// The user data type
 type User = {
   id: string;
   email: string;

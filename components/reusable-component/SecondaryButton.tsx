@@ -3,6 +3,13 @@
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation"
 
+/**
+ * Secondary button component
+ * @param text button text
+ * @param onClick button click event
+ * @param style button style
+ * @param destination button destination
+ */
 export const SecondaryButton = ({ text, onClick, style, destination }: { text: string; onClick?: React.MouseEventHandler<HTMLButtonElement>; style?: string; destination? : string }) => {
     const router = useRouter();
 

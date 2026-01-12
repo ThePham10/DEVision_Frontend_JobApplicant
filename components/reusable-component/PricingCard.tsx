@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import { Button } from "./Button";
 
+// Define the pricing card props
 interface PricingCardProps {
     title: string;
     price: string;
@@ -16,6 +17,18 @@ interface PricingCardProps {
     isCurrent?: boolean;
 }
 
+/**
+ * Pricing card component
+ * @param title pricing card title
+ * @param price pricing card price
+ * @param period pricing card period
+ * @param features pricing card features
+ * @param isPopular pricing card popular flag
+ * @param onSelect pricing card select event
+ * @param ctaText pricing card cta text
+ * @param highlighted pricing card highlighted flag
+ * @param isCurrent pricing card current flag
+ */
 export const PricingCard = ({
     title,
     price,

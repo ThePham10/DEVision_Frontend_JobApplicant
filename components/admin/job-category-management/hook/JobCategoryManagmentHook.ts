@@ -4,6 +4,7 @@ import { JobCategory, JobCategoryFilters } from "../types";
 import { loadJobCategories, createJobCategory, updateJobCategory, deleteJobCategory, deActiveJobCategory, activateJobCategory } from "@/components/admin/job-category-management/service/JobCategoryService"
 
 export default function useJobCategoryManagment() {
+    //Query client
     const queryClient = useQueryClient();
     
     // Pagination and filter state
@@ -96,6 +97,7 @@ export default function useJobCategoryManagment() {
         setIsModalOpen(true);
     };
     
+    // Open edit modal
     const openEditModal = (category: JobCategory) => {
         setEditingCategory(category);
         setIsModalOpen(true);
@@ -127,7 +129,10 @@ export default function useJobCategoryManagment() {
         activateMutation.mutate(category.id);
     }
     
+    // Check if is submitting
     const isSubmitting = createMutation.isPending || updateMutation.isPending;
+    
+    // Check if is loading
     const loading = isLoading || isFetching;
 
     return {

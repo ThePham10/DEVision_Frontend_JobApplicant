@@ -3,6 +3,7 @@ import Dropdown from "@/components/headless-dropdown";
 import { Button } from "@/components/reusable-component";
 import { employmentTypes, JobSearchParams } from "../types";
 
+// Define the job post filter bar props
 interface JobPostFilterBarProps {
     searchTerm: string;
     setSearchTerm: (searchTerm: string) => void;
@@ -12,6 +13,15 @@ interface JobPostFilterBarProps {
     filters: JobSearchParams; // Committed filters (set on button click)
 }
 
+/**
+ * Job Post filter bar
+ * @param searchTerm - Search term
+ * @param setSearchTerm - Set search term
+ * @param handleSearch - Handle search
+ * @param clearFilters - Clear filters
+ * @param setEmploymentTypeFilter - Set employment type filter
+ * @param filters - Filters
+ */
 export const JobPostFilterBar = ({
     searchTerm,
     setSearchTerm,

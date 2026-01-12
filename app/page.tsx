@@ -1,6 +1,5 @@
 "use client";
 
-import { Footer } from "@/components/footer";
 import { ServiceCard, Button, SecondaryButton } from "@/components/reusable-component";
 import { useRouter } from "next/navigation";
 import { motion, useInView } from "motion/react";

@@ -1,11 +1,11 @@
 "use client";
-
 import { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Search, Check, Folder, X } from "lucide-react";
 import { useDropdown, DropdownItem } from "../hook/useDropdown";
 import { icons } from "@/components/reusable-component";
 
+// Define the drop down props
 export interface DropdownProps<T extends DropdownItem> {
     items: T[];
     onChange?: (item: T | T[] | null) => void;
@@ -25,6 +25,25 @@ export interface DropdownProps<T extends DropdownItem> {
     defaultValues?: string[]; // IDs of default selected items (multi select)
 }
 
+/**
+ * The headless drop down menu
+ * @param items - Array of items to be displayed in the drop down
+ * @param onChange - Callback function to be called when the selection changes 
+ * @param placeholder - Placeholder text to be displayed when no item is selected
+ * @param searchPlaceholder - Placeholder text to be displayed in the search input
+ * @param searchableFields - Array of fields to be searched
+ * @param width - Width of the drop down
+ * @param showSearch - Whether to show the search input
+ * @param showCount - Whether to show the count of selected items
+ * @param showIcons - Whether to show icons for each item
+ * @param multiple - Whether to allow multiple selection
+ * @param renderItem - Function to render each item
+ * @param renderSelectedItem - Function to render the selected item
+ * @param countLabel - Label to be displayed when multiple items are selected
+ * @param defaultValue - Default value of the drop down
+ * @param defaultValues - Array of default values of the drop down
+ * @returns 
+ */
 export default function Dropdown<T extends DropdownItem>({
     items,
     onChange,

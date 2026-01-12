@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 
 /**
  * Custom hook for search profile form
- * @returns form configuration, initial values, and loading status
  */
 const useSearchProfileForm = () => {
     // State for initial search profile 

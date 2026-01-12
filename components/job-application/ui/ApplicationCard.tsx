@@ -1,9 +1,11 @@
 "use client"
-
 import { JobApplication, JobApplicationStatus } from "../types"
 import { MapPinned, Calendar, FileText, Building2, Clock, Archive } from "lucide-react"
 import { motion } from "motion/react"
 
+/**
+ * Props for the job application card
+ */
 type JobApplicationCardProps = {
     item: JobApplication
 }
@@ -44,7 +46,11 @@ const STATUS_CONFIG: Record<JobApplicationStatus, {
 }
 
 /**
- * Format date to relative or absolute format
+ * Function to convert the date to the relative or absolute format
+ * Relative format (1 days ago, etc.)
+ * Absolute format (10/1/2026)
+ * @param date the date to convert
+ * @returns the relative or absolute format
  */
 function formatAppliedDate(date: Date): { relative: string; absolute: string } {
     const now = new Date()
@@ -65,6 +71,7 @@ function formatAppliedDate(date: Date): { relative: string; absolute: string } {
     return { relative: absolute, absolute }
 }
 
+// Convert the button lable depends on the file type
 const getDocumentLabel = (url: string): string => {
     if (url.includes("/cv/")) return "View Resume"
     if (url.includes("/cover-letter/")) return "View Cover Letter"
