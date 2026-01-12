@@ -16,3 +16,4 @@ export const PAYMENT_CREATE_INTENT_URL = "/payment-service/api/payments/subscrip
 export const PAYMENT_GET_SUBSCRIPTION_URL = "/payment-service/api/payments/premium/applicant"
 export const PAYMENT_CANCEL_SUBSCRIPTION_URL = "/payment-service/api/payments/subscriptions/applicant"
 export const COMPANY_ADMIN_URL = "/profile-service/api/profiles"
+export const COMPANY_ADMIN_DELETE_URL = "/auth-service/api/admin/companies"

@@ -8,7 +8,6 @@ export default function Page() {
             {/* Animated ribbon background */}
             <Ribbon words={["LOGIN", "*", "SIGN IN", "*", "WELCOME BACK", "*", "ACCESS YOUR ACCOUNT", "*", "LET'S GO"]} />
 
-
             <div className="z-10">
                 <DEVisionLogoButton />
             </div>

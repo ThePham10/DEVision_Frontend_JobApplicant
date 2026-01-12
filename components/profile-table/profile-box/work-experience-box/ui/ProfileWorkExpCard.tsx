@@ -17,7 +17,6 @@ const ProfileWorkExpCard = ({ item, onDelete }: ProfileWorkExpCardProps) => {
         handleUpdate,
         handleClickOpen,
         handleClose,
-        userWorkExpSkills,
     } = useWorkExpCard(item);
 
     return (
@@ -46,25 +45,6 @@ const ProfileWorkExpCard = ({ item, onDelete }: ProfileWorkExpCardProps) => {
                         <p className="text-gray-500 text-sm mb-3">
                             {item.description}
                         </p>
-
-                        {userWorkExpSkills && userWorkExpSkills.length > 0 && (
-                            <div className="flex flex-wrap gap-2.5">
-                                {userWorkExpSkills.map((skill: any) => (
-                                    <span 
-                                        key={skill.id}
-                                        className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full hover:shadow-md transition-shadow duration-200"
-                                    >
-                                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                                        {skill.name}
-                                        {(() => {
-                                            const Icon = icons[skill.icon || "Other"];
-                                            return <Icon className="w-3 h-3 ml-1" />;
-                                        })()}
-                                    </span>
-        
-                                ))}
-                            </div>
-                        )}
                     </div>
                     
                     <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">

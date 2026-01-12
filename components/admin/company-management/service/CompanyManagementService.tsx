@@ -1,6 +1,6 @@
 import { jmHttpHelper } from "@/utils/jmhttpHelper";
 import { Company } from "../types";
-import { COMPANY_ADMIN_URL } from "@/config/URLConfig";
+import { COMPANY_ADMIN_URL, COMPANY_ADMIN_DELETE_URL } from "@/config/URLConfig";
 
 export async function loadCompanies(searchTerm: string | null): Promise<Company[]> {
     try {
@@ -9,6 +9,16 @@ export async function loadCompanies(searchTerm: string | null): Promise<Company[
         return response.data ?? [];
     } catch (error) {
         console.error("Error loading companies:", error);
+        throw error;
+    }
+}
+
+export async function deleteCompanyById(companyId: string): Promise<void> {
+    try {
+        await jmHttpHelper.delete(`${COMPANY_ADMIN_DELETE_URL}/${companyId}`);
+        console.log(`Company with ID ${companyId} deleted successfully.`);
+    } catch (error) {
+        console.error(`Error deleting company with ID ${companyId}:`, error);
         throw error;
     }
 }

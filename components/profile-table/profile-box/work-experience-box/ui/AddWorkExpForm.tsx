@@ -15,11 +15,9 @@ export default function AddWorkExpForm({ onSubmit, onCancel, isLoading = false }
     const handleSubmit = (values: FormValues) => {
         const data: Omit<WorkExpData, "id" | "applicantId" | "createdAt" | "updatedAt"> = {
             title: String(values.title || ""),
-            companyId: String(values.companyId || ""),
             description: String(values.description || ""),
             startDate: String(values.startDate || ""),
             endDate: String(values.endDate || ""),
-            skillCategories: (values.skillCategories as string[]) || [],
         };
         onSubmit(data);
     };
@@ -34,25 +32,18 @@ export default function AddWorkExpForm({ onSubmit, onCancel, isLoading = false }
                 colSpan: 2,
             },
             {
-                title: "Company ID",
-                name: "companyId",
-                type: "text",
-                placeholder: "Enter company ID",
-                colSpan: 2,
-            },
-            {
                 title: "Start Date",
                 name: "startDate",
                 type: "date",
                 placeholder: "",
-                colSpan: 1,
+                colSpan: 2,
             },
             {
                 title: "End Date",
                 name: "endDate",
                 type: "date",
                 placeholder: "",
-                colSpan: 1,
+                colSpan: 2,
             },
             {
                 title: "Job Description",

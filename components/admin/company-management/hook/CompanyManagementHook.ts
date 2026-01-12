@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
 
 import { Company } from "../types";
-import { loadCompanies } from "../service/CompanyManagementService";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { deleteCompanyById, loadCompanies } from "../service/CompanyManagementService";
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
 const PAGE_SIZE = 5;
 
 export default function useCompanyManagement() {
     const [deleteConfirm, setDeleteConfirm] = useState<Company | null>(null);
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+    const queryClient = useQueryClient();
 
     // Search/filter state
     const [searchTerm, setSearchTerm] = useState("");
@@ -39,6 +40,20 @@ export default function useCompanyManagement() {
         setVisibleCount(PAGE_SIZE);
     };
 
+    const deleteMutation = useMutation({
+        mutationFn: deleteCompanyById,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-companies"] });
+            setDeleteConfirm(null);
+        },
+    })
+
+    const handleDelete = () => {
+        if (deleteConfirm) {
+            deleteMutation.mutate(deleteConfirm.userId);
+        }
+    }
+
     return {
         companies,
         allCompaniesCount: allCompanies.length,
@@ -52,5 +67,6 @@ export default function useCompanyManagement() {
         clearFilters,
         deleteConfirm,
         setDeleteConfirm,
+        handleDelete,
     }
 }

@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { ApplicantFilters, ApplicantAccount } from "../types";
 import { loadApplicants, deactivateApplicant, activateApplicant } from "../service/ApplicantManagementService";
-import { useInfiniteQuery, useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 
 export default function useApplicantManagement() { 
 
@@ -16,78 +16,59 @@ export default function useApplicantManagement() {
     const queryClient = useQueryClient();
 
     // Filter state
-    const [searchName, setSearchName] = useState("");
-    const [searchPhone, setSearchPhone] = useState("");
-    const [searchEmail, setSearchEmail] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [filters, setFilters] = useState<ApplicantFilters>({});
 
-    // // use to refetch data when page or filters change
-    // // cache the data based on page and filters
-    // const {
-    //     data: applicantsData,
-    //     fetchNextPage,
-    //     hasNextPage,
-    //     isFetchingNextPage,
-    //     isLoading,
-    // } = useInfiniteQuery({
-    //     // applicants: indicates the data being queried
-    //     queryKey: ["applicants"],
-    //     // first fetch uses page 1
-    //     queryFn: ({ pageParam = 1 }) => {
-    //         return loadApplicants(pageParam, 10);
-    //     },
+    // Convert filters
+    const buildApiFilters = () => {
+        const apiFilters: { id: string; value: string; operator: string }[] = [];
 
-    //     // set the starting page for the first query to 1
-    //     initialPageParam: 1,
+        apiFilters.push({
+            id: "isActive",
+            value: "true,false",
+            operator: "in"
+        });
 
-    //     // determines the next page to fetch based on the data received from the last fetched page
-    //     getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
-    // });
+        if (searchTerm) {
+            apiFilters.push({
+                id: 'name',
+                value: searchTerm,
+                operator: 'contains'
+            });
+        }
 
-    // Load ALL applicants at once (use a high limit)
+        if (statusFilter) {
+            apiFilters.push({
+                id: 'isActive',
+                value: statusFilter === "active" ? "true" : "false",
+                operator: 'equals'
+            });
+        }
+
+        return apiFilters;
+    }
+
     const {
         data: applicantsData,
         isLoading,
     } = useQuery({
-        queryKey: ["applicants"],
-        queryFn: () => loadApplicants(1, 100), // Load all applicants with high limit
+        queryKey: ["applicantsAdmin", filters],
+        queryFn: () => loadApplicants(buildApiFilters()), 
     });
 
     const allApplicants = applicantsData?.data ?? [];
     console.log("All Applicants:", allApplicants);
     const totalApplicantsCount = applicantsData?.total ?? 0;
-    
-    // Apply client-side filters
-    const filteredApplicants = allApplicants.filter(applicant => {
-        // Filter by name
-        if (filters.name && !applicant.name.toLowerCase().includes(filters.name.toLowerCase())) {
-            return false;
-        }
-        // Filter by phone
-        if (filters.phone && (!applicant.phone || !applicant.phone.toLowerCase().includes(filters.phone.toLowerCase()))) {
-            return false;
-        }
-        // Filter by email
-        if (filters.email && !applicant.email.toLowerCase().includes(filters.email.toLowerCase())) {
-            return false;
-        }
-        // Filter by status
-        if (filters.isActive !== undefined && applicant.isActive !== filters.isActive) {
-            return false;
-        }
-        return true;
-    });
 
     // Apply client-side lazy loading (pagination)
-    const applicants = filteredApplicants.slice(0, visibleCount);
-    const hasNextPage = visibleCount < filteredApplicants.length;
-
+    const applicants = allApplicants.slice(0, visibleCount);
+    const hasNextPage = visibleCount < allApplicants.length;
 
     const deactivateMutation = useMutation({
         mutationFn: deactivateApplicant,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["applicants"] });
+            queryClient.invalidateQueries({ queryKey: ["applicantsAdmin"] });
             setIsModalOpen(false);
             setDeactivateConfirm(null);
         }
@@ -96,18 +77,22 @@ export default function useApplicantManagement() {
     const activateMutation = useMutation({
         mutationFn: activateApplicant,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["applicants"] });
+            queryClient.invalidateQueries({ queryKey: ["applicantsAdmin"] });
             setIsModalOpen(false);
             setActivateConfirm(null);
         }
     });
 
-    const handleDeActivate = (applicant: ApplicantAccount) => {
-        deactivateMutation.mutate(applicant.id);
+    const handleDeActivate = () => {
+        if (deactivateConfirm) {
+            deactivateMutation.mutate(deactivateConfirm.id);
+        }
     }
 
-    const handleActivate = (applicant: ApplicantAccount) => {
-        activateMutation.mutate(applicant.id);
+    const handleActivate = () => {
+        if (activateConfirm) {
+            activateMutation.mutate(activateConfirm.id);
+        }
     }
 
     const handleLoadMore = () => {
@@ -117,9 +102,7 @@ export default function useApplicantManagement() {
     // Handle search
     const handleSearch = () => {
         const newFilters: ApplicantFilters = {
-            name: searchName || undefined,
-            phone: searchPhone || undefined,
-            email: searchEmail || undefined,
+            name: searchTerm || undefined,
             isActive: statusFilter === "active" ? true : statusFilter === "inactive" ? false : undefined,
         };
         setFilters(newFilters);
@@ -128,9 +111,7 @@ export default function useApplicantManagement() {
 
     // Clear filters
     const clearFilters = () => {
-        setSearchName("");
-        setSearchPhone("");
-        setSearchEmail("");
+        setSearchTerm("");
         setStatusFilter("");
         setFilters({});
         setVisibleCount(PAGE_SIZE); // Reset pagination when clearing filters
@@ -150,13 +131,8 @@ export default function useApplicantManagement() {
         handleActivate,
         activateConfirm,
         setActivateConfirm,
-        // Search & filter
-        searchName,
-        setSearchName,
-        searchPhone,
-        setSearchPhone,
-        searchEmail,
-        setSearchEmail,
+        searchTerm,
+        setSearchTerm,
         statusFilter,
         setStatusFilter,
         handleSearch,

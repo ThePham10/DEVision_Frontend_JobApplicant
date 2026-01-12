@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import CompanyManagementCard from "./CompanyManagementCard";
 import useCompanyManagement from "../hook/CompanyManagementHook";
 import { FaTimes } from "react-icons/fa";
+import { Modal } from "@/components/reusable-component/Modal";
 
 const CompanyManagement = () => {
     const {
@@ -18,6 +19,9 @@ const CompanyManagement = () => {
         handleLoadMore,
         handleSearch,
         clearFilters,
+        deleteConfirm,
+        setDeleteConfirm,
+        handleDelete,
     } = useCompanyManagement();
 
     return (
@@ -94,6 +98,7 @@ const CompanyManagement = () => {
                             <CompanyManagementCard
                                 key={company.id}
                                 company={company}
+                                onDelete={setDeleteConfirm}
                             />
                             
                         ))}
@@ -109,6 +114,34 @@ const CompanyManagement = () => {
                     />
                 </div>
             )}
+
+            <Modal
+                isOpen={!!deleteConfirm}
+                onClose={() => setDeleteConfirm(null)}
+                title="Confirm Delete"
+                size="small"
+            >
+                <div className="space-y-4">
+                    <p className="font-[Inter] text-gray-700">
+                        Are you sure you want to delete <strong>&quot;{deleteConfirm?.companyName}&quot;</strong> account?
+                    </p>
+                    <div className="flex justify-end gap-3">
+                        <button
+                            onClick={() => setDeleteConfirm(null)}
+                            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-[Inter]"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                            disabled={!deleteConfirm}
+                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-[Inter] disabled:opacity-50"
+                        >
+                            {isLoading ? "Deleting..." : "Delete"}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }

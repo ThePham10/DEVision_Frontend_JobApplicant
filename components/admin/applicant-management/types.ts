@@ -5,14 +5,13 @@ type ApplicantAccount = {
     phone?: string;
     address?: string;
     isActive: boolean;
+    isPremium?: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
 
 type ApplicantFilters = {
     name?: string;
-    email?: string;
-    phone?: string;
     isActive?:boolean;
 }
 
@@ -21,7 +20,7 @@ type PaginatedResponse<T> = {
     total: number;
     page: number;
     limit: number;
-    hasMore: boolean;
+    totalPages: number;
 }
 
 export type { ApplicantAccount, ApplicantFilters, PaginatedResponse };

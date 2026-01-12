@@ -5,13 +5,14 @@ import { motion } from "framer-motion";
 import { Modal } from "@/components/reusable-component/Modal";
 import { useState } from "react";
 import CompanyDetails from "./CompanyDetails";
-import { Building2 } from "lucide-react";
+import { Building2, X } from "lucide-react";
 
 interface CompanyManagementCardProps {
     company: Company;
+    onDelete: (company: Company) => void;
 }
 
-export default function CompanyManagementCard({ company }: CompanyManagementCardProps) {
+export default function CompanyManagementCard({ company, onDelete }: CompanyManagementCardProps) {
     const [isModalOpen, setIsModalOpen] =  useState(false);
 
     return (
@@ -51,6 +52,16 @@ export default function CompanyManagementCard({ company }: CompanyManagementCard
                     whileTap={{ scale: 0.95 }} 
                 >   
                     View Details
+                </motion.button>
+
+                <motion.button
+                    onClick={() => onDelete(company)}
+                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-[Inter]"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    aria-label="Delete"
+                >
+                    <X />
                 </motion.button>
 
                 <Modal
