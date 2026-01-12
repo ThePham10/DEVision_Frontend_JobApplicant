@@ -11,6 +11,7 @@ const iconOptions = Object.keys(icons).map((key) => ({
     icon: key,
 }));
 
+// Define skill form props
 interface SkillFormProps {
     skill?: Skill | null;
     jobCategories: JobCategory[];

@@ -1,12 +1,19 @@
 import { motion } from "motion/react";
 import type { IconType } from "react-icons"
 
+// Define the service card props
 type ServiceCardProps = {
     title: string;
     description: string;
     Icon: IconType;
 }
 
+/**
+ * Service card component 
+ * @param title service card title
+ * @param description service card description
+ * @param Icon service card icon
+ */
 export const ServiceCard = ({ title, description, Icon}: ServiceCardProps) => {
     return (
         <motion.div

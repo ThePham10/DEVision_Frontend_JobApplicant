@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+// Auth user data
 type AuthUser = {
     id: string,
     email: string,
@@ -9,9 +10,10 @@ type AuthUser = {
     role: string,
     country?: string,
     emailVerified: boolean,
-    isPremium: boolean,  // Premium user flag
+    isPremium: boolean,
 }
 
+// User profile data
 type UserProfile = {
   name: string;
   email: string;
@@ -28,12 +30,13 @@ type UserProfile = {
   highestEducation: string;
 }
 
+// Define the auth store interface
 interface AuthStore {
     user: AuthUser | null;
     userProfile: UserProfile | null;
     isAuthenticated: boolean;
     isAdmin: boolean;
-    isPremium: boolean;  // Premium user flag
+    isPremium: boolean;
     _hasHydrated: boolean;
 
     setUser: (user : AuthUser) => void;
@@ -50,7 +53,7 @@ export const useAuthStore = create<AuthStore>()(
             userProfile: null,
             isAuthenticated: false,
             isAdmin: false,
-            isPremium: false,  // Default to non-premium
+            isPremium: false,
             _hasHydrated: false,
 
             setUser: (user : AuthUser) => 
@@ -58,7 +61,7 @@ export const useAuthStore = create<AuthStore>()(
                     user,
                     isAuthenticated: true,
                     isAdmin: user.role === "admin",
-                    isPremium: user.isPremium  // Set from user data
+                    isPremium: user.isPremium 
                 }),
             
             clearUser: () => 
@@ -66,7 +69,7 @@ export const useAuthStore = create<AuthStore>()(
                     user: null,
                     isAuthenticated: false,
                     isAdmin: false,
-                    isPremium: false  // Reset to non-premium
+                    isPremium: false
                 }),
 
             setIsAuthenticated: (state: boolean) =>

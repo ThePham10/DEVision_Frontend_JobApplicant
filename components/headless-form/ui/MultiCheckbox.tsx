@@ -1,7 +1,7 @@
 "use client";
-
 import { SelectOption } from "../types/types";
 
+// Define the multi check box props
 interface MultiCheckboxProps {
     title: string;
     name: string;
@@ -11,6 +11,15 @@ interface MultiCheckboxProps {
     errorMessage?: string;
 }
 
+/**
+ * MultiCheckbox component
+ * @param title - The title of the multi checkbox
+ * @param name - The name of variable of the multi checkbox
+ * @param options - The options for the multi checkbox
+ * @param value - The value of the multi checkbox
+ * @param onChange - The function to be called when the multi checkbox value changes
+ * @param errorMessage - The error message for the multi checkbox
+ */
 const MultiCheckbox = ({ title, name, options, value = [], onChange, errorMessage }: MultiCheckboxProps) => {
     const handleCheckboxChange = (optionId: string) => {
         if (value.includes(optionId)) {
@@ -24,9 +33,12 @@ const MultiCheckbox = ({ title, name, options, value = [], onChange, errorMessag
 
     return (
         <div className="mb-4">
+            {/*Title*/}
             <label className="font-[Inter] font-medium block mb-3">
                 {title}
             </label>
+
+            {/*Option selection list*/}
             <div className="flex flex-wrap gap-3">
                 {options.map((option) => {
                     const isSelected = value.includes(option.id);

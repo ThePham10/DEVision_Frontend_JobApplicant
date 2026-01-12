@@ -1,4 +1,3 @@
-
 import { Button, SecondaryButton } from "@/components/reusable-component"
 import {ApplicationModal} from "@/components/job-application/ui/ApplicationModal"
 import { motion } from "motion/react"
@@ -6,6 +5,11 @@ import { MapPinned, DollarSign, Calendar, Building, CheckCircle } from "lucide-r
 import { useJobPostDetail } from "../hook/JobPostDetailHook"
 import { icons } from "@/components/reusable-component"
 
+/**
+ * Job post detail component
+ * @param params - the job post id
+ * @returns the job post detail component
+ */
 export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     const {
         router,
@@ -19,6 +23,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
         getSkillName
     } = useJobPostDetail({ params });
 
+    // If the job post is loading, show a loading screen
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -33,6 +38,7 @@ export const JobPostDetail = ({ params }: { params: Promise<{ id: string }> }) =
         )
     }
 
+    // If the job post is not found, show a not found screen
     if (!jobPost) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">

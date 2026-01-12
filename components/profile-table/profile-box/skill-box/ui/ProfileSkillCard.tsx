@@ -3,12 +3,19 @@ import { X } from "lucide-react";
 import { icons } from "@/components/reusable-component"
 import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup";
 
+// Define the profile skill card props
 type ProfileSkillCardProps = {
     item: string[];
     onDelete?: (id: string) => void;
 };
 
+/**
+ * Profile skill card component
+ * @param item list of skills
+ * @param onDelete delete skill function
+ */
 const ProfileSkillCard = ({ item, onDelete }: ProfileSkillCardProps) => {
+    // Use skill lookup hook
     const { getSkillIcon, getSkillName } = useSkillLookup()
 
     return (
@@ -61,6 +68,7 @@ const ProfileSkillCard = ({ item, onDelete }: ProfileSkillCardProps) => {
                 })}
             </AnimatePresence>
             
+            {/* No skills message */}
             {item.length === 0 && (
                 <div className="text-gray-400 text-sm italic">
                     No skills added yet. Click &quot;Add Skill&quot; to get started.

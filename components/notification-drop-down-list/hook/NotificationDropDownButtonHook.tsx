@@ -6,9 +6,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { markAllAsRead, markAsRead } from "../service/NotificationDropDownService";
 import { getNotificationDropDownList } from "../service/NotificationDropDownService";
 
+/**
+ * Notification drop down button hook
+ */
 const useNotificationDropDownButton = () => {
+    // Query client
     const queryClient = useQueryClient();
 
+    // Notification store
     const { 
         notifications,       
         setNotifications,
@@ -16,18 +21,23 @@ const useNotificationDropDownButton = () => {
         wsStatus,
     } = useNotificationStore()
 
+    // State
     const [displayCount, setDisplayCount ] = useState(10)
     const displayedNotifications = notifications.slice(0, displayCount)
     const hasMore = displayCount < notifications.length
     const [isOpen, setIsOpen] = useState(false)
+
+    // Ref
     const popupRef = useRef<HTMLDivElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)
     const loaderRef = useRef<HTMLDivElement>(null)
 
+    // Handle load more function
     const loadMore = useCallback(() => {
         setDisplayCount(prev => Math.min(prev + 10, notifications.length))
     }, [notifications.length])
     
+    // Handle load more intersection observer
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -43,6 +53,7 @@ const useNotificationDropDownButton = () => {
         return () => observer.disconnect()
     }, [hasMore, loadMore, isOpen])
 
+    // Get notification icon
     function getNotificationIcon(type: NotificationType) {
         const iconClass = "w-5 h-5";
         switch (type) {
@@ -59,6 +70,7 @@ const useNotificationDropDownButton = () => {
         }
     };   
     
+    // Get notification background color
     function getNotificationBg(type: NotificationType) {
         switch (type) {
             case "JobMatchingAlert":
@@ -74,6 +86,7 @@ const useNotificationDropDownButton = () => {
         }
     };
 
+    // Get relative time
     function getRelativeTime(timestamp: string): string {
         const now = new Date();
         const date = new Date(timestamp);
@@ -127,6 +140,7 @@ const useNotificationDropDownButton = () => {
         };
     }, [isOpen]);
 
+    // Mark as read mutation
     const markAsReadMutation = useMutation({
         mutationFn: ({id}: {id: string}) => 
             markAsRead(id),
@@ -135,10 +149,12 @@ const useNotificationDropDownButton = () => {
         }
     })
 
+    // Handle mark as read
     function handleMarkAsRead(id: string) {
         markAsReadMutation.mutate({id});
     }
 
+    // Mark all as read mutation
     const markAllAsReadMutation = useMutation({
         mutationFn: () => markAllAsRead(),
         onSuccess: () => {
@@ -146,6 +162,7 @@ const useNotificationDropDownButton = () => {
         }
     })
 
+    // Handle mark all as read
     function handleMarkAllAsRead() {
         markAllAsReadMutation.mutate();
     }

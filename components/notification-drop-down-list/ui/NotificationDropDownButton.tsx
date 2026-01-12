@@ -1,11 +1,13 @@
 "use client";
-
 import { motion, AnimatePresence } from "motion/react";
 import { Bell } from "lucide-react";
 import { NotificationCard } from "./NotificationCard";
 import useNotificationDropDownButton from "../hook/NotificationDropDownButtonHook";
 
-
+/**
+ * Notification drop down button component
+ * Notification drop down button <- notification drop down hook <- notification drop down service
+ */
 export const NotificationDropDownButton = () => {
     const {
         isOpen, 

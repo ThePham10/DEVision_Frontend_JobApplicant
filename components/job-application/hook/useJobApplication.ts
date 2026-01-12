@@ -7,19 +7,24 @@ import { loadJobPost } from "@/components/job-post/job-post-table/service/JobPos
 import { Briefcase, Clock, Archive } from "lucide-react"
 
 /**
- * Custom hook for managing job applications
+ * Job Application hook
  */
 export function useJobApplication() { 
+    // State
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [activeFilter, setActiveFilter] = useState<JobApplicationStatus | undefined>(undefined)
 
+    // Auth store
     const { user } = useAuthStore()
 
+    // The query for fetching all job posts with the setting will refetch after 5 minutes
     const { data: allJobPosts } = useQuery({
         queryKey: ["all-job-posts"],
         queryFn: () => loadJobPost(),
         staleTime: 5 * 60 * 1000
     })
 
+    // The query for fetching the job application
     const {
         data: jobApplications,
         isLoading
@@ -28,8 +33,7 @@ export function useJobApplication() {
         queryFn: () => getJobApplication(user?.id || "")
     })
 
-    const [activeFilter, setActiveFilter] = useState<JobApplicationStatus | undefined>(undefined)
-
+    // Handle the filter click
     const handleFilterClick = (status: JobApplicationStatus | undefined) => {
         setActiveFilter(status)
     }
@@ -52,6 +56,7 @@ export function useJobApplication() {
         }
     })
 
+    // Check whether the user has applied to the job
     const hasAppliedToJob = (jobId: string): boolean => {
         return (jobApplications ?? []).some(app => app.jobId === jobId)
     }
@@ -61,6 +66,7 @@ export function useJobApplication() {
         ? enrichedApplications.filter(app => app.status === activeFilter)
         : enrichedApplications
 
+    // Define the style of the stat cards
     const statCards = [
         {
             label: "Total Applications",

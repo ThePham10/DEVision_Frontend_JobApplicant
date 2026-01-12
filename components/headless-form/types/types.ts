@@ -1,5 +1,3 @@
-import { UserCredential } from "firebase/auth";
-
 type SelectOption = {
     id: string;
     name: string;
@@ -81,7 +79,6 @@ type UseFormReturn = {
     };
     getFieldError: (name: string) => string | undefined;
     isFieldTouched: (name: string) => boolean;
-    handleGoogle: (e?: React.FormEvent) => Promise<UserCredential>;
 };
 
 type ValidationRule = {

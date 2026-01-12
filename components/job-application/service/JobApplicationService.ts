@@ -2,6 +2,11 @@ import { JOB_APPLICATION_URL } from "@/config/URLConfig"
 import { JobApplication, ApplicationFormData, ReturnMediaUrl, ReturnUploadingData } from "../types"
 import { httpHelper } from "@/utils/httpHelper"
 
+/**
+ * Get job application by applicant id
+ * @param applicantId - the applicant id
+ * @returns the job application list
+ */
 export async function getJobApplication(applicantId: string): Promise<JobApplication[]> {
     try {
         const response = await httpHelper.get(JOB_APPLICATION_URL + "/applicant/" + applicantId);
@@ -15,6 +20,11 @@ export async function getJobApplication(applicantId: string): Promise<JobApplica
     return []
 }
 
+/**
+ * Submit a new application
+ * @param application - the application form data that contain the cv file and cover letter file
+ * @returns the job application
+ */
 export async function submitApplication(application: ApplicationFormData): Promise<JobApplication | null> {
     try {
         const cvUrl = await uploadCVFile(application);
@@ -49,6 +59,11 @@ export async function submitApplication(application: ApplicationFormData): Promi
     return null
 }
 
+/**
+ * Upload the cv file
+ * @param application - the application form data that contain the cv file
+ * @returns the media url
+ */
 async function uploadCVFile(application: ApplicationFormData): Promise<ReturnMediaUrl | null> {
     const file = application.cvFile;
 
@@ -71,6 +86,11 @@ async function uploadCVFile(application: ApplicationFormData): Promise<ReturnMed
     return null;
 }
 
+/**
+ * Upload the cover letter file
+ * @param application - the application form data that contain the cover letter file
+ * @returns the media url
+ */
 async function uploadCoverLetterFile(application: ApplicationFormData): Promise<ReturnMediaUrl | null> {
     const file = application.coverLetterFile;
 
@@ -92,6 +112,11 @@ async function uploadCoverLetterFile(application: ApplicationFormData): Promise<
     return null;
 }
 
+/**
+ * Upload the file to S3 bucket
+ * @param data - the form data that contain the file
+ * @returns the uploading data (status and file url)
+ */
 async function uploadFileToStorage(data: FormData): Promise<ReturnUploadingData | null> {
     try {
         const response = await httpHelper.post("/storage/upload", data);

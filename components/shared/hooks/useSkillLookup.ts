@@ -3,14 +3,13 @@ import { loadSkills } from "@/components/admin/skill-management/service/SkillSer
 import { Skill } from "@/components/admin/skill-management/types";
 
 /**
- * Hook to fetch all skills and provide a lookup function
- * to convert skill IDs to skill names
+ * Hook to fetch all skills and provide a lookup function to convert skill IDs to skill names
  */
 export function useSkillLookup() {
-    // Fetch all skills (with a high limit to get all)
+    // Fetch all skills
     const { data: skillsData, isLoading } = useQuery({
         queryKey: ["all-skills"],
-        queryFn: () => loadSkills(), // Fetch up to 1000 skills
+        queryFn: () => loadSkills(),
         staleTime: 10 * 60 * 1000, // Cache for 10 minutes
     });
 
@@ -23,7 +22,8 @@ export function useSkillLookup() {
 
     /**
      * Get skill name by ID
-     * Returns the skill name if found, otherwise returns the ID itself
+     * @param skillId skill id
+     * @returns skill name
      */
     const getSkillName = (skillId: string): string => {
         return skillMap.get(skillId)?.name ?? skillId;
@@ -31,6 +31,8 @@ export function useSkillLookup() {
 
     /**
      * Get full skill object by ID
+     * @param skillId skill id
+     * @returns skill object
      */
     const getSkill = (skillId: string): Skill | undefined => {
         return skillMap.get(skillId);
@@ -38,11 +40,18 @@ export function useSkillLookup() {
 
     /**
      * Convert array of skill IDs to array of skill names
+     * @param skillIds array of skill ids
+     * @returns array of skill names
      */
     const getSkillNames = (skillIds: string[]): string[] => {
         return skillIds.map(id => getSkillName(id));
     };
 
+    /**
+     * Get skill icon by ID
+     * @param skillId skill id
+     * @returns skill icon
+     */
     const getSkillIcon = (skillId: string): string => {
         return getSkill(skillId)?.icon ?? ""
     }

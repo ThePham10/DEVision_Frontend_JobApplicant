@@ -6,18 +6,28 @@ import { useRouter } from "next/navigation"
 import { useState, useEffect, Activity } from "react"
 import { Menu, X } from "lucide-react"
 
+// Tab interface
 type Tab = {
     title: string;
     path: string;
 }
 
+// Define the navigation bar props
 interface NavBarProps {
     isAdmin: boolean;
     pathname: string;
 }
 
+/**
+ * Navigation bar component
+ * @param isAdmin admin flag
+ * @param pathname current path
+ */
 export const NavBar = ({isAdmin, pathname}: NavBarProps) => {
+    // Router for navigation
     const router = useRouter();
+
+    // State
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Close mobile menu on escape key
@@ -41,11 +51,13 @@ export const NavBar = ({isAdmin, pathname}: NavBarProps) => {
         };
     }, [isMobileMenuOpen]);
 
+    // Handle tab click
     const handleTabClick = (tab: Tab) => {
         router.push(tab.path);
         setIsMobileMenuOpen(false);
     };
 
+    // Define tabs for admin and applicant
     const tabs = isAdmin ? [
         {title: 'Job Applicant', path: '/admin/applicant'},
         {title: 'Company', path: '/admin/company'},

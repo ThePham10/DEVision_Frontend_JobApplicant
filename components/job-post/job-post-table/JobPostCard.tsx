@@ -4,7 +4,16 @@ import { MapPinned, DollarSign, Calendar } from "lucide-react"
 import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup"
 import { icons } from "@/components/reusable-component"
 
+/**
+ * Job post card component
+ * @param item - job post item
+ * @param onViewDetail - view detail callback
+ * @param onApply - apply callback
+ * @param isApplied - check if user has applied for the job
+ * @param isAuthenticated - check if user is authenticated
+ */
 const JobPostCard = ({ item, onViewDetail, onApply, isApplied, isAuthenticated }: { item: JobPost, onViewDetail?: (job: JobPost) => void, onApply: (job: JobPost) => void, isApplied: boolean, isAuthenticated: boolean }) => {
+    // Skill lookup hook
     const { getSkillName, getSkillIcon } = useSkillLookup();
 
     return (

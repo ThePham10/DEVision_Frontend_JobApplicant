@@ -3,6 +3,15 @@
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 
+/**
+ * Button component
+ * @param text button text
+ * @param onClick button click event
+ * @param style button style
+ * @param type button type
+ * @param destination button destination for navigation
+ * @param disabled disabled flag
+ */
 export const Button = ({ text, onClick, style, type = "submit", destination, disabled = false}: { text: string; onClick?: React.MouseEventHandler<HTMLButtonElement>; style?: string; type?: "submit" | "button" | "reset"; destination?: string; disabled?: boolean}) => {
     const router = useRouter();
     

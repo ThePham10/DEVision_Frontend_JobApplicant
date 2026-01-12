@@ -1,18 +1,17 @@
 "use client"
 
-import { MapPinned } from "lucide-react";
 import { Modal, AvatarFrame, EditButton } from "@/components/reusable-component";
 import { HeadlessForm } from "@/components/headless-form";
 import { useAvatarBox } from "../hook/AvatarBoxHook";
 
 export const AvatarBox = () => {
+    // Get avatar box data
     const avatarBoxData = useAvatarBox();
     
     // Return null or a placeholder if not authenticated
     if (!avatarBoxData) return null;
 
     const {
-        user,
         isModalOpen,
         handleOpenModal,
         handleCloseModal,

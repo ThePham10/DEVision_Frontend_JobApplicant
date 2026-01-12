@@ -5,6 +5,7 @@ import { Skill } from "@/components/admin/skill-management/types";
 
 /**
  * Load job categories
+ * @returns job categories
  */
 async function loadJobCategoriesData(): Promise<JobCategory[]> {
     const response = await httpHelper.get<{ data: JobCategory[] }>(JOB_CATEGORY_URL + "?limit=" + 100);
@@ -13,6 +14,7 @@ async function loadJobCategoriesData(): Promise<JobCategory[]> {
 
 /**
  * Load skills
+ * @returns skills
  */
 async function loadSkillsData(): Promise<Skill[]> {
     const response = await httpHelper.get<{ data: Skill[] }>(SKILL_URL + "?limit=" + 100);

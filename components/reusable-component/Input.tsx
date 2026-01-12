@@ -67,6 +67,24 @@ const stateStyles: Record<InputState, { border: string; ring: string; text: stri
     },
 };
 
+/**
+ * Input component
+ * @param title input title 
+ * @param type input type
+ * @param placeholder input placeholder
+ * @param variant input variant
+ * @param size input size
+ * @param state input state
+ * @param leftIcon for define the icon position on the left
+ * @param rightIcon for define the icon position on the right
+ * @param helperText input helper message
+ * @param errorMessage input error message
+ * @param successMessage input success message
+ * @param containerClassName input container class name
+ * @param inputClassName input class name
+ * @param labelClassName input label class name
+ * @param disabled input disabled flag
+ */
 export const Input = ({
     title,
     type = "text",

@@ -2,9 +2,15 @@ import { MapPin, Briefcase, Calendar, DollarSign, Building } from "lucide-react"
 import { JobPost } from "../types";
 import { useSkillLookup } from "@/components/shared/hooks/useSkillLookup";
 
+/**
+ * Job post detail modal
+ * @param job - Job post 
+ */
 export const JobPostDetailModal = ({ job }: {job: JobPost}) => {
+    // Skill lookup hook
     const { getSkillName } = useSkillLookup();
 
+    // Format date
     const formatDate = (dateString: string | null) => {
         if (!dateString) return "N/A";
         try {

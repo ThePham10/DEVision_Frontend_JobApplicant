@@ -1,13 +1,15 @@
 // API layer for fetching countries with dial codes
 import { countriesApi } from "@/utils/httpHelper";
 
+// The country data type
 export type Country = {
     value: string;      // Country code (e.g., "VN")
     label: string;      // Country name (e.g., "Vietnam")
     dialCode: string;   // Dial code (e.g., "+84")
 };
 
-type RawCountryData = {
+// The raw country data type (because this is the data type returned from the API)
+export type RawCountryData = {
     name: { common: string };
     cca2: string;
     idd?: {
@@ -19,10 +21,12 @@ type RawCountryData = {
 // Store countries in memory for dial code lookup
 let countriesCache: Country[] = [];
 
+// Function to fetch countries from the API and cache them
 export async function fetchCountries(): Promise<Country[]> {
     // Using httpHelper's countriesApi for centralized API management
     const response = await countriesApi.get<RawCountryData[]>("/all?fields=name,cca2,idd");
     
+    // Map the raw country data to the country data
     const countries = response.data
         .map((country) => {
             // Build dial code from idd.root + first suffix

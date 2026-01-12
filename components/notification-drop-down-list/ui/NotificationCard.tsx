@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation"
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react"
 import { Notification, NotificationType, MatchingJobData } from "../types/types"
 
+// Define the notification card props
 type NotificationCardProps = {
     notification: Notification,
     markAsRead: (notificationId: string) => void,
@@ -11,12 +12,25 @@ type NotificationCardProps = {
     getRelativeTime: (timestamp: string) => string,
 }
 
+/**
+ * Notification card component
+ * @param notification notification list
+ * @param markAsRead mark notification as read function
+ * @param getNotificationBg get notification background color function
+ * @param getNotificationIcon get notification icon function
+ * @param getRelativeTime get relative time function
+ */
 export const NotificationCard = ({ notification, markAsRead, getNotificationBg, getNotificationIcon, getRelativeTime }: NotificationCardProps) => {
+    //State 
     const [isExpanded, setIsExpanded] = useState(false);
+    
+    //Router for navigation
     const router = useRouter();
 
+    // Check if the notification is clickable
     const isClickableJobNotification = notification.type === "JobMatchingAlert" && notification.data;
 
+    // Handle click
     const handleClick = () => {
         setIsExpanded(!isExpanded);
         if (!notification.read) {
@@ -24,8 +38,12 @@ export const NotificationCard = ({ notification, markAsRead, getNotificationBg, 
         }
     };
 
+    // Handle navigate to job
     const handleNavigateToJob = (e: React.MouseEvent) => {
+        // Prevent to trigger the parent click event
         e.stopPropagation();
+        
+        // Check if the notification is clickable
         if (notification.type === "JobMatchingAlert" && notification.data) {
             const jobData = notification.data as MatchingJobData;
             router.push(`/jobs/${jobData.jobId}`);

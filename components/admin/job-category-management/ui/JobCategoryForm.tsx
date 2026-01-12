@@ -19,6 +19,7 @@ const iconOptions = Object.keys(icons).map((key) => ({
 }));
 
 export default function JobCategoryForm({ category, onSubmit, onCancel, isLoading = false }: JobCategoryFormProps) {
+    // Check whether the form is used for editing job category
     const isEditing = !!category;
     
     // Form configuration using HeadlessForm pattern

@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import { Notification } from "@/components/notification-drop-down-list/types/types";
 
+// Define the web socket status
 export type WebSocketStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
 
+// Define the notification store interface
 interface NotificationStore {
     notifications: Notification[];
     unreadCount: number;

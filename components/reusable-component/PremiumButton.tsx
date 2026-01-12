@@ -3,13 +3,11 @@
 import { motion } from "motion/react";
 import { Crown } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { usePersonalSettingForm } from "@/components/account-box/personal-box/hook/usePersonalSettingForm";
 import { useAuthStore } from "@/store/authStore";
 
 export const PremiumButton = () => {
     const router = useRouter();
     const { userProfile } = useAuthStore();
-    const { userAccount } = usePersonalSettingForm();
 
     const handleClick = () => {
         router.push("/premium");

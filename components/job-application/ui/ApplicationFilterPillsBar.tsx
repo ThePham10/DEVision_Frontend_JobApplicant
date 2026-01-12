@@ -2,12 +2,19 @@ import { motion } from "motion/react"
 import { Filter } from "lucide-react"
 import { JobApplicationStatus, statusFilters } from "../types"
 
+// Define the applciation filter pills bar props
 interface ApplicationFilterPillsBarProps {
     activeFilter: JobApplicationStatus | undefined
     getCountForStatus: (status: JobApplicationStatus | undefined) => number
     handleFilterClick: (status: JobApplicationStatus | undefined) => void
 }
 
+/**
+ * Application filter pills bar component
+ * @param getCountForStatus - function to get the count for a status
+ * @param activeFilter - the active filter
+ * @param handleFilterClick - function to handle filter click
+ */
 export const ApplicationFilterPillsBar = ({ getCountForStatus, activeFilter, handleFilterClick }: ApplicationFilterPillsBarProps) => {
     return (
         <motion.div

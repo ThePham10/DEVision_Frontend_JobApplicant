@@ -4,6 +4,7 @@ import { Modal, Button } from "@/components/reusable-component"
 import { Upload, FileText, X } from "lucide-react"
 import { useApplicationModal } from "../hook/ApplicationModalHook"
 
+// Define the application modal props
 type ApplicationModalProps = {
     isOpen: boolean
     onClose: () => void
@@ -12,6 +13,14 @@ type ApplicationModalProps = {
     company: string
 }
 
+/**
+ * Application modal component
+ * @param isOpen - whether the modal is open
+ * @param onClose - function to close the modal
+ * @param jobId - the job id
+ * @param jobTitle - the job title
+ * @param company - the company name
+ */
 export function ApplicationModal({ isOpen, onClose, jobId, jobTitle, company }: ApplicationModalProps) {
 
     const {
@@ -31,6 +40,7 @@ export function ApplicationModal({ isOpen, onClose, jobId, jobTitle, company }: 
         onClose,
     })
 
+    // If the application is successful, redirect to the applications page
     if (success) {
         return (
             <Modal isOpen={isOpen} onClose={handleClose}>
@@ -47,6 +57,7 @@ export function ApplicationModal({ isOpen, onClose, jobId, jobTitle, company }: 
         )
     }
 
+    // Render the modal
     return (
         <Modal isOpen={isOpen} onClose={handleClose}>
             <div className="max-w-2xl">

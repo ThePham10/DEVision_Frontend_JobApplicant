@@ -1,18 +1,19 @@
-// Custom hook for form state and validation
-
 import { useState, useCallback } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "@/firebase/firebaseConfig";
 import { ValidationErrors, FormValues, FormFieldValue, UseFormOptions, UseFormReturn } from "../types/types"
-
 import { 
     validateField, 
     validateForm, 
     hasErrors, 
 } from "./validation";
 
-
-
+/**
+ * The headless form hook which is use to handle the field validation and form submission
+ * @param initialValues - The initial values of the form
+ * @param validations - The validation rules for the form that contains all the validation rules for each field
+ * @param onSubmit - The callback function to be called when the form is submitted
+ * @param validateOnChange - Whether to validate the form on value change
+ * @param validateOnBlur - Whether to validate the form on blur
+ */
 export function useForm({
     initialValues = {},
     validations = {},
@@ -20,6 +21,7 @@ export function useForm({
     validateOnChange = false,
     validateOnBlur = true,
 }: UseFormOptions = {}): UseFormReturn {
+    // State variables
     const [values, setValues] = useState<FormValues>(initialValues);
     const [errors, setErrors] = useState<ValidationErrors>({});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -36,6 +38,8 @@ export function useForm({
     );
 
     // Handle value change (supports string, string[], File, or null)
+    // useCallback to prevent re-render function on every render
+    // The function is only re-render when the dependencies change which can affect the function behavior
     const handleChange = useCallback(
         (name: string, value: FormFieldValue) => {
             setValues(prev => {
@@ -61,6 +65,7 @@ export function useForm({
     );
 
     // Handle file change
+    // useCallback to prevent re-render function on every render
     const handleFileChange = useCallback(
         (name: string, file: File | null) => {
             setValues(prev => ({ ...prev, [name]: file }));
@@ -71,6 +76,7 @@ export function useForm({
     );
 
     // Handle blur
+    // useCallback to prevent re-render function on every render
     const handleBlur = useCallback(
         (name: string) => {
             setTouched(prev => ({ ...prev, [name]: true }));
@@ -93,6 +99,7 @@ export function useForm({
     );
 
     // Handle form submission
+    // useCallback to prevent re-render function on every render
     const handleSubmit = useCallback(
         async (e?: React.FormEvent) => {
             e?.preventDefault();
@@ -123,16 +130,20 @@ export function useForm({
     );
 
     // Set a single field value
+    // useCallback to prevent re-render function on every render
     const setFieldValue = useCallback((name: string, value: string) => {
         setValues(prev => ({ ...prev, [name]: value }));
     }, []);
 
     // Set a single field error
+    // useCallback to prevent re-render function on every render
     const setFieldError = useCallback((name: string, error: string) => {
         setErrors(prev => ({ ...prev, [name]: error }));
     }, []);
 
     // Reset the form
+    // useCallback to prevent re-render function on every render
+    // the reset function is only re-render when the initial values change which can affect the correctness of the function
     const resetForm = useCallback(() => {
         setValues(initialValues);
         setErrors({});
@@ -141,6 +152,8 @@ export function useForm({
     }, [initialValues]);
 
     // Get field props (for easier binding - for string fields only)
+    // useCallback to prevent re-render function on every render
+    // the getFieldProps function is only re-render when the values, handleChange, or handleBlur change which can affect the correctness of the function
     const getFieldProps = useCallback(
         (name: string) => ({
             value: String(values[name] || ""),
@@ -152,25 +165,19 @@ export function useForm({
     );
 
     // Get field error (only if touched)
+    // useCallback to prevent re-render function on every render
+    // the getFieldError function is only re-render when the errors or touched change which can affect the correctness of the function
     const getFieldError = useCallback(
         (name: string) => (touched[name] ? errors[name] : undefined),
         [errors, touched]
     );
 
     // Check if field is touched
+    // useCallback to prevent re-render function on every render
+    // the isFieldTouched function is only re-render when the touched change which can affect the correctness of the function
     const isFieldTouched = useCallback(
         (name: string) => touched[name],
         [touched]
-    );
-
-    const handleGoogle = useCallback(
-        async (e?: React.FormEvent) => { 
-            e?.preventDefault();
-            const provider = new GoogleAuthProvider();
-            provider.setCustomParameters({ prompt: "select_account" });
-            return signInWithPopup(auth, provider);
-        },
-        []
     );
 
     return {
@@ -189,7 +196,6 @@ export function useForm({
         getFieldProps,
         getFieldError,
         isFieldTouched,
-        handleGoogle,
     };
 }
 

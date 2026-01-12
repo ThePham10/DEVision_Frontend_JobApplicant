@@ -2,6 +2,13 @@ import { UserProfile } from "firebase/auth";
 import { httpHelper } from "@/utils/httpHelper";
 import { APPLICANT_URL } from "@/config/URLConfig";
 
+/**
+ * Add new skill to user profile
+ * @param id user id
+ * @param currentSkills current skills
+ * @param data new skills
+ * @returns updated user profile
+ */
 export const addNewSkill = async (id: string, currentSkills: string[], data: string[]): Promise<UserProfile | null | undefined> => {
     try {
         // Combine current skills with new skills (with duplicates removed)
@@ -18,6 +25,13 @@ export const addNewSkill = async (id: string, currentSkills: string[], data: str
     }
 }
 
+/**
+ * Delete skill from user profile
+ * @param id user id
+ * @param currentSkills current skills
+ * @param skill skill to delete
+ * @returns updated user profile
+ */
 export const deleteSkill = async (id: string, currentSkills: string[], skill: string): Promise<UserProfile | null | undefined> => {
     try {
         // Remove the skill from the array using filter

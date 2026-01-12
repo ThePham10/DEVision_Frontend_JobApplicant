@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getJobApplication } from "@/components/job-application/service/JobApplicationService"
 import { useAuthStore } from "@/store"
 
+// Employment type options
 const employmentType = [
     { id: "1", name: "All Types", value: "", icon: "briefcase-business" },
     { id: "2", name: "Full-time", value: "Full-time", icon: "briefcase-business" },
@@ -59,6 +60,7 @@ const filterFormConfig: FormConfig = {
     formClassName: "w-full",
 }
 
+// Page size for pagination
 const PAGE_SIZE = 6;
 
 // Default form values - typed to match FormValues (string | string[] | File | null)
@@ -70,7 +72,11 @@ const defaultFormValues: FormValues = {
     salaryRange_max: null,
 };
 
+/**
+ * Hook for job post table
+ */
 const useJobPostTable = () => {
+    // Router for navigation
     const router = useRouter()
     
     // State for filters and UI
@@ -83,9 +89,10 @@ const useJobPostTable = () => {
     // Client-side pagination state
     const [displayCount, setDisplayCount] = useState(PAGE_SIZE)
 
+    // Authentication state
     const { user, _hasHydrated, isAuthenticated } = useAuthStore()
     
-    // Fetch ALL job posts (server doesn't support pagination)
+    // Fetch ALL job posts
     const { 
         data: allJobPosts = [], 
         isLoading: loading, 
@@ -95,6 +102,7 @@ const useJobPostTable = () => {
         queryFn: () => loadJobPost(filters),
     })
 
+    // Client-side pagination
     const jobPosts = allJobPosts.slice(0, displayCount)
 
     // Total count of all filtered job posts
@@ -106,6 +114,7 @@ const useJobPostTable = () => {
     // Simulate loading state for load more (instant since data is already fetched)
     const [isFetchingNextPage, setIsFetchingNextPage] = useState(false)
 
+    // Fetch job applications
     const {
         data: JobApplication = []
     } = useQuery({
@@ -114,6 +123,7 @@ const useJobPostTable = () => {
         enabled: _hasHydrated && !!user?.id,  // Wait for hydration AND user login
     })
 
+    // Check if user has applied for a job
     function hasApplied(jobId: string) {
         return JobApplication.some((application) => application.jobId === jobId)
     }
@@ -142,6 +152,7 @@ const useJobPostTable = () => {
         setFilters(cleanFilters)
     }
     
+    // Remove filter
     const removeFilter = (key: keyof JobPostFilters) => {
         setDisplayCount(PAGE_SIZE)
         
@@ -173,10 +184,12 @@ const useJobPostTable = () => {
         setFormKey(prev => prev + 1)
     }
 
+    // Handle view detail button click
     const handleViewDetail = (post: JobPost) => {
         router.push(`/jobs/${post.jobId}`)
     }
 
+    // Handle apply button click
     const handleApply = async (job: JobPost) => {
         setSelectedJob(job)
         setIsJobApplicationOpen(true)

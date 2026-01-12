@@ -4,8 +4,6 @@ import { motion } from "motion/react";
 import { Crown, Zap, Bell, Shield, Sparkles, Check, X } from "lucide-react";
 import { PricingCard, AuthGuard } from "@/components/reusable-component";
 import PaymentCheckoutModal from "@/components/payment/ui/PaymentCheckoutModal";
-import { Modal } from "@/components/reusable-component/Modal";
-import { usePersonalSettingForm } from "@/components/account-box/personal-box/hook/usePersonalSettingForm";
 import { planType } from "@/components/payment/types";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -16,13 +14,16 @@ import { useAuthStore } from "@/store";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export default function Page() {
+    // State
     const [selectedPlan, setSelectedPlan] = useState<planType>();
     const { subscriptionInfo } = usePayment();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDowngradeModalOpen, setIsDowngradeModalOpen] = useState(false);
 
+    // User profile
     const { userProfile } = useAuthStore();
 
+    // Pricing plans
     const pricingPlans = [
         {
             title: "FREE",
@@ -57,6 +58,7 @@ export default function Page() {
         },
     ];
 
+    // Comparison features
     const comparisonFeatures = [
         { feature: "Job Search Access", free: true, premium: true },
         { feature: "Email Notifications", free: true, premium: true },
@@ -64,6 +66,7 @@ export default function Page() {
         { feature: "Support", free: "Community", premium: "Priority" }
     ];
 
+    // Benefits
     const benefits = [
         {
             icon: Bell,

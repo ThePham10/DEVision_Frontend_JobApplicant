@@ -7,12 +7,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addNewSkill, deleteSkill } from "../service/ProfileSkillService";
 
 export const useProfileSkillBox = () => {
+    // Get skills from store 
     const { skills } = useDataStore()
+
+    // State
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Get user profile from store
     const { user, userProfile } = useAuthStore()
+
+    // Get query client
     const queryClient = useQueryClient();
+
+    // Use user profile hook
     useUserProfile();
 
+    // Form configuration
     const formConfig: FormConfig = {
         children: [
             {
@@ -33,10 +43,12 @@ export const useProfileSkillBox = () => {
         },
     };
 
+    // handle open add skill modal
     const openAddModal = () => {
         setIsModalOpen(true);
     };
 
+    // handle update mutation
     const updateMutation = useMutation({
         mutationFn: ({ data }: { data: FormValues }) =>
             addNewSkill(user?.id || "", userProfile?.skillCategories || [], (data.skills as string[]) || []),
@@ -46,6 +58,7 @@ export const useProfileSkillBox = () => {
         }
     })
 
+    // handle delete mutation
     const deleteMutation = useMutation({
         mutationFn: ({ data }: { data: string }) =>
             deleteSkill(user?.id || "", userProfile?.skillCategories || [], data),
@@ -54,10 +67,12 @@ export const useProfileSkillBox = () => {
         }
     })
 
+    // handle add new skill
     const handleAdd = (data: FormValues) => {
         updateMutation.mutate({ data });
     }
 
+    // handle delete skill
     const handleDelete = (data: string) => {
         deleteMutation.mutate({ data });
     }

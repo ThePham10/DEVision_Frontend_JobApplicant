@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store";
 import { FormConfig } from "@/components/headless-form";
 
 export const useSummaryBox = () => {
+    //Form config
     const formConfig: FormConfig = {
         children: [
             { name: "objectiveSummary", title: "Summary", type: "text", placeholder: "Write a brief summary about your career objectives...", colSpan: 1 },
@@ -16,9 +17,13 @@ export const useSummaryBox = () => {
         },
     };  
 
+    //Auth store
     const { user } = useAuthStore();
+
+    //Query client
     const queryClient = useQueryClient();
 
+    //Mutation
     const updateMutation = useMutation({
         mutationFn: (summary: string) => updateSummaryObjective(user?.id || "", summary),
         onSuccess: () => {
@@ -27,6 +32,7 @@ export const useSummaryBox = () => {
         },
     });
 
+    // Handle submit
     const handleSubmit = async (summary?: string) => {
         if (!summary) return;
         updateMutation.mutate(summary);

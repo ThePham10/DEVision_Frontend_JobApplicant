@@ -1,5 +1,3 @@
-// Validation types and utilities for form fields
-
 import { ValidationRule, FieldValidation, ValidationErrors, FormFieldValue, FormValues } from "../types/types";
 
 // ============================================================
@@ -93,13 +91,24 @@ export const phoneValidationRules: ValidationRule[] = [
 
 // Common validation patterns (legacy support)
 export const patterns = {
+    // The pattern for verify whether the input contains the valid character and is the valid email format (example@something.com)
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    // The pattern for verify whether the input is a phone number or not (example: +84 123 456 789)
     phone: /^\+[\d\s]{7,15}$/,
+    // The pattern for verify whether the input is a password or not 
+    // (example: at least 8 characters, at least 1 number, at least 1 special character, at least 1 uppercase letter)
     password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~])[a-zA-Z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]{8,}$/,
+    // The pattern for verify whether the input is an alphanumeric or not (example: only contain letters and numbers)
     alphanumeric: /^[a-zA-Z0-9]+$/,
 };
 
-// Validate a single field (with optional access to all values for cross-field validation)
+/**
+ * Validate a single field 
+ * @param value The value to validate
+ * @param validation The validation rules to apply
+ * @param allValues Optional, all values in the form for cross-field validation
+ * @returns Error message if validation fails, null otherwise
+ */
 export function validateField(
     value: FormFieldValue,
     validation: FieldValidation,
@@ -149,7 +158,7 @@ export function validateField(
         return null;
     }
 
-    // Handle string validation (existing logic)
+    // Create the new variable that contain the value with no leading and trailing white spaces
     const trimmedValue = value.trim();
 
     // Required check
@@ -195,13 +204,19 @@ export function validateField(
     return null;
 }
 
-// Validate all fields
+/**
+ * Validate all fields before the submission
+ * @param values The values to validate
+ * @param validations The validation rules to apply
+ * @returns The validation errors
+ */
 export function validateForm(
     values: FormValues,
     validations: Record<string, FieldValidation>
 ): ValidationErrors {
     const errors: ValidationErrors = {};
 
+    // Validate each field
     for (const [fieldName, validation] of Object.entries(validations)) {
         const value = values[fieldName] ?? "";
         const error = validateField(value, validation, values);
@@ -218,9 +233,7 @@ export function hasErrors(errors: ValidationErrors): boolean {
     return Object.keys(errors).length > 0;
 }
 
-// ============================================================
-// COMMON INPUT VALIDATION CONFIGURATIONS
-// ============================================================
+// The common validation
 export const commonValidations = {
     email: {
         required: true,
@@ -246,6 +259,7 @@ export const commonValidations = {
     } as FieldValidation,
 };
 
+// Validate the login input 
 export const loginValidations = {
     email: {
         required: true,

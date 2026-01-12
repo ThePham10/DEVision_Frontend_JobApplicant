@@ -1,7 +1,7 @@
 "use client";
-
 import { useCountryDropdown, Country } from "./hook/useCountryDropdown";
 
+// Define the country drop down props which is the properties that the country drop down component will receive
 type CountryDropdownProps = {
     title: string;
     onChange?: (country: Country) => void;
@@ -9,6 +9,13 @@ type CountryDropdownProps = {
     initialValue?: string; // Country code or label to pre-select
 };
 
+/**
+ * Country drop down component
+ * @param title - The title of the country drop down
+ * @param onChange - The callback function to be called when the country is changed
+ * @param errorMessage - The error message to be displayed
+ * @param initialValue - The initial value of the country drop down
+ */
 export default function CountryDropdown({ title, onChange, errorMessage, initialValue }: CountryDropdownProps) {
     const {
         loading,
@@ -123,6 +130,8 @@ export default function CountryDropdown({ title, onChange, errorMessage, initial
                         </ul>
                     </div>
                 )}
+
+                {/* Error message */}
                 {errorMessage && (
                 <p className={`mt-1 text-sm border-red-500 focus:border-red-500 focus:ring-red-500/20 text-red-500`}>
                     {errorMessage}

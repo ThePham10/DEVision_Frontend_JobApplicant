@@ -1,10 +1,9 @@
-// Custom hook for managing country dropdown state and logic
-
 import { useEffect, useState, useRef, RefObject } from "react";
 import { fetchCountries, Country } from "../api/countryDropDownMenuService";
 
 export type { Country };
 
+// Define the return type of the country drop down hook
 type UseCountryDropdownReturn = {
     // State
     countries: Country[];
@@ -22,15 +21,19 @@ type UseCountryDropdownReturn = {
     toggleDropdown: () => void;
 };
 
+// Define the country drop down hook
 export function useCountryDropdown(
     onChange?: (country: Country) => void,
-    initialValue?: string // Country code or label to pre-select
+    initialValue?: string // The initial value of the country drop down
 ): UseCountryDropdownReturn {
+    // State
     const [countries, setCountries] = useState<Country[]>([]);
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
+
+    // Ref for the dropdown container
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Fetch countries on mount
@@ -61,13 +64,19 @@ export function useCountryDropdown(
 
     // Close dropdown when clicking outside
     useEffect(() => {
+        // Function to handle outside click
         const handleClickOutside = (event: MouseEvent) => {
+            // First is check whether the drop down element is appear on the UI
+            // Then check whether the click event is outside the drop down element
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                // If the click event is outside the drop down element, close the drop down
                 setIsOpen(false);
+                // Reset the search term
                 setSearchTerm("");
             }
         };
 
+        // Add event listener for outside click
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);

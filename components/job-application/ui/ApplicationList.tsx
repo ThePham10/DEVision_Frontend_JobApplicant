@@ -8,7 +8,7 @@ import { statusFilters } from "../types"
 import { ApplicationFilterPillsBar } from "./ApplicationFilterPillsBar"
 
 /**
- * Main list component for displaying job applications
+ * Job application list component
  */
 export const JobApplicationList = () => {
     const {         

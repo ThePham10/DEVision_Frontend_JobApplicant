@@ -43,6 +43,9 @@ function parseSalaryRange(salaryDisplay: string): { min: number | null; max: num
 /**
  * Fetches job posts from JM team backend with server-side filtering
  * Uses the /search endpoint when filters are provided
+ * 
+ * @param filters - Optional job post filters
+ * @returns job post list data
  */
 async function loadJobPost( 
     filters?: JobPostFilters

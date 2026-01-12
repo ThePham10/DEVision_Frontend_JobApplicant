@@ -4,6 +4,8 @@ import { JobPost, JobSearchParams } from "../types";
 
 /**
  * Load all job posts from JM team API
+ * @param params - Search parameters
+ * @returns Job posts list
  */
 export async function loadJobPosts(params?: JobSearchParams): Promise<JobPost[]> {
     try {
@@ -33,6 +35,8 @@ export async function loadJobPosts(params?: JobSearchParams): Promise<JobPost[]>
 
 /**
  * Load a single job post by ID
+ * @param jobId - Job ID
+ * @returns Job post
  */
 export async function loadJobPostById(jobId: string): Promise<JobPost | null> {
     try {
@@ -46,6 +50,7 @@ export async function loadJobPostById(jobId: string): Promise<JobPost | null> {
 
 /**
  * Delete a job post by ID
+ * @param jobId - Job ID
  */
 export async function deleteJobPost(jobId: string): Promise<void> {
     try {

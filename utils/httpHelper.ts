@@ -1,8 +1,10 @@
 import { useAuthStore } from "@/store/authStore";
 
+// API base URL
 const API_BASE_URL =
     process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
+// Http error interface
 export interface HttpError extends Error {
     status: number;
     data?: unknown;
@@ -14,6 +16,7 @@ export interface ApiResponse<T> {
     data: T;
 }
 
+// Http helper class
 class HttpHelper {
     private baseUrl: string;
 
@@ -38,6 +41,7 @@ class HttpHelper {
 
         let response = await fetch(url, config);
 
+        // If the request failed, try to refresh the token before sending the request again
         if (response.status === 401) {
             const refreshed = await this.refreshToken();
 
@@ -51,8 +55,10 @@ class HttpHelper {
             return { status: response.status, data: {} as T };
         }
 
+        // Parse the response
         const data = await response.json();
 
+        // If the request failed, throw an error
         if (!response.ok) {
             const error = new Error(
                 data.message || "Request failed"
@@ -65,6 +71,7 @@ class HttpHelper {
         return { status: response.status, data };
     }
 
+    // Function for send the refresh token request
     private async refreshToken(): Promise<boolean> {
         try {
             const isAdmin = useAuthStore.getState().isAdmin;
