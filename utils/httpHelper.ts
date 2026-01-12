@@ -80,8 +80,22 @@ class HttpHelper {
                 method: 'POST',
                 credentials: 'include', // Send refresh token cookie
             });
-            return response.ok;
-        } catch {
+
+            if (!response.ok) {
+                useAuthStore.getState().clearUser();
+                if (typeof window !== "undefined") {
+                    window.location.href = "/login";
+                }
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            console.error("Refresh token failed:", error);
+            useAuthStore.getState().clearUser();
+            if (typeof window !== "undefined") {
+                window.location.href = "/login";
+            }
             return false;
         }
     }
@@ -106,7 +120,7 @@ class HttpHelper {
         if (data instanceof FormData) {
             return this.requestFormData<T>(endpoint, data);
         }
-        
+
         // Otherwise, use standard JSON request
         return this.request<T>(endpoint, {
             method: "POST",
