@@ -1,3 +1,4 @@
+// Define the Company type
 type Company = {
     id: string;
     userId: string;

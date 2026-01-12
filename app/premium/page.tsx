@@ -14,7 +14,7 @@ import { useAuthStore } from "@/store";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export default function Page() {
-    // State
+    // States
     const [selectedPlan, setSelectedPlan] = useState<planType>();
     const { subscriptionInfo } = usePayment();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -198,7 +198,8 @@ export default function Page() {
                         </div>
                     </div>
                 </section>
-
+                
+                {/* Card Payment Section to upgrade*/}
                 {selectedPlan === "PREMIUM" && (
                     <Elements stripe={stripePromise}>
                         <PaymentCheckoutModal 
@@ -211,6 +212,7 @@ export default function Page() {
                     </Elements>  
                 )}
 
+                {/* Cancel Subscription Confirmation Modal to downgrade */}
                 {selectedPlan === "FREE" && (
                     <CancelConfirmModal
                         isOpen={isDowngradeModalOpen}
@@ -308,8 +310,8 @@ export default function Page() {
                     </div>
                 </section>
                 
+                {/* Footer for non-premium users */}
                 {userProfile?.isPremium === false && (
-                    // Final CTA
                     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 to-yellow-50">
                         <div className="max-w-4xl mx-auto text-center">
                             <motion.div
@@ -337,7 +339,8 @@ export default function Page() {
                         </div>
                     </section>
                 )}
-
+                
+                {/* Footer for premium users */}
                 {userProfile?.isPremium === true && (
                     // Final CTA
                     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-amber-50 to-yellow-50">

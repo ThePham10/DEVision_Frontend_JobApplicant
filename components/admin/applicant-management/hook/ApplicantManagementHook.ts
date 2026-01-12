@@ -4,7 +4,7 @@ import { loadApplicants, deactivateApplicant, activateApplicant } from "../servi
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 
 export default function useApplicantManagement() { 
-
+    // States
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [deactivateConfirm, setDeactivateConfirm] = useState<ApplicantAccount | null>(null);
     const [activateConfirm, setActivateConfirm] = useState<ApplicantAccount | null>(null);
@@ -24,12 +24,14 @@ export default function useApplicantManagement() {
     const buildApiFilters = () => {
         const apiFilters: { id: string; value: string; operator: string }[] = [];
 
+        // Always default filter to include both active and inactive applicants
         apiFilters.push({
             id: "isActive",
             value: "true,false",
             operator: "in"
         });
 
+        // Apply search term filter
         if (searchTerm) {
             apiFilters.push({
                 id: 'name',
@@ -38,6 +40,7 @@ export default function useApplicantManagement() {
             });
         }
 
+        // Apply status filter
         if (statusFilter) {
             apiFilters.push({
                 id: 'isActive',
@@ -49,6 +52,8 @@ export default function useApplicantManagement() {
         return apiFilters;
     }
 
+    // Fetch applicants data with filters
+    // Refetches when filters change
     const {
         data: applicantsData,
         isLoading,
@@ -57,14 +62,19 @@ export default function useApplicantManagement() {
         queryFn: () => loadApplicants(buildApiFilters()), 
     });
 
+    // All applicants from the server
     const allApplicants = applicantsData?.data ?? [];
     console.log("All Applicants:", allApplicants);
     const totalApplicantsCount = applicantsData?.total ?? 0;
 
     // Apply client-side lazy loading (pagination)
+    // Slice the applicants array to show only the visible count
     const applicants = allApplicants.slice(0, visibleCount);
+    // Determine if there are more applicants to load
     const hasNextPage = visibleCount < allApplicants.length;
 
+    // Deactivate applicant 
+    // On success, refetches the latest applicants data and updates the query cache
     const deactivateMutation = useMutation({
         mutationFn: deactivateApplicant,
         onSuccess: () => {
@@ -74,6 +84,8 @@ export default function useApplicantManagement() {
         }
     });
 
+    // Activate applicant
+    // On success, refetches the latest applicants data and updates the query cache
     const activateMutation = useMutation({
         mutationFn: activateApplicant,
         onSuccess: () => {
@@ -83,24 +95,28 @@ export default function useApplicantManagement() {
         }
     });
 
+    // Wrapper deactivate trigger
     const handleDeActivate = () => {
         if (deactivateConfirm) {
             deactivateMutation.mutate(deactivateConfirm.id);
         }
     }
 
+    // Wrapper activate trigger
     const handleActivate = () => {
         if (activateConfirm) {
             activateMutation.mutate(activateConfirm.id);
         }
     }
 
+    // Handle load more for pagination
     const handleLoadMore = () => {
         setVisibleCount(prev => prev + PAGE_SIZE);
     }
 
     // Handle search
     const handleSearch = () => {
+        // Update filters based on search term and status
         const newFilters: ApplicantFilters = {
             name: searchTerm || undefined,
             isActive: statusFilter === "active" ? true : statusFilter === "inactive" ? false : undefined,

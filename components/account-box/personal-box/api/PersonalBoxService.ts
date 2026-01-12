@@ -4,6 +4,11 @@ import { APPLICANT_URL } from "@/config/URLConfig";
 import { useAuthStore } from "@/store/authStore";
 import { AccountData } from "../types";
 
+/**
+* Function to update the user's information
+* @param - User Data to update
+* @returns - updated user data from API
+*/
 export const updateUserInfo = async (
     data: Partial<User>,
 ): Promise<ApiResponse<UserData>> => {
@@ -20,6 +25,11 @@ export const updateUserInfo = async (
     return response;
 };
 
+/**
+* Function to get the user's information
+* @param - User ID
+* @returns - user data from API
+*/
 export const getUserInfo = async (
     userId: string,
 ): Promise<ApiResponse<AccountData>> => {

@@ -9,11 +9,13 @@ import { Settings, Settings2, LogOut } from "lucide-react";
 import { useNotificationStore } from "@/store";
 
 export const Header = () => {
+    // Initialize router and auth store
     const router = useRouter();
     const { isAuthenticated, isAdmin, clearUser } = useAuthStore();
     const pathname = usePathname();
     const { clearAll } = useNotificationStore()
     
+    // Handle user sign out
     const handleSignOut = async () => {
         try {
             const response = await logoutUser();

@@ -1,6 +1,7 @@
 import { Company } from "../types";
 import { Mail, MapPinHouse, SearchSlash, Phone, Plane } from "lucide-react";
 
+// Define the company detail props
 interface CompanyDetailProps {
     company: Company;
     onClose: () => void;
@@ -9,6 +10,7 @@ interface CompanyDetailProps {
 const CompanyDetails = ({ company, onClose }: CompanyDetailProps) => {
     return (
         <div>
+            {/* Header Section with Company Name and Close Button */}
             <div className="flex items-start justify-between mb-2">
                 <div className="flex flex-col gap-2">
                     <h3 className="text-3xl font-bold text-gray-900 leading-tight">{company.companyName}</h3>

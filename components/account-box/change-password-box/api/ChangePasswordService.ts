@@ -1,17 +1,24 @@
 import { httpHelper } from "@/utils/httpHelper";
 import { CHANGE_PASSWORD_URL } from "@/config/URLConfig";
 
+// Define the data type for changing password
 export interface ChangePasswordData {
     currentPassword: string;
     newPassword: string;
 }
 
+// Define the result type for changing password
 interface ChangePasswordResult {
     success: boolean;
     message?: string;
     error?: string;
 }
 
+/** 
+* Function to change the user's password
+* @param - current and new passwords
+* @returns - success status and message or error
+*/
 const changePassword = async (data: ChangePasswordData): Promise<ChangePasswordResult> => {
     try {
         const response = await httpHelper.post<{ message: string }>(CHANGE_PASSWORD_URL, data);

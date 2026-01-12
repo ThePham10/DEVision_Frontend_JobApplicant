@@ -1,3 +1,4 @@
+// Define account data type
 type AccountData = {
     id: string;
     name: string;

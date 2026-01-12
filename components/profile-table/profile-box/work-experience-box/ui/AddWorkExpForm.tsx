@@ -12,6 +12,7 @@ interface AddWorkExpFormProps {
 
 export default function AddWorkExpForm({ onSubmit, onCancel, isLoading = false }: AddWorkExpFormProps) {
 
+    // Handle form submission
     const handleSubmit = (values: FormValues) => {
         const data: Omit<WorkExpData, "id" | "applicantId" | "createdAt" | "updatedAt"> = {
             title: String(values.title || ""),
@@ -22,6 +23,7 @@ export default function AddWorkExpForm({ onSubmit, onCancel, isLoading = false }
         onSubmit(data);
     };
 
+    // Define form configuration
     const formConfig: FormConfig = {
         children: [
             {

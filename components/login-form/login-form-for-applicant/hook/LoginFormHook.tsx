@@ -6,11 +6,13 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 export const useLoginForm = () => {
+    // Initialize auth store and router and states
     const { setUser, setIsAuthenticated, setUserProfile } = useAuthStore();
     const router = useRouter();
     const [error, setError] = useState<string | null>(null);
     const { user } = useAuthStore();
 
+    // Define the form configuration for applicant login
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
         children: [
@@ -33,6 +35,7 @@ export const useLoginForm = () => {
         buttonText: "Login ",
     };
 
+    // Fetch user profile using React Query
     const query = useQuery({
         queryKey: ["userProfile", user?.id],
         queryFn: () => getUserProfile(user?.id || ""),
@@ -46,6 +49,7 @@ export const useLoginForm = () => {
         }
     }, [query.data, setUserProfile]);
 
+    // Handle applicant login form submission
     const handleSubmit = async (values: FormValues) => {
         try {
             const loginData = {
@@ -54,6 +58,9 @@ export const useLoginForm = () => {
             };
 
             const response = await loginUser(loginData);
+
+            // Check if login is successful
+            // If email is not verified, clear user and redirect to verify-email page
             if (response.status === 201) {
                 setError(null);
                 setUser(response.data.user);

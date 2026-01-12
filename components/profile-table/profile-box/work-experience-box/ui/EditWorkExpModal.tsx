@@ -20,6 +20,7 @@ export default function EditWorkExpModal({ item, onSubmit, isOpen, onCancel, isL
         return date.toISOString().split('T')[0];
     };
 
+    // Handle form submission
     const handleFormSubmit = (values: FormValues) => {
         const updateData: Partial<Omit<WorkExpData, "id" | "applicantId" | "createdAt" | "updatedAt">> = {};
         
@@ -31,6 +32,7 @@ export default function EditWorkExpModal({ item, onSubmit, isOpen, onCancel, isL
         onSubmit(updateData);
     };
 
+    // Define form configuration
     const formConfig: FormConfig = {
         children: [
             {

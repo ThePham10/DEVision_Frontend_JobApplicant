@@ -38,6 +38,7 @@ export default function PaymentCheckoutModal({
                 onClose={onClose}
                 size="large"
             >
+                {/* Payment Form */}
                 <form
                     onSubmit={handleSubmit}
                     className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-xl p-4"
@@ -92,6 +93,8 @@ export default function PaymentCheckoutModal({
                                 </div>
                             </div>
                         </div>
+
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"

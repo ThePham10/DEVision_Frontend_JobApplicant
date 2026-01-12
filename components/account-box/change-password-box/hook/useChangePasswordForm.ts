@@ -10,6 +10,7 @@ export const useChangePasswordForm = () => {
     const { clearUser } = useAuthStore();
     const router = useRouter();
 
+    // Define the form configuration for changing password
     const formConfig: FormConfig = {
         children: [
             { 
@@ -50,6 +51,7 @@ export const useChangePasswordForm = () => {
         },
     };
 
+    // Handle change password form submission
     const handleSubmit = async (values: FormValues) => {
         // Validate passwords match
         if (values.new !== values.confirm) {
@@ -58,11 +60,14 @@ export const useChangePasswordForm = () => {
         }
 
         try {
+            // Convert response to match ChangePasswordResult type
+            // Send change password request 
             const result = await changePassword({
                 currentPassword: values.current as string,
                 newPassword: values.new as string,
             });
 
+            // If successful, log out user and redirect to login page
             if (result.success) {
                 clearUser();
                 alert("Password changed successfully. Please log in again.");

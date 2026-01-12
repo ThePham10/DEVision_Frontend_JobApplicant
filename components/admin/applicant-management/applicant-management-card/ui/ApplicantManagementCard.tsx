@@ -19,6 +19,7 @@ export default function ApplicantManagementCard({ applicant, onDeactivate, onAct
             exit={{ opacity: 0, y: -10 }}
             layout
         >
+            {/* Applicant Info Card Section */}
             <div className="flex items-center gap-4">
                 {/* Name and Description */}
                 <div>
@@ -72,7 +73,9 @@ export default function ApplicantManagementCard({ applicant, onDeactivate, onAct
                 
             </div>
 
+            {/* Action Buttons Section */}
             <div className="flex items-center gap-2">
+                {/* Activate Buttons if Inactive */}
                 {!applicant.isActive && <motion.button
                     onClick={() => onActivate(applicant)}
                     className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors font-[Inter]"
@@ -83,6 +86,7 @@ export default function ApplicantManagementCard({ applicant, onDeactivate, onAct
                     <Check />
                 </motion.button>}
 
+                {/* Deactivate Buttons if Active */}
                 {applicant.isActive && <motion.button
                     onClick={() => onDeactivate(applicant)}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-[Inter]"
