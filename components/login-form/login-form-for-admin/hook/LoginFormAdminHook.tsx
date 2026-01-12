@@ -42,6 +42,8 @@ export const useLoginFormAdmin = () => {
             if (response.status === 201) {
                 setUser(response.data.user);
                 router.push("/admin/applicant");
+            } else {
+                setError("Invalid email/password or account is not an ADMIN. Please try again.")
             }
         } catch (err) {
             setError("Login failed. Your email or password is incorrect. Please try again.")

@@ -7,11 +7,11 @@ export const useUserProfile = () => {
     // Auth store
     const { user, setUserProfile } = useAuthStore();
 
-    // Query for fetch the applicant profile data
+    const isAdmin = user?.role === "admin";
     const query = useQuery({
         queryKey: ["userProfile", user?.id],
         queryFn: () => getUserProfile(user?.id || ""),
-        enabled: !!user?.id,
+        enabled: !!user?.id && !isAdmin,
         staleTime: 5 * 60 * 1000, // 5 minutes
     });
 

@@ -1,25 +1,18 @@
 type Company = {
     id: string;
-    name: string;
+    userId: string;
     email: string;
-    address?: string;
-    isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    description?: string;
-    field?: string;
+    phoneNumber?: string;
+    companyName: string;
+    streetAddress?: string;
+    city?: string;
+    country?: string;
+    aboutUs?: string;
+    subscriptionType?: string;
+    subscriptionActive?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+    isActive?: boolean;
 }
 
-type CompanyFilters = {
-    name?: string;
-}
-
-type PaginatedResponse<T> = {
-    data: T[];
-    total: number;
-    page: number;
-    limit: number;
-    hasMore: boolean;
-}
-
-export type { Company, CompanyFilters, PaginatedResponse };
+export type { Company };

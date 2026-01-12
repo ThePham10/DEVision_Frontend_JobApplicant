@@ -1,99 +1,72 @@
 import { useMemo, useState } from "react";
 
-import { Company, CompanyFilters } from "../types";
-import { loadCompaniesMock, activateCompany, deactivateCompany } from "../service/CompanyManagementService";
-import { useInfiniteQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { Company } from "../types";
+import { deleteCompanyById, loadCompanies } from "../service/CompanyManagementService";
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+
+const PAGE_SIZE = 5;
 
 export default function useCompanyManagement() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [deactivateConfirm, setDeactivateConfirm] = useState<Company | null>(null);
-    const [activateConfirm, setActivateConfirm] = useState<Company | null>(null);
-
+    const [deleteConfirm, setDeleteConfirm] = useState<Company | null>(null);
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
     const queryClient = useQueryClient();
 
-    // Filter state
-    // const [searchName, setSearchName] = useState("");
-    // const [statusFilter, setStatusFilter] = useState("");
-    // const [filters, setFilters] = useState<CompanyFilters>({});
+    // Search/filter state
+    const [searchTerm, setSearchTerm] = useState("");
 
-    // use to refetch data when page or filters change
-    // cache the data based on page and filters
     const {
-        data: companiesData,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
+        data: allCompanies = [],
         isLoading,
-    } = useInfiniteQuery({
-        // companies: indicates the data being queried
-        queryKey: ["companies"],
-        // first fetch uses page 1
-        queryFn: ({ pageParam = 1 }) => {
-            return loadCompaniesMock(pageParam, 10);
-        },
-
-        // set the starting page for the first query to 1
-        initialPageParam: 1,
-
-        // determines the next page to fetch based on the data received from the last fetched page
-        getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
+        error,
+    } = useQuery({
+        queryKey: ["admin-companies", searchTerm],
+        queryFn: () => loadCompanies(searchTerm),
     });
 
-    const allCompanies = useMemo(() => 
-        companiesData?.pages.flatMap(page => page.data) ?? [], 
-        [companiesData]
-    );
-
-    const totalCompaniesCount = useMemo(() => 
-        companiesData?.pages[0]?.total ?? 0, 
-        [companiesData]
-    );
-
-    const deactivateMutation = useMutation({
-        mutationFn: deactivateCompany,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["companies"] });
-            setIsModalOpen(false);
-            setDeactivateConfirm(null);
-        }
-    });
-
-    const activateMutation = useMutation({
-        mutationFn: activateCompany,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["companies"] });
-            setIsModalOpen(false);
-            setActivateConfirm(null);
-        }
-    });
-
-    const handleDeActivate = (company: Company) => {
-        deactivateMutation.mutate(company.id);
-    }
-
-    const handleActivate = (company: Company) => {
-        activateMutation.mutate(company.id);
-    }
+    const companies = allCompanies.slice(0, visibleCount);
+    const hasNextPage = visibleCount < allCompanies.length;
 
     const handleLoadMore = () => {
-        fetchNextPage();
+        setVisibleCount(prev => prev + PAGE_SIZE);
+    };
+
+    const handleSearch = () => {
+        setSearchTerm(searchTerm || "");
+        setVisibleCount(PAGE_SIZE);
+    };
+
+    const clearFilters = () => {
+        setSearchTerm("");
+        setVisibleCount(PAGE_SIZE);
+    };
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteCompanyById,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-companies"] });
+            setDeleteConfirm(null);
+        },
+    })
+
+    const handleDelete = () => {
+        if (deleteConfirm) {
+            deleteMutation.mutate(deleteConfirm.userId);
+        }
     }
 
     return {
-        allCompanies,
-        totalCompaniesCount,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
+        companies,
+        allCompaniesCount: allCompanies.length,
+        searchTerm,
+        setSearchTerm,
         isLoading,
+        error,
+        hasNextPage,
         handleLoadMore,
-        isModalOpen,
-        setIsModalOpen,
-        deactivateConfirm,
-        setDeactivateConfirm,
-        handleDeActivate,
-        handleActivate,
-        activateConfirm,
-        setActivateConfirm
+        handleSearch,
+        clearFilters,
+        deleteConfirm,
+        setDeleteConfirm,
+        handleDelete,
     }
 }

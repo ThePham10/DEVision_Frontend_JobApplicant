@@ -38,7 +38,22 @@ export default function ApplicantManagementCard({ applicant, onDeactivate, onAct
                     </div>)}
 
                     <div className="font-[Inter] text-sm text-gray-500 max-w-md truncate mb-2">
-                        Created at: {new Date(applicant.createdAt).toLocaleDateString()}
+                        Created at: {new Date(applicant.createdAt).toLocaleString()}
+                    </div>
+
+                    <div className="font-[Inter] text-sm text-gray-500 max-w-md truncate mb-2">
+                        Updated at: {new Date(applicant.updatedAt).toLocaleString()}
+                    </div>
+
+                    <div className="font-[Inter] text-sm text-gray-500 mb-1 flex items-center gap-2">
+                        <span>Subscription Status: </span>
+                        <div className={`inline-block px-2 py-1 rounded text-xs font-medium 
+                            ${ applicant.isPremium 
+                                ? "bg-yellow-100 text-orange-700"
+                                : "bg-green-100 text-green-700"
+                            }`}>
+                            {applicant.isPremium ? "Premium" : "Free"}
+                        </div>
                     </div>
                 
                     <div className="font-[Inter] text-sm text-gray-500 mb-1 flex items-center gap-2">

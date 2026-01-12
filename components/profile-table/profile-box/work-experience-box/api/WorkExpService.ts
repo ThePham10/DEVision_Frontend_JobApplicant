@@ -7,7 +7,6 @@ export const getWorkExperiences = async (
 ): Promise<ApiResponse<WorkExpData[]>> => {
     const endpoint = `${WORK_HISTORY_URL}/applicant/${userId}`;
     const response = await httpHelper.get<WorkExpData[]>(endpoint);
-
     return response;
 }
 

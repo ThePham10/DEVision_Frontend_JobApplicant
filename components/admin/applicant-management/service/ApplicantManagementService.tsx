@@ -2,33 +2,42 @@ import { httpHelper } from "@/utils/httpHelper";
 import { ApplicantAccount, ApplicantFilters, PaginatedResponse } from "../types";
 import { APPLICANT_URL } from "@/config/URLConfig";
 
+interface SearchFilter {
+    id: string;
+    value: string;
+    operator: string;
+}
+
 async function loadApplicants(
-    page: number,
-    limit: number,
+    searchFilters?: SearchFilter[],
 ): Promise<PaginatedResponse<ApplicantAccount>> {
-    const endpoint = `${APPLICANT_URL}?limit=${limit}&page=${page}`;
+
+    const params = new URLSearchParams();
+
+    if (searchFilters && searchFilters.length > 0) {
+        params.append('filters', JSON.stringify(searchFilters));
+    }
+
+    const endpoint = `${APPLICANT_URL}?limit=50&${params.toString()}`;
 
     const response = await httpHelper.get<PaginatedResponse<ApplicantAccount>>(endpoint);
 
+    // Handle response
     if (response.status === 200) {
         const data = response.data;
-        // Calculate hasMore if API doesn't return it
-        const hasMore = data.hasMore ?? (data.page * data.limit < data.total);
-        return { ...data, hasMore };
+        return data;
     } else {
         return {
             data: [],
             total: 0,
-            page,
-            limit,
-            hasMore: false,
+            page: 0,
+            limit: 0,
+            totalPages: 0
         };
     }
 }
 
-async function deactivateApplicant(
-    applicantId: string,
-): Promise<boolean> {
+async function deactivateApplicant( applicantId: string ): Promise<boolean> {
     const url = `${APPLICANT_URL}/${applicantId}`;
     const response = await httpHelper.delete<ApplicantAccount>(url);
     
@@ -39,9 +48,7 @@ async function deactivateApplicant(
     }
 }
 
-async function activateApplicant(
-    applicantId: string,
-): Promise<boolean> {
+async function activateApplicant( applicantId: string ): Promise<boolean> {
     const response = await httpHelper.put<ApplicantAccount>(APPLICANT_URL + "/" + `${applicantId}`, { isActive: true });
     
     if (response.status === 200) {
