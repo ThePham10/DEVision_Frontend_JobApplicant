@@ -47,7 +47,6 @@ export const useResendEmail = () => {
                 setError("Failed to send verification email. Please try again.");
             }
         } catch (err: unknown) {
-            console.error("Resend email error:", err);
             if (err instanceof Error) {
                 setError(err.message);
             } else {

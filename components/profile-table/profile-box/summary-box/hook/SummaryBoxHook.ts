@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateSummaryObjective } from "../service/SummaryBoxService";
 import { useAuthStore } from "@/store";
 import { FormConfig } from "@/components/headless-form";
+import toast from "react-hot-toast";
 
 export const useSummaryBox = () => {
     //Form config
@@ -29,7 +30,11 @@ export const useSummaryBox = () => {
         onSuccess: () => {
             // Invalidate the user profile query to refetch updated data
             queryClient.invalidateQueries({ queryKey: ["userProfile", user?.id] });
+            toast.success("Summary updated successfully");
         },
+        onError: () => {
+            toast.error("Summary updating failed");
+        }
     });
 
     // Handle submit

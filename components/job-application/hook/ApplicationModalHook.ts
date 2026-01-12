@@ -3,6 +3,7 @@ import { useJobApplication } from "../hook/useJobApplication"
 import { ApplicationFormData } from "../types"
 import { useRouter } from "next/navigation"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import toast from "react-hot-toast"
 
 // Define the application modal props
 interface applicationModalProps {
@@ -107,10 +108,12 @@ export const useApplicationModal = ({ jobId, onClose }: applicationModalProps) =
             setTimeout(() => {
                 onClose()
                 router.push("/my-applications")
+                toast.success("Application submitted successfully")
             }, 2000)
         },
         onError: () => {
             setError("Failed to submit application. Please try again.")
+            toast.error("Application submission failed")
         }
     })
 

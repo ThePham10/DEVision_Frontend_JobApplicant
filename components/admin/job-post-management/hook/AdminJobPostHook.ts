@@ -4,6 +4,7 @@ import { useState } from "react";
 import { JobPost, JobSearchParams } from "../types";
 import { loadJobPosts, deleteJobPost } from "../service/AdminJobPostService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 // Page size for pagination
 const PAGE_SIZE = 10;
@@ -52,7 +53,11 @@ export default function useAdminJobPost() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-job-posts"] });
             setDeleteConfirm(null);
+            toast.success("Job post deleted successfully")
         },
+        onError: () => {
+            toast.error("Job post deletion failed")
+        }
     });
 
     // Load more job posts

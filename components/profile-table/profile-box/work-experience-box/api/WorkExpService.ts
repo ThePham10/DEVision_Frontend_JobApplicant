@@ -1,4 +1,4 @@
-import { APPLICANT_URL, WORK_HISTORY_URL } from "@/config/URLConfig";
+import { WORK_HISTORY_URL } from "@/config/URLConfig";
 import { httpHelper, ApiResponse } from "@/utils/httpHelper";
 import { WorkExpData } from "../types";
 

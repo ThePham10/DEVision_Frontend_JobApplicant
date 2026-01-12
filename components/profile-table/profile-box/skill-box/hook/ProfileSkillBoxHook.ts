@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addNewSkill, deleteSkill } from "../service/ProfileSkillService";
+import toast from "react-hot-toast";
 
 export const useProfileSkillBox = () => {
     // Get skills from store 
@@ -55,6 +56,10 @@ export const useProfileSkillBox = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["userProfile"] });
             setIsModalOpen(false);
+            toast.success("Skill added successfully");
+        },
+        onError: () => {
+            toast.error("Skill adding failed");
         }
     })
 
@@ -64,6 +69,10 @@ export const useProfileSkillBox = () => {
             deleteSkill(user?.id || "", userProfile?.skillCategories || [], data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+            toast.success("Skill deleted successfully");
+        },
+        onError: () => {
+            toast.error("Skill deleting failed");
         }
     })
 

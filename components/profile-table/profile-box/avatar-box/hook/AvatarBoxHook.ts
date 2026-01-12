@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FormConfig, FormValues } from "@/components/headless-form"
 import { updateUserInfo } from "@/components/account-box/personal-box/api/PersonalBoxService";
 import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 /**
  * Avatar box hook
@@ -77,7 +78,6 @@ const useAvatarBox = () => {
 
             // Check if update was successful
             if (dbResponse?.status === 200) {
-                console.log("Avatar updated successfully");
                 if (user) {
                     setUser({
                         ...user,
@@ -86,9 +86,11 @@ const useAvatarBox = () => {
                 }
                 queryClient.invalidateQueries({ queryKey: ['userInfo', user.id] });
                 setIsModalOpen(false);
+                toast.success("Avatar updated successfully");
             }
         } catch (error) {
             console.error("Avatar update failed:", error);
+            toast.error("Avatar update failed");
         }
     }
 

@@ -6,6 +6,7 @@ import { googleAuthService } from "@/services/googleAuthService";
 import { useRouter } from "next/navigation";
 import authUserWithGoogleAccount from "./service/ContinueWithGoogleButtonService";
 import { authUserWithGoogleAccountData } from "./type/types";
+import toast from "react-hot-toast";
 
 export const ContinueWithGoogleButton = () => {
     const { setUser } = useAuthStore();
@@ -21,7 +22,6 @@ export const ContinueWithGoogleButton = () => {
             const response = await authUserWithGoogleAccount(data);
             
             if (response.status === 201) {
-                console.log("Authentication successful!");
                 setUser({
                     id: response.data.user.id,
                     email: response.data.user.email,
@@ -31,13 +31,12 @@ export const ContinueWithGoogleButton = () => {
                     emailVerified: response.data.user.emailVerified,
                     isPremium: response.data.user.isPremium
                 });
+                toast.success("Google sign-in successful!");
                 router.push("/jobs");
             }
         } catch (error) {
-            console.error("Google sign-in failed:", error);
+            toast.error("Google sign-in failed!" + error);
         }
-
-        console.log("Sign up with Google")
     };
 
     return (

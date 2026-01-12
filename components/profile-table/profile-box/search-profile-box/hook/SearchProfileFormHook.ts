@@ -5,6 +5,7 @@ import { FormConfig, FormValues } from "@/components/headless-form";
 import { createSearchProfile, getSearchProfile } from "../service/SearchProfileFormService";
 import { SearchProfile } from "../type";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 /**
  * Custom hook for search profile form
@@ -170,14 +171,26 @@ const useSearchProfileForm = () => {
     };
 
     // Handle form submission
-    const handleSubmit = (data: Record<string, unknown>) => {
+    const handleSubmit = async (data: Record<string, unknown>) => {
         if (!userProfile?.isPremium) return; // Prevent submission for non-premium users
 
         // Transform form data to match the server's expected format
         const transformedData: SearchProfile = transformFormData(data);
 
-        // Create search profile
-        createSearchProfile(transformedData);
+        try {
+            // Create search profile
+            const response = await createSearchProfile(transformedData);
+
+            // Show toast based on response status (assuming 201 Created or 200 OK)
+            if (response && (response.status === 201 || response.status === 200)) {
+                toast.success("Search profile saved successfully");
+            } else {
+                toast.error("Failed to save search profile");
+            }
+        } catch (error) {
+            console.error("Create search profile error:", error);
+            toast.error("Failed to save search profile");
+        }
     }
 
     return {

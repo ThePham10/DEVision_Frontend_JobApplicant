@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EducationCreateData, Education } from "../types";
 import { FormConfig, FormValues } from "@/components/headless-form";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import toast from "react-hot-toast";
 
 /**
  * Profile education box hook
@@ -47,6 +48,10 @@ export const useProfileEducationBox = () => {
                 queryKey: ["education"],
             })
             setIsModalOpen(false);
+            toast.success("Education added successfully");
+        },
+        onError: () => {
+            toast.error("Education adding failed");
         }
     })
 
@@ -58,6 +63,10 @@ export const useProfileEducationBox = () => {
                 queryKey: ["education"],
             })
             setIsModalOpen(false);
+            toast.success("Education updated successfully");
+        },
+        onError: () => {
+            toast.error("Education updating failed");
         }
     })
 
@@ -69,6 +78,10 @@ export const useProfileEducationBox = () => {
                 queryKey: ["education"],
             })
             setDeleteConfirm(null)
+            toast.success("Education deleted successfully");
+        },
+        onError: () => {
+            toast.error("Education deleting failed");
         }
     })
 
@@ -79,6 +92,10 @@ export const useProfileEducationBox = () => {
             queryClient.invalidateQueries({
                 queryKey: ["userProfile"],
             })
+            toast.success("Highest education updated successfully");
+        },
+        onError: () => {
+            toast.error("Highest education updating failed");
         }
     })
 

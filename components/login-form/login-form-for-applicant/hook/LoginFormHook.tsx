@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export const useLoginForm = () => {
     const { setUser, setIsAuthenticated, setUserProfile } = useAuthStore();
@@ -59,17 +60,19 @@ export const useLoginForm = () => {
                 setUser(response.data.user);
                 setIsAuthenticated(true);
                 if (response.data.user.emailVerified) {
+                    toast.success("Login successful");
                     router.push("/jobs");
                 } else {
                     clearUser();
+                    toast.error("Please verify your email");
                     router.push("/verify-email");
                 }
             } else {
-                setError("Invalid email/password or account is not active. Please try again.")
+                 setError("Invalid email/password or account is not active. Please try again.")
             }
-        } catch (err) {
-            setError("Login failed. Please try again.")
-            console.error("Login error:", err);
+        } catch (err: any) {
+            const errorMessage = err?.data?.message || err?.message || "Login failed. Please try again.";
+            setError(errorMessage);
         }
     }
 
