@@ -2,10 +2,9 @@ import { jmHttpHelper } from "@/utils/jmhttpHelper";
 import { Company } from "../types";
 import { COMPANY_ADMIN_URL } from "@/config/URLConfig";
 
-async function loadCompanies(): Promise<Company[]> {
+export async function loadCompanies(searchTerm: string | null): Promise<Company[]> {
     try {
-        // Per API docs, use search=null to get all companies
-        const response = await jmHttpHelper.get<Company[]>(`${COMPANY_ADMIN_URL}?search`);
+        const response = await jmHttpHelper.get<Company[]>(`${COMPANY_ADMIN_URL}?search=${searchTerm}`);
         console.log("Loaded companies:", response.data);
         return response.data ?? [];
     } catch (error) {
@@ -13,5 +12,3 @@ async function loadCompanies(): Promise<Company[]> {
         throw error;
     }
 }
-
-export { loadCompanies };

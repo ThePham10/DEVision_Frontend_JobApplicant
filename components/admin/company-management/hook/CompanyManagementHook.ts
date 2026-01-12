@@ -1,33 +1,56 @@
 import { useMemo, useState } from "react";
 
-import { Company, CompanyFilters } from "../types";
+import { Company } from "../types";
 import { loadCompanies } from "../service/CompanyManagementService";
-import { useInfiniteQuery, useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+
+const PAGE_SIZE = 5;
 
 export default function useCompanyManagement() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [deactivateConfirm, setDeactivateConfirm] = useState<Company | null>(null);
-    const [activateConfirm, setActivateConfirm] = useState<Company | null>(null);
+    const [deleteConfirm, setDeleteConfirm] = useState<Company | null>(null);
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-    const queryClient = useQueryClient();
+    // Search/filter state
+    const [searchTerm, setSearchTerm] = useState("");
 
-    // Filter state
-    // const [searchName, setSearchName] = useState("");
-    // const [statusFilter, setStatusFilter] = useState("");
-    // const [filters, setFilters] = useState<CompanyFilters>({});
-
-    // use to refetch data when page or filters change
-    // cache the data based on page and filters
     const {
         data: allCompanies = [],
         isLoading,
         error,
     } = useQuery({
-        queryKey: ["admin-companies"],
-        queryFn: loadCompanies,
+        queryKey: ["admin-companies", searchTerm],
+        queryFn: () => loadCompanies(searchTerm),
     });
 
+    const companies = allCompanies.slice(0, visibleCount);
+    const hasNextPage = visibleCount < allCompanies.length;
+
+    const handleLoadMore = () => {
+        setVisibleCount(prev => prev + PAGE_SIZE);
+    };
+
+    const handleSearch = () => {
+        setSearchTerm(searchTerm || "");
+        setVisibleCount(PAGE_SIZE);
+    };
+
+    const clearFilters = () => {
+        setSearchTerm("");
+        setVisibleCount(PAGE_SIZE);
+    };
+
     return {
-        allCompanies,
+        companies,
+        allCompaniesCount: allCompanies.length,
+        searchTerm,
+        setSearchTerm,
+        isLoading,
+        error,
+        hasNextPage,
+        handleLoadMore,
+        handleSearch,
+        clearFilters,
+        deleteConfirm,
+        setDeleteConfirm,
     }
 }

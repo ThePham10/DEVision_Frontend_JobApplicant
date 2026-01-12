@@ -2,7 +2,6 @@
 
 import { Company } from "../types";
 import { motion } from "framer-motion";
-import { Check, X } from "lucide-react";
 import { Modal } from "@/components/reusable-component/Modal";
 import { useState } from "react";
 import CompanyDetails from "./CompanyDetails";
@@ -10,11 +9,9 @@ import { Building2 } from "lucide-react";
 
 interface CompanyManagementCardProps {
     company: Company;
-    onDeactivate?: (company: Company) => void;
-    onActivate?: (company: Company) => void;
 }
 
-export default function CompanyManagementCard({ company, onDeactivate, onActivate }: CompanyManagementCardProps) {
+export default function CompanyManagementCard({ company }: CompanyManagementCardProps) {
     const [isModalOpen, setIsModalOpen] =  useState(false);
 
     return (
@@ -62,28 +59,12 @@ export default function CompanyManagementCard({ company, onDeactivate, onActivat
                     title={company.companyName}
                     size="large"
                 >
-                    {company && (<CompanyDetails company={company} /> )}
+                    {company && (
+                    <CompanyDetails 
+                        company={company} 
+                        onClose={() => setIsModalOpen(false)}
+                    /> )}
                 </Modal>
-
-                {!company.isActive && <motion.button
-                    // onClick={() => onActivate(company)}
-                    className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors font-[Inter]"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label="Activate"
-                >
-                    <Check />
-                </motion.button>}
-
-                {company.isActive && <motion.button
-                    // onClick={() => onDeactivate(company)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-[Inter]"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label="Deactivate"
-                >
-                    <X />
-                </motion.button>}
             </div>
         </motion.div>
     );
