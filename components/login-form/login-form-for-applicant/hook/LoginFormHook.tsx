@@ -9,7 +9,7 @@ export const useLoginForm = () => {
     const { setUser, setIsAuthenticated, setUserProfile } = useAuthStore();
     const router = useRouter();
     const [error, setError] = useState<string | null>(null);
-    const { user } = useAuthStore();
+    const { user, clearUser } = useAuthStore();
 
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
@@ -61,6 +61,7 @@ export const useLoginForm = () => {
                 if (response.data.user.emailVerified) {
                     router.push("/jobs");
                 } else {
+                    clearUser();
                     router.push("/verify-email");
                 }
             } else {
