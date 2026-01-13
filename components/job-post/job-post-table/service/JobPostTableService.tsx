@@ -54,6 +54,7 @@ async function loadJobPost(
         // Check if any filters are provided
         const hasFilters = filters && Object.keys(filters).some(key => {
             const value = filters[key as keyof JobPostFilters];
+            if (Array.isArray(value)) return value.length > 0;
             return value !== undefined && value !== "";
         });
 
@@ -72,8 +73,10 @@ async function loadJobPost(
             }
             
             // Employment type filter (API expects array)
-            if (filters?.employmentType) {
-                queryParams.append('employmentTypes', filters.employmentType);
+            if (filters?.employmentType && filters.employmentType.length > 0) {
+                filters.employmentType.forEach(type => {
+                    queryParams.append('employmentTypes', type);
+                });
             }
             
             // Salary range filters
@@ -85,6 +88,8 @@ async function loadJobPost(
                 queryParams.append('maxSalary', filters.maxSalary.toString());
             }
             
+            console.log("Query params:", queryParams.toString());
+
             // Call search endpoint with filters
             const url = `${JOB_POST_URL}/search?${queryParams.toString()}`;
             const response = await jmHttpHelper.get<JobPost[]>(url);

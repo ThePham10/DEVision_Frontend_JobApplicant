@@ -37,6 +37,7 @@ const filterFormConfig: FormConfig = {
             name: "employmentType", 
             title: "Employment Type", 
             type: "select", 
+            multiple: true,
             placeholder: "Select employment type",
             options: employmentType,
         },
@@ -67,7 +68,7 @@ const PAGE_SIZE = 6;
 const defaultFormValues: FormValues = {
     jobTitle: "",
     location: "",
-    employmentType: "",
+    employmentType: [],
     salaryRange_min: null,
     salaryRange_max: null,
 };
@@ -139,14 +140,17 @@ const useJobPostTable = () => {
         const newFilters: JobPostFilters = {
             jobTitle: formData.jobTitle as string || undefined,
             location: formData.location as string || undefined,
-            employmentType: (formData.employmentType as string) || undefined,
+            employmentType: (formData.employmentType as string[]) || undefined,
             minSalary: formData.salaryRange_min ? Number(formData.salaryRange_min) : undefined,
             maxSalary: formData.salaryRange_max ? Number(formData.salaryRange_max) : undefined,
         }
         
         // Remove undefined/empty values
         const cleanFilters = Object.fromEntries(
-            Object.entries(newFilters).filter(([, value]) => value !== undefined && value !== "")
+            Object.entries(newFilters).filter(([, value]) => {
+                if (Array.isArray(value)) return value.length > 0;
+                return value !== undefined && value !== "";
+            })
         ) as JobPostFilters
         
         setFilters(cleanFilters)
@@ -168,7 +172,7 @@ const useJobPostTable = () => {
             const newValues = { ...prev }
             if (key === 'jobTitle') newValues.jobTitle = ""
             if (key === 'location') newValues.location = ""
-            if (key === 'employmentType') newValues.employmentType = ""
+            if (key === 'employmentType') newValues.employmentType = []
             if (key === 'minSalary') {
                 newValues.salaryRange_min = null
                 newValues.salaryRange_max = null

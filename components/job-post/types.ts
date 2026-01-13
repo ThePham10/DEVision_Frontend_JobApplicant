@@ -19,7 +19,7 @@ export type JobPost = {
 export type JobPostFilters = {
     jobTitle?: string;
     location?: string;
-    employmentType?: string;
+    employmentType?: string[];
     minSalary?: number;
     maxSalary?: number;
 }

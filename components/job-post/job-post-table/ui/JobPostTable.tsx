@@ -71,14 +71,16 @@ export const JobPostTable = () => {
                         </span>
                     )}
                     {filters.employmentType && (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                            Type: {filters.employmentType}
-                            <X 
-                                onClick={() => removeFilter('employmentType')}
-                                className="ml-1 hover:bg-blue-200 rounded-full p-0.5"
-                                aria-label="Remove employment type filter"
-                            />
-                        </span>
+                        filters.employmentType.map((type) => (
+                            <span key={type} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                Type: {type}
+                                <X 
+                                    onClick={() => removeFilter('employmentType')}
+                                    className="ml-1 hover:bg-blue-200 rounded-full p-0.5"
+                                    aria-label="Remove employment type filter"
+                                />
+                            </span>
+                        ))
                     )}
                     {(filters.minSalary || filters.maxSalary) && (
                         <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
