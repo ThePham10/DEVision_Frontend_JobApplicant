@@ -16,7 +16,6 @@ export const JobApplicationList = () => {
         isLoading,
         handleFilterClick,
         filteredApplications,
-        statCards,
         activeFilter,
         getCountForStatus
     } = useJobApplication()
@@ -163,35 +162,6 @@ export const JobApplicationList = () => {
                         Track the status of your job applications and stay updated on your career journey
                     </p>
                 </motion.div>
-
-                {/* Stats Cards */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
-                    {statCards.map((stat, index) => (
-                        <motion.div
-                            key={stat.label}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1, duration: 0.4 }}
-                            whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                            className={`relative overflow-hidden bg-gradient-to-br ${stat.bgGradient} border border-gray-200/50 p-5 sm:p-6 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300`}
-                        >
-                            {/* Background gradient accent */}
-                            <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${stat.gradient} opacity-10 blur-2xl rounded-full`} />
-                            
-                            <div className="relative">
-                                <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${stat.gradient} mb-3`}>
-                                    <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                                </div>
-                                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1">
-                                    {stat.value}
-                                </div>
-                                <div className="text-xs sm:text-sm font-medium text-gray-600">
-                                    {stat.label}
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
 
                 {/* Applications List */}
                 <motion.div

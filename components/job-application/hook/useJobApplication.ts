@@ -4,7 +4,6 @@ import { JobApplicationStatus, JobApplication, ApplicationFormData } from "../ty
 import { useQuery } from "@tanstack/react-query"
 import { useAuthStore } from "@/store"
 import { loadJobPost } from "@/components/job-post/job-post-table/service/JobPostTableService"
-import { Briefcase, Clock, Archive } from "lucide-react"
 
 /**
  * Job Application hook
@@ -66,31 +65,6 @@ export function useJobApplication() {
         ? enrichedApplications.filter(app => app.status === activeFilter)
         : enrichedApplications
 
-    // Define the style of the stat cards
-    const statCards = [
-        {
-            label: "Total Applications",
-            value: enrichedApplications.length,
-            icon: Briefcase,
-            gradient: "from-blue-500 to-indigo-600",
-            bgGradient: "from-blue-50 to-indigo-50"
-        },
-        {
-            label: "Pending",
-            value: getCountForStatus(JobApplicationStatus.PENDING),
-            icon: Clock,
-            gradient: "from-amber-500 to-yellow-600",
-            bgGradient: "from-amber-50 to-yellow-50"
-        },
-        {
-            label: "Archived",
-            value: getCountForStatus(JobApplicationStatus.ARCHIVED),
-            icon: Archive,
-            gradient: "from-gray-500 to-slate-600",
-            bgGradient: "from-gray-50 to-slate-50"
-        }
-    ]
-
     // Submit a new application
     const handleSubmit = async (formData: ApplicationFormData): Promise<JobApplication | null> => {
         setIsSubmitting(true)
@@ -111,7 +85,6 @@ export function useJobApplication() {
         isSubmitting,
         handleFilterClick,
         filteredApplications,
-        statCards,
         activeFilter,
         getCountForStatus,
         hasAppliedToJob,
