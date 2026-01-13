@@ -71,33 +71,45 @@ class HttpHelper {
         return { status: response.status, data };
     }
 
+    private refreshPromise: Promise<boolean> | null = null;
+
     // Function for send the refresh token request
     private async refreshToken(): Promise<boolean> {
-        try {
-            const isAdmin = useAuthStore.getState().isAdmin;
-            const endpoint = isAdmin ? '/auth/admin/refresh' : '/auth/applicant/refresh';
-            const response = await fetch(`${this.baseUrl}${endpoint}`, {
-                method: 'POST',
-                credentials: 'include', // Send refresh token cookie
-            });
+        if (this.refreshPromise) {
+            return this.refreshPromise;
+        }
 
-            if (!response.ok) {
+        this.refreshPromise = (async () => {
+            try {
+                const isAdmin = useAuthStore.getState().isAdmin;
+                const endpoint = isAdmin ? '/auth/admin/refresh' : '/auth/applicant/refresh';
+                const response = await fetch(`${this.baseUrl}${endpoint}`, {
+                    method: 'POST',
+                    credentials: 'include', // Send refresh token cookie
+                });
+
+                if (!response.ok) {
+                    useAuthStore.getState().clearUser();
+                    if (typeof window !== "undefined") {
+                        window.location.href = "/login";
+                    }
+                    return false;
+                }
+
+                return true;
+            } catch (error) {
+                console.error("Refresh token failed:", error);
                 useAuthStore.getState().clearUser();
                 if (typeof window !== "undefined") {
                     window.location.href = "/login";
                 }
                 return false;
+            } finally {
+                this.refreshPromise = null;
             }
+        })();
 
-            return true;
-        } catch (error) {
-            console.error("Refresh token failed:", error);
-            useAuthStore.getState().clearUser();
-            if (typeof window !== "undefined") {
-                window.location.href = "/login";
-            }
-            return false;
-        }
+        return this.refreshPromise;
     }
 
     /**
