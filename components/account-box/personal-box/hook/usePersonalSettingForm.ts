@@ -7,10 +7,12 @@ import { fetchCountries, Country } from "@/components/headless-form/country-drop
 import toast from "react-hot-toast";
 
 export function usePersonalSettingForm() {
+    // States
     const { isAuthenticated, user, isAdmin } = useAuthStore();
     const queryClient = useQueryClient();
 
-    // Fetch user info
+    // Fetch user info using user ID
+    // Only fetch when the user is authenticated, user exists, and the user is not an admin
     const { data: fetchedData } = useQuery({
         queryKey: ['userInfo', user?.id],
         queryFn: () => {
@@ -27,6 +29,7 @@ export function usePersonalSettingForm() {
         staleTime: Infinity, // Countries don't change often
     });
 
+    // User account data
     const userAccount = fetchedData?.data;
 
     // Get full country name from code
@@ -38,7 +41,8 @@ export function usePersonalSettingForm() {
         return country?.label || code;
     };
 
-    // Update mutation
+    // Update user info in backend on the server
+    // On success, refetches the latest user info and updates the query cache
     const updateMutation = useMutation({
         mutationFn: (data: Partial<AccountData>) => updateUserInfo(data),
         onSuccess: async () => {
@@ -52,6 +56,7 @@ export function usePersonalSettingForm() {
         }
     });
 
+    // Handle form submission
     const handleSubmit = async (values: FormValues) => {
         updateMutation.mutate(values as Partial<AccountData>);
     };

@@ -1,3 +1,4 @@
+// Define type for Applicant
 type ApplicantAccount = {
     id: string;
     name: string;
@@ -10,11 +11,13 @@ type ApplicantAccount = {
     updatedAt: Date;
 }
 
+// Define type for Filters
 type ApplicantFilters = {
     name?: string;
     isActive?:boolean;
 }
 
+// Define type for Paginated Response
 type PaginatedResponse<T> = {
     data: T[];
     total: number;

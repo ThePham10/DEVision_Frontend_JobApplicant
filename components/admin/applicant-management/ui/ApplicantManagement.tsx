@@ -42,6 +42,7 @@ export const ApplicantManagement = () => {
                 </div>
             </div>
 
+            {/* Search and Filter Section */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="font-[Inter] text-lg font-semibold mb-4">Search Applicant Account</h2>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -108,7 +109,8 @@ export const ApplicantManagement = () => {
                     </div>
                 )} 
             </div>
-
+            
+            {/* Pagination and Loading Status */}
             <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-500 font-[Inter]">
                     Showing {applicants.length} of {totalApplicantsCount} applicants
@@ -149,6 +151,7 @@ export const ApplicantManagement = () => {
                 </div>
             )}
 
+            {/* Activation Confirmation Modal */}
             <Modal
                 isOpen={!!activateConfirm}
                 onClose={() => setActivateConfirm(null)}
@@ -177,6 +180,7 @@ export const ApplicantManagement = () => {
                 </div>
             </Modal>
             
+            {/* Deactivation Confirmation Modal */}
             <Modal
                 isOpen={!!deactivateConfirm}
                 onClose={() => setDeactivateConfirm(null)}

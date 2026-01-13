@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/authStore";
-import { useDataStore } from "@/store";
 import { updateWorkExperience } from "../api/WorkExpService";
 import { WorkExpData } from "../types";
 
 export default function useWorkExpCard(item: WorkExpData) {
+    // States
     const [open, setOpen] = useState(false);
     const { user } = useAuthStore();
     const queryClient = useQueryClient();
-    const { skills } = useDataStore();
 
+    // Format date to readable string
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', { 
             year: 'numeric', 
@@ -19,6 +19,8 @@ export default function useWorkExpCard(item: WorkExpData) {
         });
     };
 
+    // Update mutation for work experience
+    // On success, invalidate the user work experience query to refetch updated data
     const updateMutation = useMutation({
         mutationFn: ({ id, data }: { id: string; data: Partial<Omit<WorkExpData, "id" | "applicantId" | "createdAt" | "updatedAt">> }) => 
             updateWorkExperience(id, data),
@@ -28,6 +30,7 @@ export default function useWorkExpCard(item: WorkExpData) {
         }
     });
 
+    // Fileter out id, applicantId, createdAt, updatedAt from updating
     const handleUpdate = (data: Partial<Omit<WorkExpData, "id" | "applicantId" | "createdAt" | "updatedAt">>) => {
         updateMutation.mutate({ id: item.id, data });
     };

@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export const usePayment = () => {
+    // States 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
@@ -27,6 +28,8 @@ export const usePayment = () => {
 
     const subscriptionInfo = fetchedData;
 
+    // Update user subscription status after payment
+    // Waits for a few seconds to ensure backend processes are complete before invalidating queries
     const updateUserSubscriptionStatus = async () => {
         if (!user) return;
         await new Promise(resolve => setTimeout(resolve, 5000));
@@ -37,8 +40,10 @@ export const usePayment = () => {
         toast.success("Subscription upgraded successfully");
     }
 
+    // Downgrade user subscription status
     const downgradeUserSubscriptionStatus = async () => {
         if (!user) return;
+        console.log("Starting downgrade process...");
         await new Promise(resolve => setTimeout(resolve, 5000));
         await cancelSubscription(user.id);
         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -46,11 +51,12 @@ export const usePayment = () => {
         queryClient.invalidateQueries({ queryKey: ['userProfile', user.id] });
         toast.success("Subscription downgraded successfully");
     }
-
+    
+    // Process payment with Stripe
     const paymentProcess = async (
-        stripe: Stripe,
-        cardElement: StripeCardNumberElement,
-        planData: planData
+        stripe: Stripe, // Stripe instance (used to interact with Stripe API)
+        cardElement: StripeCardNumberElement, // Card element containing user's card details
+        planData: planData // Data about the selected subscription plan
     ) => {
         if (!stripe || !cardElement) {
             setError("Stripe has not loaded properly.");
@@ -61,7 +67,7 @@ export const usePayment = () => {
         setSuccess(false);
 
         try {
-            // create payment intent on the backend
+            // Create payment intent on the backend
             const intent: paymentIntentResponse = await createPaymentIntent(planData);
             const clientSecret = intent.clientSecret;
 
@@ -69,16 +75,17 @@ export const usePayment = () => {
                 throw new Error("Failed to create/retrieve client secret.");
             }
 
-            // confirm card payment with stripe
+            // Confirm card payment with Stripe using the client secret and card details
             const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
                 clientSecret,
                 {
                     payment_method: {
-                        card: cardElement,
+                        card: cardElement, // Pass the card element as the payment method
                     },
                 }
             );
 
+            // If Stripe returns an error (e.g., invalid card, insufficient funds), throw it
             if (stripeError) {
                 throw new Error(stripeError.message);
             }
@@ -86,9 +93,11 @@ export const usePayment = () => {
             if (paymentIntent.status === "succeeded") {
                 setSuccess(true);
                 toast.success("Payment successful");
+                // Return success object with payment details
                 return { success: true, paymentIntent };
             }
 
+            // If payment did not succeed (e.g., requires further action), return failure response
             return { success: false, paymentIntent };
         } catch (err: any) {
             console.error("Payment failed", err);

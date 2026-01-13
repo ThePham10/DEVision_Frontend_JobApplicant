@@ -6,10 +6,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const useLoginFormAdmin = () => {
+    // Initialize auth store and router
     const { setUser } = useAuthStore();
     const router = useRouter();
     const [ error, setError ] = useState<string | null>(null);
 
+    // Define the form configuration for admin login
     const formConfig = {
         className: "flex flex-col items-center bg-white p-8 gap-6 w-full max-w-md rounded shadow",
         children: [
@@ -32,6 +34,7 @@ export const useLoginFormAdmin = () => {
         buttonText: "Login ",
     };
 
+    // Handle admin login form submission
     const handleAdminLogin = async (values: FormValues) => {
         try {
             const adminLoginData = {
@@ -40,6 +43,8 @@ export const useLoginFormAdmin = () => {
             };
 
             const response = await loginAdmin(adminLoginData);
+
+            // Check if login is successful 
             if (response.status === 201) {
                 setUser(response.data.user);
                 toast.success("Login successful");

@@ -47,8 +47,8 @@ export const PersonalBoxForm = () => {
                         </div>
                     </div>
 
+                    {/* User Information */}
                     <div className="relative z-10">
-                        
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             {/* Email */}
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">

@@ -1,6 +1,10 @@
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
 
+/**
+ * Service to handle Google authentication using Firebase
+ * @returns - ID token from Google authentication
+ */
 export const googleAuthService = {
     async signInWithGoogle(): Promise<string> {
         try {

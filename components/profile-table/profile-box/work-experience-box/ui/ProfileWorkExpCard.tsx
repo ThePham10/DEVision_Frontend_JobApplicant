@@ -56,6 +56,7 @@ const ProfileWorkExpCard = ({ item, onDelete }: ProfileWorkExpCardProps) => {
                             <Pencil className="w-4 h-4" />
                         </button>
 
+                        {/* Edit Work Experience Modal */}
                         <EditWorkExpModal 
                             item={item} 
                             onSubmit={handleUpdate}

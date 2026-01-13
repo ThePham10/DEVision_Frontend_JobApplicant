@@ -7,6 +7,7 @@ import { useState } from "react";
 import CompanyDetails from "./CompanyDetails";
 import { Building2, X } from "lucide-react";
 
+// Define the props for CompanyManagementCard
 interface CompanyManagementCardProps {
     company: Company;
     onDelete: (company: Company) => void;
@@ -23,6 +24,7 @@ export default function CompanyManagementCard({ company, onDelete }: CompanyMana
             exit={{ opacity: 0, y: -10 }}
             layout
         >
+            {/* Company Info Card Section */}
             <div className="flex items-center gap-4">
                 {/* Name and Description */}
                 <div>
@@ -45,6 +47,7 @@ export default function CompanyManagementCard({ company, onDelete }: CompanyMana
             </div>
 
             <div className="flex items-center gap-2">
+                {/* View Details Button */}
                 <motion.button 
                     onClick={() => setIsModalOpen(true)} 
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-[Inter]" 
@@ -53,7 +56,8 @@ export default function CompanyManagementCard({ company, onDelete }: CompanyMana
                 >   
                     View Details
                 </motion.button>
-
+                
+                {/* Delete Button */}
                 <motion.button
                     onClick={() => onDelete(company)}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-[Inter]"

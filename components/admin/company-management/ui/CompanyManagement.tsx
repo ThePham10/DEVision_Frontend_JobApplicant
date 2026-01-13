@@ -37,6 +37,7 @@ const CompanyManagement = () => {
                 </div>
             </div>
 
+            {/* Search and Filter Section */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="font-[Inter] text-lg font-semibold mb-4">Search Company</h2>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -75,7 +76,8 @@ const CompanyManagement = () => {
                     </div>
                 )}
             </div>
-
+            
+            {/* Pagination and Company Count Section */}
             <div className="flex justify-between items-center">
                 <div className="text-sm text-gray-500 font-[Inter]">
                     Showing {companies.length} of {allCompaniesCount} companies
@@ -115,6 +117,7 @@ const CompanyManagement = () => {
                 </div>
             )}
 
+            {/* Delete Confirmation Modal */}
             <Modal
                 isOpen={!!deleteConfirm}
                 onClose={() => setDeleteConfirm(null)}

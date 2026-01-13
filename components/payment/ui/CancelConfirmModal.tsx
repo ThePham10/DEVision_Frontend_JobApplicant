@@ -21,6 +21,7 @@ export default function CancelConfirmModal({
                 onClose={onClose}
                 size="medium"
             >
+                {/* Confirmation Content */}
                 <div className="text-center">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">Confirm Downgrade to Free Plan</h3>
                     <p className="text-gray-600 mb-6">

@@ -1,3 +1,4 @@
+// Define the response 
 type LogoutResponse = {
     message: string;
 }

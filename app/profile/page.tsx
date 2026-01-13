@@ -24,6 +24,7 @@ export default function Page() {
                         </p>
                     </motion.div>
                     
+                    {/* Profile Table Component */}
                     <ProfileTable />
                 </div>
             </AuthGuard>

@@ -12,15 +12,19 @@ export const ContinueWithGoogleButton = () => {
     const { setUser } = useAuthStore();
     const router = useRouter();
 
+    // Handle Google authentication button click
     const handleAuthWithGoogle = async () => {
         try {
+            // Sign in with Google and get ID token
             const idToken = await googleAuthService.signInWithGoogle();
             
+            // Use the ID token to authenticate/register with backend
             const data: authUserWithGoogleAccountData = {
                 idToken: idToken
             }
             const response = await authUserWithGoogleAccount(data);
             
+            // Update user state upon successful authentication
             if (response.status === 201) {
                 setUser({
                     id: response.data.user.id,
